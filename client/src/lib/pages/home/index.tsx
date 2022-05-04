@@ -13,14 +13,7 @@ const Home = () => {
       gap={8}
       mb={8}
       w="full"
-    >
-      <SomeImage />
-
-      <Box>
-        <SomeText />
-        <CTASection />
-      </Box>
-    </Box>
+    ></Box>
   );
 };
 
