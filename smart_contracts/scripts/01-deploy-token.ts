@@ -11,7 +11,7 @@ const deployGovernanceToken: DeployFunction = async function (
   const { deployer } = await getNamedAccounts();
 
   log("Deploying token");
-  const token = await deploy("ChrisCoin", {
+  const token = await deploy("TestTokenDex", {
     from: deployer,
     args: [],
     log: true,
