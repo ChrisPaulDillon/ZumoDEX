@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import SwapCard from "../../components/SwapCard";
 
 const Home = () => {
   return (
@@ -9,7 +10,9 @@ const Home = () => {
       gap={8}
       mb={8}
       w="full"
-    ></Box>
+    >
+      <SwapCard />
+    </Box>
   );
 };
 
