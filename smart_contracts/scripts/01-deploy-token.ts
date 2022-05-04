@@ -3,7 +3,7 @@ import { DeployFunction } from "hardhat-deploy/types";
 import verifyContract from "../util/verifyContract";
 import { LOCAL_CHAINS } from "../util/deployerHelper";
 
-const deployGovernanceToken: DeployFunction = async function (
+const deployToken: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
   const { getNamedAccounts, deployments, network } = hre;
@@ -24,4 +24,4 @@ const deployGovernanceToken: DeployFunction = async function (
   }
 };
 
-export default deployGovernanceToken;
+export default deployToken;
