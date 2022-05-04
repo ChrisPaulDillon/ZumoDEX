@@ -1,4 +1,5 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
+import WalletConnectButton from "lib/components/WalletConnectButton";
 import Link from "next/link";
 
 import ThemeToggle from "./ThemeToggle";
@@ -11,6 +12,7 @@ const Header = () => {
       </Heading>
 
       <Box marginLeft="auto">
+        <WalletConnectButton mx={2} />
         <ThemeToggle />
       </Box>
     </Flex>
