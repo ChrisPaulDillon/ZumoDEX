@@ -9,12 +9,14 @@ import {
 import BigNumber from "bignumber.js";
 import { getBalanceNumber } from "../../../util/balanceHelper";
 import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
+import { ITokenInfo } from "../../../hooks/useGetTokenInfo";
 
 interface ITDDStats {
+  tokenInfo?: ITokenInfo;
   userBalance: BigNumber;
 }
 
-const TDDStats: React.FC<ITDDStats> = ({ userBalance }) => {
+const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
   const { account } = useActiveWeb3React();
 
   return (
@@ -27,7 +29,7 @@ const TDDStats: React.FC<ITDDStats> = ({ userBalance }) => {
       flexDir="column"
     >
       <Heading textAlign={"center"} size="md">
-        TDD Token
+        {tokenInfo?.name} - {tokenInfo?.symbol}
       </Heading>
       {account ? (
         <Text textAlign={"center"}>{getBalanceNumber(userBalance)} TDD</Text>

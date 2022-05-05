@@ -2,11 +2,15 @@ import { Box } from "@chakra-ui/react";
 import TDDStats from "lib/components/TDDStats";
 import useBalanceOf from "../../../../hooks/useBalanceOf";
 import SwapCard from "../../components/SwapCard";
+import useGetTokenInfo from "../../../../hooks/useGetTokenInfo";
 
 const Home = () => {
   const balance = useBalanceOf("0xAfDB5Bd0661283a6898c15c474B49373Db96B1AF");
-  console.log(balance);
+  const tokenInfo = useGetTokenInfo(
+    "0xAfDB5Bd0661283a6898c15c474B49373Db96B1AF"
+  );
 
+  console.log(tokenInfo);
   return (
     <Box
       display={{ md: "flex" }}
