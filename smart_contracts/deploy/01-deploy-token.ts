@@ -3,7 +3,7 @@ import { DeployFunction } from "hardhat-deploy/types";
 import verifyContract from "../util/verifyContract";
 import { LOCAL_CHAINS } from "../util/deployerHelper";
 
-const deployToken: DeployFunction = async function (
+const deployGovernanceToken: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
   //@ts-ignore
@@ -25,4 +25,4 @@ const deployToken: DeployFunction = async function (
   }
 };
 
-export default deployToken;
+export default deployGovernanceToken;
