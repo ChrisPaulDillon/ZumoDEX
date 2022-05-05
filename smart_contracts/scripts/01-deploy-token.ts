@@ -6,6 +6,7 @@ import { LOCAL_CHAINS } from "../util/deployerHelper";
 const deployToken: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
+  //@ts-ignore
   const { getNamedAccounts, deployments, network } = hre;
   const { deploy, log } = deployments;
   const { deployer } = await getNamedAccounts();
