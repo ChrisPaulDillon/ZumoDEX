@@ -10,7 +10,6 @@ const Home = () => {
     "0xAfDB5Bd0661283a6898c15c474B49373Db96B1AF"
   );
 
-  console.log(tokenInfo);
   return (
     <Box
       display={{ md: "flex" }}
@@ -22,7 +21,7 @@ const Home = () => {
       w="full"
       border="1px"
     >
-      <TDDStats userBalance={balance} />
+      <TDDStats tokenInfo={tokenInfo} userBalance={balance} />
       <SwapCard />
     </Box>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { getERC20Contract } from "../util/contractHelper";
+import useActiveWeb3React from "./useActiveWeb3React";
 
 export interface ITokenInfo {
   name: string;
@@ -9,6 +10,7 @@ export interface ITokenInfo {
 }
 
 const useGetTokenInfo = (tokenAddress: string) => {
+  const { library, account } = useActiveWeb3React();
   const [tokenInfo, setTokenInfo] = useState<ITokenInfo>({
     name: "",
     symbol: "",
@@ -17,12 +19,11 @@ const useGetTokenInfo = (tokenAddress: string) => {
 
   useEffect(() => {
     const fetchTokenStats = async () => {
-      const contract = getERC20Contract(tokenAddress);
+      const contract = getERC20Contract(tokenAddress, library);
       try {
-        const name = await contract.methods.name.call();
-        const symbol = await contract.methods.symbol.call();
-        const totalSupply = await contract.methods.totalSupply.call();
-
+        const name = await contract.methods.name().call();
+        const symbol = await contract.methods.symbol().call();
+        const totalSupply = await contract.methods.totalSupply().call();
         setTokenInfo({ name: name, symbol: symbol, totalSupply: totalSupply });
       } catch (e) {
         console.error(e);

@@ -39,6 +39,9 @@ const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
           <Text textAlign={"center"}>{getBalanceNumber(userBalance)} TDD</Text>
         </Skeleton>
       )}
+      <Text textAlign={"center"}>
+        {getBalanceNumber(tokenInfo?.totalSupply!)} Max Supply
+      </Text>
     </Stack>
   );
 };
