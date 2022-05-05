@@ -3,7 +3,7 @@ import { DeployFunction } from "hardhat-deploy/types";
 import verifyContract from "../util/verifyContract";
 import { LOCAL_CHAINS } from "../util/deployerHelper";
 
-const deployGovernanceToken: DeployFunction = async function (
+const deployToken: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
   //@ts-ignore
@@ -16,13 +16,16 @@ const deployGovernanceToken: DeployFunction = async function (
     from: deployer,
     args: [],
     log: true,
-    //waitConfirmations
   });
   log(`Deployed Token to Address: ${token.address}`);
 
   if (!LOCAL_CHAINS.includes(network.name) && process.env.BSCSCAN_API) {
-    await verifyContract(token.address, []);
+    await verifyContract(
+      token.address,
+      [],
+      "contracts/TestTokenDex.sol:TestTokenDex"
+    );
   }
 };
 
-export default deployGovernanceToken;
+export default deployToken;
