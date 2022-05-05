@@ -6,6 +6,7 @@ const Home = () => {
     <Box
       display={{ md: "flex" }}
       alignItems="center"
+      justifyContent={"center"}
       minHeight="70vh"
       gap={8}
       mb={8}
