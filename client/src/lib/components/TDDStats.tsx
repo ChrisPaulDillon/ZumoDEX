@@ -1,8 +1,24 @@
-import { Box, useColorModeValue, Heading, Flex } from "@chakra-ui/react";
+import {
+  useColorModeValue,
+  Heading,
+  Flex,
+  Text,
+  Skeleton,
+  Stack,
+} from "@chakra-ui/react";
+import BigNumber from "bignumber.js";
+import { getBalanceNumber } from "../../../util/balanceHelper";
+import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
 
-const TDDStats = () => {
+interface ITDDStats {
+  userBalance: BigNumber;
+}
+
+const TDDStats: React.FC<ITDDStats> = ({ userBalance }) => {
+  const { account } = useActiveWeb3React();
+
   return (
-    <Flex
+    <Stack
       rounded="lg"
       minH={"250px"}
       minW={"250px"}
@@ -13,7 +29,15 @@ const TDDStats = () => {
       <Heading textAlign={"center"} size="md">
         TDD Token
       </Heading>
-    </Flex>
+      {account ? (
+        <Text textAlign={"center"}>{getBalanceNumber(userBalance)} TDD</Text>
+      ) : (
+        <Skeleton>
+          {" "}
+          <Text textAlign={"center"}>{getBalanceNumber(userBalance)} TDD</Text>
+        </Skeleton>
+      )}
+    </Stack>
   );
 };
 
