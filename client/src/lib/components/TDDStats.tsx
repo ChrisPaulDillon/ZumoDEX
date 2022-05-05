@@ -31,15 +31,17 @@ const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
         {tokenInfo?.name} - {tokenInfo?.symbol}
       </Heading>
       {account ? (
-        <Text textAlign={"center"}>{getBalanceNumber(userBalance)} TDD</Text>
+        <Text textAlign={"center"}>{getBalanceNumber(userBalance, 2)} TDD</Text>
       ) : (
         <Skeleton>
           {" "}
-          <Text textAlign={"center"}>{getBalanceNumber(userBalance)} TDD</Text>
+          <Text textAlign={"center"}>
+            {getBalanceNumber(userBalance, 2)} TDD
+          </Text>
         </Skeleton>
       )}
       <Text textAlign={"center"}>
-        {getBalanceNumber(tokenInfo?.totalSupply!)} Max Supply
+        {getBalanceNumber(tokenInfo?.totalSupply!, 2)} Max Supply
       </Text>
     </Stack>
   );

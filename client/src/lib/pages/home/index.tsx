@@ -3,12 +3,11 @@ import TDDStats from "lib/components/TDDStats";
 import useBalanceOf from "../../../../hooks/useBalanceOf";
 import SwapCard from "../../components/SwapCard";
 import useGetTokenInfo from "../../../../hooks/useGetTokenInfo";
+import { CONTRACT_ERC20 } from "../../../../contracts/contracts";
 
 const Home = () => {
-  const balance = useBalanceOf("0xAfDB5Bd0661283a6898c15c474B49373Db96B1AF");
-  const tokenInfo = useGetTokenInfo(
-    "0xAfDB5Bd0661283a6898c15c474B49373Db96B1AF"
-  );
+  const balance = useBalanceOf(CONTRACT_ERC20);
+  const tokenInfo = useGetTokenInfo(CONTRACT_ERC20);
 
   return (
     <Box
@@ -19,7 +18,6 @@ const Home = () => {
       gap={14}
       mb={8}
       w="full"
-      border="1px"
     >
       <TDDStats tokenInfo={tokenInfo} userBalance={balance} />
       <SwapCard />
