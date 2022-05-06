@@ -24,6 +24,5 @@
     "web3": "^1.7.3",
     "@types/chai-as-promised": "^7.1.5",
     "chai-as-promised": "^7.1.1"
-  },
-W
+  }
 }
