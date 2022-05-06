@@ -82,29 +82,50 @@ describe("DexSwap", function () {
     );
 
     //give the dexSwap contract ether so it can buy tokens back
-    const transactionHash = await owner.sendTransaction({
+    await owner.sendTransaction({
       to: dexSwapContract.address,
-      value: ethers.utils.parseEther("5.0"),
+      value: ethers.utils.parseEther("1.0"),
     });
 
+    const tokenAmount = 1;
+    const tokenAmountToSell = ethers.utils.parseUnits(
+      tokenAmount.toString(),
+      2
+    );
+
+    console.log("Ether Parse Units" + tokenAmountToSell);
+    console.log(tokenAmountToSell.toNumber());
+
+    const etherBalanceBefore = await ethers.provider.getBalance(owner.address);
+
+    console.log(
+      "Ether Before Balance" + ethers.utils.formatEther(etherBalanceBefore)
+    );
+
     //Act
-    // const provider = ethers.provider;
-    // const test = await provider.getBalance(dexSwapContract.address);
-    // console.log(test);
 
-    // console.log(test.toNumber());
+    //Allow dex contract permission to spend tokens
+    await testDexTokenContract.approve(
+      dexSwapContract.address,
+      tokenAmountToSell
+    );
 
-    // const test = dexSwapContract.provider.getBalance(dexSwapContract.address);
-    // console.log(test);
+    const result = await dexSwapContract.sellTokens(tokenAmountToSell);
 
-    // await dexSwapContract.sellTokens(web3.utils.toWei(1, "ether"));
+    console.log(result);
 
-    // const ownerBalance = await testDexTokenContract.balanceOf(owner.address);
+    const etherBalance = await ethers.provider.getBalance(owner.address);
 
-    // var userTokenBalance = ownerBalance.toNumber();
-    // console.log(userTokenBalance);
+    console.log("Ether Balance" + ethers.utils.formatEther(etherBalance));
 
-    // expect(userTokenBalance).to.equal(tokenReceivedAmount);
+    const etherBefore = ethers.utils.formatEther(etherBalanceBefore);
+    const etherAfter = ethers.utils.formatEther(etherBalance);
+
+    const dexContractTokenBalance = await testDexTokenContract.balanceOf(
+      dexSwapContract.address
+    );
+
+    expect(dexContractTokenBalance).to.equal(tokenAmountToSell);
   });
 
   it("Should return the buy rate for tokens", async function () {
