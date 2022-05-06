@@ -9,10 +9,12 @@ import { HardhatUserConfig } from "hardhat/config";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 import { solidity } from "ethereum-waffle";
+import chaiAsPromised from "chai-as-promised";
 
-var chai = require('chai');
+var chai = require("chai");
 //used for bignumber comparison in unit tests
 chai.use(solidity);
+chai.use(chaiAsPromised).should();
 
 dotenvConfig({ path: resolve(__dirname, "./.env") });
 

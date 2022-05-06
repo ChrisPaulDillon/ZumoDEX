@@ -128,6 +128,41 @@ describe("DexSwap", function () {
     expect(dexContractTokenBalance).to.equal(tokenAmountToSell);
   });
 
+  it("should throw an error when the user attempts to sell tokens but there is no ethereum", async function () {
+    //Arrange
+    await testDexTokenContract.deployed();
+    await dexSwapContract.deployed();
+
+    const [owner] = await ethers.getSigners();
+
+    //Give the owner all the tokens
+    testDexTokenContract.transfer(
+      owner.address,
+      await testDexTokenContract.totalSupply()
+    );
+
+    const ERROR_MSG = "Error: Not enough Ether in contract";
+
+    const tokenAmount = 1;
+    const tokenAmountToSell = ethers.utils.parseUnits(
+      tokenAmount.toString(),
+      2
+    );
+
+    //Act
+
+    //Allow dex contract permission to spend tokens
+    await testDexTokenContract.approve(
+      dexSwapContract.address,
+      tokenAmountToSell
+    );
+
+    //@ts-ignore
+    await dexSwapContract
+      .sellTokens(tokenAmountToSell)
+      .should.be.rejectedWith(ERROR_MSG);
+  });
+
   it("Should return the buy rate for tokens", async function () {
     //Arrange
     await dexSwapContract.deployed();

@@ -5,6 +5,7 @@
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
     "@nomiclabs/hardhat-etherscan": "^3.0.3",
+    "@openzeppelin/contracts": "^4.5.0",
     "@typechain/ethers-v5": "^10.0.0",
     "@typechain/hardhat": "^6.0.0",
     "@types/chai": "^4.3.1",
@@ -13,14 +14,16 @@
     "chai": "^4.3.6",
     "chai-bignumber": "^3.0.0",
     "dotenv": "^16.0.0",
+    "ethereum-waffle": "^3.4.4",
     "ethers": "^5.6.2",
     "hardhat": "^2.8.3",
     "hardhat-deploy": "^0.11.4",
     "ts-node": "^10.7.0",
     "typechain": "^8.0.0",
     "typescript": "^4.6.3",
-    "@openzeppelin/contracts": "^4.5.0",
-    "ethereum-waffle": "^3.4.4",
-    "web3": "^1.7.3"
-  }
+    "web3": "^1.7.3",
+    "@types/chai-as-promised": "^7.1.5",
+    "chai-as-promised": "^7.1.1"
+  },
+W
 }
