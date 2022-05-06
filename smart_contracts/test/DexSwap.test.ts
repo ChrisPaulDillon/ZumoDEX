@@ -173,15 +173,22 @@ describe("DexSwap", function () {
       await testDexTokenContract.totalSupply()
     );
 
-    const tokenAmount = 5 * 1e2;
-    const tokenAmountToSell = web3.utils.toWei(tokenAmount.toString());
+    const tokenAmount = 5;
+    const tokenAmountToSell = ethers.utils.parseUnits(
+      tokenAmount.toString(),
+      2
+    );
 
-    console.log(tokenAmountToSell);
-
-    const transactionHash = await owner.sendTransaction({
+    await owner.sendTransaction({
       to: dexSwapContract.address,
       value: ethers.utils.parseEther("5.0"),
     });
+
+    //Allow dex contract permission to spend tokens
+    await testDexTokenContract.approve(
+      dexSwapContract.address,
+      tokenAmountToSell
+    );
 
     //Act
     await dexSwapContract.sellTokens(tokenAmountToSell);
