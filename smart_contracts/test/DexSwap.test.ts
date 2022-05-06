@@ -88,11 +88,11 @@ describe("DexSwap", function () {
     });
 
     //Act
-    const provider = ethers.provider;
-    const test = await provider.getBalance(dexSwapContract.address);
-    console.log(test);
+    // const provider = ethers.provider;
+    // const test = await provider.getBalance(dexSwapContract.address);
+    // console.log(test);
 
-    console.log(test.toNumber());
+    // console.log(test.toNumber());
 
     // const test = dexSwapContract.provider.getBalance(dexSwapContract.address);
     // console.log(test);
@@ -105,5 +105,60 @@ describe("DexSwap", function () {
     // console.log(userTokenBalance);
 
     // expect(userTokenBalance).to.equal(tokenReceivedAmount);
+  });
+
+  it("Should return the buy rate for tokens", async function () {
+    //Arrange
+    await dexSwapContract.deployed();
+
+    //Act
+    const buyRate = await dexSwapContract.getBuyRate();
+
+    //Assert
+    expect(buyRate.toNumber()).to.equal(10000);
+  });
+
+  it("Should return the sell rate for tokens", async function () {
+    //Arrange
+    await dexSwapContract.deployed();
+
+    //Act
+    const sellRate = await dexSwapContract.getSellRate();
+
+    //Assert
+    expect(sellRate.toNumber()).to.equal(5000);
+  });
+
+  it("Should get the inital total sales", async function () {
+    //Arrange
+    await dexSwapContract.deployed();
+
+    //Act
+    const totalSales = await dexSwapContract.getTotalSales();
+
+    //Assert
+    expect(totalSales.toNumber()).to.equal(0);
+  });
+
+  it("Should get the total sales after a user has purchased some tokens", async function () {
+    //Arrange
+    const [owner] = await ethers.getSigners();
+    await testDexTokenContract.deployed();
+    await dexSwapContract.deployed();
+
+    await testDexTokenContract.transfer(
+      dexSwapContract.address,
+      await testDexTokenContract.totalSupply()
+    );
+
+    const ethAmount = web3.utils.toWei("10000", "wei");
+
+    //Act
+    await dexSwapContract.buyTokens({ value: ethAmount });
+
+    const totalSales = await dexSwapContract.getTotalSales();
+
+    //Assert
+    expect(totalSales.toNumber()).to.equal(1);
   });
 });

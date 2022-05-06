@@ -60,15 +60,15 @@ contract DexSwap {
         totalSales = totalSales + 1;
     }
 
-    function getBuyRate() returns (uint256) {
+    function getBuyRate() public view returns (uint256) {
         return buyRate;
     }
 
-    function getSellRate() returns (uint256) {
+    function getSellRate() public view returns (uint256) {
         return sellRate;
     }
 
-     function getTotalSales() returns (uint256) {
+     function getTotalSales() public view returns (uint256) {
         return totalSales;
     }
 
