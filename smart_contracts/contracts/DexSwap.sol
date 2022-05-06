@@ -4,8 +4,9 @@ import "./TestTokenDex.sol";
 
 contract DexSwap {
     TestTokenDex public token;
-    uint256 public buyRate = 10000;
-    uint256 public sellRate = 5000;
+    uint256 private buyRate = 10000;
+    uint256 private sellRate = 5000;
+    uint256 private totalSales = 0;
 
     event TokensPurchased(
         address account,
@@ -37,6 +38,7 @@ contract DexSwap {
 
         // Emit an event
         emit TokensPurchased(msg.sender, address(token), tokenAmount, buyRate);
+        totalSales = totalSales + 1;
     }
 
     function sellTokens(uint256 _amount) public {
@@ -55,6 +57,19 @@ contract DexSwap {
 
         // Emit an event
         emit TokensSold(msg.sender, address(token), _amount, buyRate);
+        totalSales = totalSales + 1;
+    }
+
+    function getBuyRate() returns (uint256) {
+        return buyRate;
+    }
+
+    function getSellRate() returns (uint256) {
+        return sellRate;
+    }
+
+     function getTotalSales() returns (uint256) {
+        return totalSales;
     }
 
     //allows ether to be freely sent to the contract 
