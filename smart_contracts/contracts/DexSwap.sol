@@ -30,8 +30,7 @@ contract DexSwap {
         // Calculate the number of tokens to buy
         uint256 tokenAmount = msg.value / buyRate;
 
-        // Require that EthSwap has enough tokens
-        require(token.balanceOf(address(this)) >= tokenAmount);
+        require(token.balanceOf(address(this)) >= tokenAmount, "The requested amount currently exceeds the amount of TTD tokens this contract holds");
 
         // Transfer tokens to the user
         token.transfer(msg.sender, tokenAmount);
@@ -43,13 +42,12 @@ contract DexSwap {
 
     function sellTokens(uint256 _amount) public {
         // User can't sell more tokens than they have
-        require(token.balanceOf(msg.sender) >= _amount);
+        require(token.balanceOf(msg.sender) >= _amount, "You do not have this many tokens!");
 
         // Calculate the amount of Ether to redeem
         uint256 etherAmount = _amount * buyRate;
 
-        // Require that EthSwap has enough Ether
-        require(address(this).balance >= etherAmount);
+        require(address(this).balance >= etherAmount, "Error: Not enough Ether in contract");
 
         // Perform sale
         token.transferFrom(msg.sender, address(this), _amount);

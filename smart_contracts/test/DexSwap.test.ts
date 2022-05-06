@@ -173,7 +173,8 @@ describe("DexSwap", function () {
       await testDexTokenContract.totalSupply()
     );
 
-    const tokenAmountToSell = web3.utils.toWei("1", "ether");
+    const tokenAmount = 5 * 1e2;
+    const tokenAmountToSell = web3.utils.toWei(tokenAmount.toString());
 
     console.log(tokenAmountToSell);
 
