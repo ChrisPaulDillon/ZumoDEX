@@ -1,48 +1,109 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { DexSwap, TestTokenDex } from "../typechain-types";
+import web3 from "web3";
 
-describe("TestTokenDex", function() {
-    it("Deployment should assign the total supply of tokens to the owner", async function () {
-        const [owner] = await ethers.getSigners();
-        
-        const Token = await ethers.getContractFactory("TestTokenDex");
-    
-        const testTokenDex = await Token.deploy();
-    
-        const ownerBalance = await testTokenDex.balanceOf(owner.address);
-        const totalSupply = await testTokenDex.totalSupply();
+describe("TestTokenDex", function () {
+  it("Deployment should assign the total supply of tokens to the owner", async function () {
+    const [owner] = await ethers.getSigners();
+    //console.log(owner);
 
-        expect(ownerBalance).to.equal(totalSupply)
-})
+    const Token = await ethers.getContractFactory("TestTokenDex");
+
+    const testTokenDexContract = await Token.deploy();
+
+    const ownerBalance = await testTokenDexContract.balanceOf(owner.address);
+    const totalSupply = await testTokenDexContract.totalSupply();
+
+    expect(ownerBalance).to.equal(totalSupply);
+  });
 });
 
-// describe("DexSwap", function () {
-//   let dexSwapContract: DexSwap;
-//   let testDexTokenContract: TestTokenDex
+describe("DexSwap", function () {
+  let dexSwapContract: DexSwap;
+  let testDexTokenContract: TestTokenDex;
 
-//   beforeEach(async () => {
-//     const TestTokenDex = await ethers.getContractFactory("TestTokenDex");
-//     //@ts-ignore
-//     testDexTokenContract = await TestTokenDex.deploy();
+  //TODO
+  // before(async () => {
+  //   const [owner] = await ethers.getSigners();
 
-//     const DexSwap = await ethers.getContractFactory("DexSwap");
-//     //@ts-ignore
-//     dexSwapContract = await DexSwap.deploy({
-//         from: 0x1e43E4e6e65403A6B64Ccb4FBD23306aCEAe9f1B,
-//         args: [testDexTokenContract.address],
-//         log: true,
-//       });
-//   });
+  // })
 
-//     it("should return 5 when given parameters are 2 and 3", async function () {
-//       await dexSwapContract.deployed();
+  beforeEach(async () => {
+    const [owner] = await ethers.getSigners();
 
-//       const sum = await dexSwapContract.buyTokens({ from: "0x1e43E4e6e65403A6B64Ccb4FBD23306aCEAe9f1B", value: web3.utils.toWei('1', 'ether')});
-//         console.log(sum)
-//       expect(sum).to.be.not.undefined;
-//       expect(sum).to.be.not.null;
-//       expect(sum).to.be.not.NaN;
-//       expect(sum).to.equal(5);
-//     });
-// });
+    const testTokenDex = await ethers.getContractFactory("TestTokenDex");
+    //@ts-ignore
+    testDexTokenContract = await testTokenDex.deploy();
+    const dexSwap = await ethers.getContractFactory("DexSwap");
+
+    //@ts-ignore
+    dexSwapContract = await dexSwap.deploy(testDexTokenContract.address);
+  });
+
+  it("should allow user to purchase at a 1000 wei to 1 token ratio", async function () {
+    //Arrange
+    await testDexTokenContract.deployed();
+    await dexSwapContract.deployed();
+
+    testDexTokenContract.transfer(
+      dexSwapContract.address,
+      await testDexTokenContract.totalSupply()
+    );
+
+    const [owner] = await ethers.getSigners();
+    const ethAmount = web3.utils.toWei("10000", "wei");
+
+    const tokenReceivedAmount = Number(ethAmount) / 10000;
+
+    //Act
+    await dexSwapContract.buyTokens({ value: ethAmount });
+
+    //Assert
+    const ownerBalance = await testDexTokenContract.balanceOf(owner.address);
+
+    var userTokenBalance = ownerBalance.toNumber();
+    console.log(userTokenBalance);
+
+    expect(userTokenBalance).to.equal(tokenReceivedAmount);
+  });
+
+  it("should allow user to sell at a rate of 5000 wei to 1 token ratio", async function () {
+    //Arrange
+    await testDexTokenContract.deployed();
+    await dexSwapContract.deployed();
+
+    const [owner] = await ethers.getSigners();
+
+    //Give the owner all the tokens
+    testDexTokenContract.transfer(
+      owner.address,
+      await testDexTokenContract.totalSupply()
+    );
+
+    //give the dexSwap contract ether so it can buy tokens back
+    const transactionHash = await owner.sendTransaction({
+      to: dexSwapContract.address,
+      value: ethers.utils.parseEther("5.0"),
+    });
+
+    //Act
+    const provider = ethers.provider;
+    const test = await provider.getBalance(dexSwapContract.address);
+    console.log(test);
+
+    console.log(test.toNumber());
+
+    // const test = dexSwapContract.provider.getBalance(dexSwapContract.address);
+    // console.log(test);
+
+    // await dexSwapContract.sellTokens(web3.utils.toWei(1, "ether"));
+
+    // const ownerBalance = await testDexTokenContract.balanceOf(owner.address);
+
+    // var userTokenBalance = ownerBalance.toNumber();
+    // console.log(userTokenBalance);
+
+    // expect(userTokenBalance).to.equal(tokenReceivedAmount);
+  });
+});

@@ -44,7 +44,7 @@ contract DexSwap {
         require(token.balanceOf(msg.sender) >= _amount);
 
         // Calculate the amount of Ether to redeem
-        uint256 etherAmount = _amount / buyRate;
+        uint256 etherAmount = _amount * buyRate;
 
         // Require that EthSwap has enough Ether
         require(address(this).balance >= etherAmount);
@@ -56,4 +56,7 @@ contract DexSwap {
         // Emit an event
         emit TokensSold(msg.sender, address(token), _amount, buyRate);
     }
+
+    //allows ether to be freely sent to the contract 
+    receive () external payable { }   
 }
