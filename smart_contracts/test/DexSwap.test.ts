@@ -142,7 +142,6 @@ describe("DexSwap", function () {
 
   it("Should get the total sales after a user has purchased some tokens", async function () {
     //Arrange
-    const [owner] = await ethers.getSigners();
     await testDexTokenContract.deployed();
     await dexSwapContract.deployed();
 
@@ -155,6 +154,36 @@ describe("DexSwap", function () {
 
     //Act
     await dexSwapContract.buyTokens({ value: ethAmount });
+
+    const totalSales = await dexSwapContract.getTotalSales();
+
+    //Assert
+    expect(totalSales.toNumber()).to.equal(1);
+  });
+
+  it("Should get the total sales after a user has sold tokens for ethereum", async function () {
+    //Arrange
+    const [owner] = await ethers.getSigners();
+
+    await testDexTokenContract.deployed();
+    await dexSwapContract.deployed();
+
+    await testDexTokenContract.transfer(
+      owner.address,
+      await testDexTokenContract.totalSupply()
+    );
+
+    const tokenAmountToSell = web3.utils.toWei("1", "ether");
+
+    console.log(tokenAmountToSell);
+
+    const transactionHash = await owner.sendTransaction({
+      to: dexSwapContract.address,
+      value: ethers.utils.parseEther("5.0"),
+    });
+
+    //Act
+    await dexSwapContract.sellTokens(tokenAmountToSell);
 
     const totalSales = await dexSwapContract.getTotalSales();
 
