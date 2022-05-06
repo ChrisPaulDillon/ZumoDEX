@@ -32,6 +32,7 @@ const useWalletConnect = () => {
               });
             } catch (err) {
               // This error code indicates that the chain has not been added to MetaMask
+              //@ts-ignore
               if (err.code === 4902) {
                 //@ts-ignore
                 await window.ethereum.request({
