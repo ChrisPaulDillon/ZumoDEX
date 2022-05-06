@@ -4,7 +4,8 @@ import "./TestTokenDex.sol";
 
 contract DexSwap {
     TestTokenDex public token;
-    uint256 public rate = 100;
+    uint256 public buyRate = 10000;
+    uint256 public sellRate = 5000;
 
     event TokensPurchased(
         address account,
@@ -26,7 +27,7 @@ contract DexSwap {
 
     function buyTokens() public payable {
         // Calculate the number of tokens to buy
-        uint256 tokenAmount = msg.value * rate;
+        uint256 tokenAmount = msg.value / buyRate;
 
         // Require that EthSwap has enough tokens
         require(token.balanceOf(address(this)) >= tokenAmount);
@@ -35,7 +36,7 @@ contract DexSwap {
         token.transfer(msg.sender, tokenAmount);
 
         // Emit an event
-        emit TokensPurchased(msg.sender, address(token), tokenAmount, rate);
+        emit TokensPurchased(msg.sender, address(token), tokenAmount, buyRate);
     }
 
     function sellTokens(uint256 _amount) public {
@@ -43,7 +44,7 @@ contract DexSwap {
         require(token.balanceOf(msg.sender) >= _amount);
 
         // Calculate the amount of Ether to redeem
-        uint256 etherAmount = _amount / rate;
+        uint256 etherAmount = _amount / buyRate;
 
         // Require that EthSwap has enough Ether
         require(address(this).balance >= etherAmount);
@@ -53,6 +54,6 @@ contract DexSwap {
         payable(msg.sender).transfer(etherAmount);
 
         // Emit an event
-        emit TokensSold(msg.sender, address(token), _amount, rate);
+        emit TokensSold(msg.sender, address(token), _amount, buyRate);
     }
 }
