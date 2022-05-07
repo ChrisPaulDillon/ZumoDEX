@@ -8,7 +8,7 @@ import {
 import BigNumber from "bignumber.js";
 import { getBalanceNumber } from "../../../util/balanceHelper";
 import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
-import { ITokenInfo } from "../../../hooks/useGetTokenInfo";
+import { ITokenInfo } from "../../../contracts/hooks/useGetTokenInfo";
 
 interface ITDDStats {
   tokenInfo?: ITokenInfo;

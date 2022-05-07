@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { IoMdArrowDown } from "react-icons/io";
 import Image from "next/image";
-import { IDexInfo } from "../../../hooks/useGetDexInfo";
+import { IDexInfo } from "../../../contracts/hooks/useGetDexInfo";
 
 interface ISwapCard {
   dexInfo: IDexInfo;

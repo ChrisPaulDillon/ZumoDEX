@@ -1,15 +1,15 @@
 import { Box, Flex, Stack } from "@chakra-ui/react";
 import TDDStats from "lib/components/TDDStats";
-import useBalanceOf from "../../../../hooks/useBalanceOf";
 import SwapCard from "../../components/SwapCard";
-import useGetTokenInfo from "../../../../hooks/useGetTokenInfo";
 import {
   CONTRACT_DEXSWAP,
   CONTRACT_ERC20,
 } from "../../../../contracts/contracts";
-import useGetDexInfo from "../../../../hooks/useGetDexInfo";
 import DexDataCard from "lib/components/DexDataCard";
-import useGetEthBalance from "../../../../hooks/useGetEthBalance";
+import useBalanceOf from "../../../../contracts/hooks/useBalanceOf";
+import useGetDexInfo from "../../../../contracts/hooks/useGetDexInfo";
+import useGetEthBalance from "../../../../contracts/hooks/useGetEthBalance";
+import useGetTokenInfo from "../../../../contracts/hooks/useGetTokenInfo";
 
 const Home = () => {
   const balance = useBalanceOf(CONTRACT_ERC20);
