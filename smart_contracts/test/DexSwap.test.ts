@@ -2,11 +2,11 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { DexSwap, TestTokenDex } from "../typechain-types";
 import web3 from "web3";
+import { ConvertTokenBNToNo, ConvertTokenNoToBN } from "../util/TokenHelper";
 
 describe("TestTokenDex", function () {
   it("Deployment should assign the total supply of tokens to the owner", async function () {
     const [owner] = await ethers.getSigners();
-    //console.log(owner);
 
     const Token = await ethers.getContractFactory("TestTokenDex");
 
@@ -63,7 +63,6 @@ describe("DexSwap", function () {
     const ownerBalance = await testDexTokenContract.balanceOf(owner.address);
 
     var userTokenBalance = ownerBalance.toNumber();
-    console.log(userTokenBalance);
 
     expect(userTokenBalance).to.equal(tokenReceivedAmount);
   });
@@ -88,19 +87,9 @@ describe("DexSwap", function () {
     });
 
     const tokenAmount = 1;
-    const tokenAmountToSell = ethers.utils.parseUnits(
-      tokenAmount.toString(),
-      2
-    );
-
-    console.log("Ether Parse Units" + tokenAmountToSell);
-    console.log(tokenAmountToSell.toNumber());
+    const tokenAmountToSell = ConvertTokenNoToBN(tokenAmount);
 
     const etherBalanceBefore = await ethers.provider.getBalance(owner.address);
-
-    console.log(
-      "Ether Before Balance" + ethers.utils.formatEther(etherBalanceBefore)
-    );
 
     //Act
 
@@ -112,11 +101,7 @@ describe("DexSwap", function () {
 
     const result = await dexSwapContract.sellTokens(tokenAmountToSell);
 
-    console.log(result);
-
     const etherBalance = await ethers.provider.getBalance(owner.address);
-
-    console.log("Ether Balance" + ethers.utils.formatEther(etherBalance));
 
     const etherBefore = ethers.utils.formatEther(etherBalanceBefore);
     const etherAfter = ethers.utils.formatEther(etherBalance);
@@ -253,5 +238,30 @@ describe("DexSwap", function () {
 
     //Assert
     expect(totalSales.toNumber()).to.equal(1);
+  });
+
+  it("Should get the maximum buy exchange rate available to the user", async function () {
+    //Arrange
+    const [owner] = await ethers.getSigners();
+
+    await testDexTokenContract.deployed();
+    await dexSwapContract.deployed();
+
+    const tokenAmount = 5;
+    const tokenAmountForContract = ethers.utils.parseUnits(
+      tokenAmount.toString(),
+      2
+    );
+
+    await testDexTokenContract.transfer(
+      dexSwapContract.address,
+      tokenAmountForContract
+    );
+
+    //Act
+    const maximumBuy = await dexSwapContract.getMaximumBuy();
+
+    //Assert
+    expect(ConvertTokenBNToNo(maximumBuy)).to.equal(tokenAmount);
   });
 });
