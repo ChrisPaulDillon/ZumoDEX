@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
-import { getERC20Contract } from "../contracts/contractHelper";
-import useActiveWeb3React from "./useActiveWeb3React";
+import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { getERC20Contract } from "../contractHelper";
 
 export interface ITokenInfo {
   name: string;
@@ -10,7 +10,7 @@ export interface ITokenInfo {
 }
 
 const useGetTokenInfo = (tokenAddress: string) => {
-  const { library, account } = useActiveWeb3React();
+  const { library } = useActiveWeb3React();
   const [tokenInfo, setTokenInfo] = useState<ITokenInfo>({
     name: "",
     symbol: "",

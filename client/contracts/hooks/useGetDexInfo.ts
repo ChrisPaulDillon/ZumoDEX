@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getDexSwapContract } from "../contracts/contractHelper";
-import useActiveWeb3React from "./useActiveWeb3React";
+import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { getDexSwapContract } from "../contractHelper";
 
 export interface IDexInfo {
   buyRate: string;

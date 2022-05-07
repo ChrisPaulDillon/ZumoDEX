@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import useActiveWeb3React from "./useActiveWeb3React";
-import web3NoAccount from "../util/web3";
+import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import web3NoAccount from "../../util/web3";
 
 const useGetEthBalance = () => {
   const { account } = useActiveWeb3React();
