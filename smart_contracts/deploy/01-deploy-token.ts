@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import verifyContract from "../util/verifyContract";
-import { LOCAL_CHAINS } from "../util/deployerHelper";
+import VerifyContract from "../util/VerifyContract";
+import { LOCAL_CHAINS } from "../util/DeployerHelper";
 
 const deployToken: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
@@ -20,7 +20,7 @@ const deployToken: DeployFunction = async function (
   log(`Deployed Token to Address: ${token.address}`);
 
   if (!LOCAL_CHAINS.includes(network.name) && process.env.BSCSCAN_API) {
-    await verifyContract(
+    await VerifyContract(
       token.address,
       [],
       "contracts/TestTokenDex.sol:TestTokenDex"

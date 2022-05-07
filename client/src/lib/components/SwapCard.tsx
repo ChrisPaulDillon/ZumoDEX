@@ -16,8 +16,13 @@ import {
 } from "@chakra-ui/react";
 import { IoMdArrowDown } from "react-icons/io";
 import Image from "next/image";
+import { IDexInfo } from "../../../hooks/useGetDexInfo";
 
-const SwapCard: React.FC = () => {
+interface ISwapCard {
+  dexInfo: IDexInfo;
+}
+
+const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
   return (
     <Box
       maxW={"270px"}
@@ -74,9 +79,10 @@ const SwapCard: React.FC = () => {
             </NumberInput>
           </Box>
         </Flex>
-        <Box pt={10}>
+        <Stack pt={10} spacing={10}>
           <Button>Swap</Button>
-        </Box>
+          <Text>{dexInfo.totalSales} Total Sales</Text>
+        </Stack>
       </Stack>
     </Box>
   );

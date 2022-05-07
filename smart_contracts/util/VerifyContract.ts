@@ -1,6 +1,6 @@
 import hre from "hardhat";
 
-const verifyContract = async (
+const VerifyContract = async (
   contractAddress: string,
   args: any[],
   contractPath?: string
@@ -21,4 +21,4 @@ const verifyContract = async (
   }
 };
 
-export default verifyContract;
+export default VerifyContract;
