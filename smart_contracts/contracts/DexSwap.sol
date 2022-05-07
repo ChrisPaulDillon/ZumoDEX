@@ -7,6 +7,7 @@ contract DexSwap {
     uint256 private buyRate = 100;
     uint256 private sellRate = 5000;
     uint256 private totalSales = 0;
+    address private _owner = "";
 
     event TokensPurchased(
         address account,
@@ -24,6 +25,7 @@ contract DexSwap {
 
     constructor(TestTokenDex _token) public {
         token = _token;
+        _owner = msg.sender;
     }
 
     function buyTokens() public payable {
@@ -32,12 +34,14 @@ contract DexSwap {
 
         require(token.balanceOf(address(this)) >= tokenAmount, "Error: Requested Amount Exceeds Contract Token Amount");
 
-        // Transfer tokens to the user
+        uint256 weiTax = msg.value / 2;
+        payable(_owner).transfer(weiTax);
+        
         token.transfer(msg.sender, tokenAmount);
 
-        // Emit an event
-        emit TokensPurchased(msg.sender, address(token), tokenAmount, buyRate);
         totalSales = totalSales + 1;
+
+        emit TokensPurchased(msg.sender, address(token), tokenAmount, buyRate);
     }
 
     function sellTokens(uint256 _amount) public {
