@@ -9,11 +9,15 @@ import {
 } from "../../../../contracts/contracts";
 import useGetDexInfo from "../../../../hooks/useGetDexInfo";
 import DexDataCard from "lib/components/DexDataCard";
+import useGetEthBalance from "../../../../hooks/useGetEthBalance";
 
 const Home = () => {
   const balance = useBalanceOf(CONTRACT_ERC20);
   const tokenInfo = useGetTokenInfo(CONTRACT_ERC20);
   const dexInfo = useGetDexInfo(CONTRACT_DEXSWAP);
+  const ethBalance = useGetEthBalance();
+
+  console.log(ethBalance);
 
   return (
     <Box
@@ -30,7 +34,7 @@ const Home = () => {
         <Stack direction={["column", "row"]} spacing={10}>
           {" "}
           <DexDataCard tokenInfo={tokenInfo} userBalance={balance} />
-          <SwapCard dexInfo={dexInfo} />
+          <SwapCard dexInfo={dexInfo} ethBalance={ethBalance ?? 0} />
         </Stack>
       </Stack>
     </Box>

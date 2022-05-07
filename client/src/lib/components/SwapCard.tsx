@@ -6,7 +6,6 @@ import {
   NumberInputStepper,
   Button,
   Box,
-  Center,
   useColorModeValue,
   Heading,
   NumberInput,
@@ -20,9 +19,13 @@ import { IDexInfo } from "../../../hooks/useGetDexInfo";
 
 interface ISwapCard {
   dexInfo: IDexInfo;
+  ethBalance: Number;
 }
 
-const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
+const SwapCard: React.FC<ISwapCard> = ({ dexInfo, ethBalance }) => {
+  console.log("Ether balance " + ethBalance);
+
+  const etherBalance = ethBalance as number;
   return (
     <Box
       maxW={"270px"}
@@ -70,7 +73,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
               size="sm"
               variant={"filled"}
               maxW="150px"
-              defaultValue={0}
+              defaultValue={etherBalance ?? 0}
             >
               <NumberInputField />{" "}
               <NumberInputStepper>

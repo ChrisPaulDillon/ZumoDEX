@@ -1,10 +1,10 @@
 import { Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
-import web3NoAccount from "./web3";
-import web3 from "./web3";
+import web3NoAccount from "../util/web3";
+import web3 from "../util/web3";
 
-import erc20ABI from "../contracts/abi/ERC20.json";
-import dexSwapABI from "../contracts/abi/DexSwap.json";
+import erc20ABI from "./abi/ERC20.json";
+import dexSwapABI from "./abi/DexSwap.json";
 
 export const getContract = (
   abi: any,

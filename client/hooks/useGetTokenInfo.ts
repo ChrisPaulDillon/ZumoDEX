@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
-import { getERC20Contract } from "../util/contractHelper";
+import { getERC20Contract } from "../contracts/contractHelper";
 import useActiveWeb3React from "./useActiveWeb3React";
 
 export interface ITokenInfo {

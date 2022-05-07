@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDexSwapContract, getERC20Contract } from "../util/contractHelper";
+import { getDexSwapContract } from "../contracts/contractHelper";
 import useActiveWeb3React from "./useActiveWeb3React";
 
 export interface IDexInfo {
