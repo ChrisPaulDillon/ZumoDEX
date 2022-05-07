@@ -10,12 +10,12 @@ import { getBalanceNumber } from "../../../util/balanceHelper";
 import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
 import { ITokenInfo } from "../../../hooks/useGetTokenInfo";
 
-interface ITDDStats {
+interface IDexDataCard {
   tokenInfo?: ITokenInfo;
   userBalance: BigNumber;
 }
 
-const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
+const DexDataCard: React.FC<IDexDataCard> = ({ tokenInfo, userBalance }) => {
   const { account } = useActiveWeb3React();
 
   return (
@@ -24,16 +24,14 @@ const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
       minH={"150px"}
       minW={"250px"}
       bg={useColorModeValue("white", "gray.700")}
-      boxShadow={"0 0 40px 20px #0ff"}
       flexDir="column"
       w="100%"
-      justify={"center"}
       alignItems={"center"}
+      p={3}
     >
       <Heading textAlign={"center"} size="md">
-        {tokenInfo?.name}
+        DEX Info
       </Heading>
-      <Text textAlign={"center"}>Ticker - {tokenInfo?.symbol}</Text>
       <Text textAlign={"center"}>
         {getBalanceNumber(tokenInfo?.totalSupply!, 2)} Max Supply
       </Text>
@@ -53,4 +51,4 @@ const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
   );
 };
 
-export default TDDStats;
+export default DexDataCard;

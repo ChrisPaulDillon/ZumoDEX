@@ -26,15 +26,16 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
   return (
     <Box
       maxW={"270px"}
-      bg={useColorModeValue("white", "gray.700")}
+      bg={useColorModeValue("blackAlpha.400", "gray.700")}
       boxShadow={"2xl"}
       rounded={"lg"}
       overflow={"hidden"}
       minH={"400px"}
       minW="270px"
+      p={3}
     >
       {" "}
-      <Stack spacing={4} alignItems="center" p={2} justifyContent="center">
+      <Stack spacing={4} alignItems="center" justifyContent="center">
         <Heading textAlign={"center"} size="md">
           Swap
         </Heading>
