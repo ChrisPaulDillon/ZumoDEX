@@ -4,7 +4,7 @@ import "./TestTokenDex.sol";
 
 contract DexSwap {
     TestTokenDex public token;
-    uint256 private buyRate = 10000;
+    uint256 private buyRate = 100;
     uint256 private sellRate = 5000;
     uint256 private totalSales = 0;
 
@@ -30,7 +30,7 @@ contract DexSwap {
         // Calculate the number of tokens to buy
         uint256 tokenAmount = msg.value / buyRate;
 
-        require(token.balanceOf(address(this)) >= tokenAmount, "The requested amount currently exceeds the amount of TTD tokens this contract holds");
+        require(token.balanceOf(address(this)) >= tokenAmount, "Error: Requested Amount Exceeds Contract Token Amount");
 
         // Transfer tokens to the user
         token.transfer(msg.sender, tokenAmount);

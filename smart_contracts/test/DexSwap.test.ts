@@ -21,7 +21,7 @@ describe("DexSwap", function () {
   });
 
   describe("buyTokens()", async () => {
-    it("should allow user to purchase at a 1000 wei to 1 token ratio", async function () {
+    it("should allow user to purchase at a 10000 wei to 1 token ratio", async function () {
       //Arrange
       await testDexTokenContract.deployed();
       await dexSwapContract.deployed();
@@ -34,17 +34,35 @@ describe("DexSwap", function () {
       const [owner] = await ethers.getSigners();
       const ethAmount = web3.utils.toWei("10000", "wei");
 
-      const tokenReceivedAmount = Number(ethAmount) / 10000;
-
       //Act
       await dexSwapContract.buyTokens({ value: ethAmount });
 
       //Assert
       const ownerBalance = await testDexTokenContract.balanceOf(owner.address);
 
-      var userTokenBalance = ownerBalance.toNumber();
+      expect(ConvertTokenBNToNo(ownerBalance)).to.equal(1);
+    });
 
-      expect(userTokenBalance).to.equal(tokenReceivedAmount);
+    it("should throw an error when the user attempts purchase more tokens than the contract has", async function () {
+      //Arrange
+      await testDexTokenContract.deployed();
+      await dexSwapContract.deployed();
+
+      testDexTokenContract.transfer(
+        dexSwapContract.address,
+        ConvertTokenNoToBN(1)
+      );
+
+      const ERROR_MSG_TEST =
+        "Error: Requested Amount Exceeds Contract Token Amount";
+
+      const ethAmount = web3.utils.toWei("99000", "wei");
+
+      //Act
+      //Assert
+      await dexSwapContract
+        .buyTokens({ value: ethAmount })
+        .should.be.rejectedWith(ERROR_MSG_TEST);
     });
   });
 
@@ -139,7 +157,7 @@ describe("DexSwap", function () {
       const buyRate = await dexSwapContract.getBuyRate();
 
       //Assert
-      expect(buyRate.toNumber()).to.equal(10000);
+      expect(buyRate.toNumber()).to.equal(100);
     });
   });
 
