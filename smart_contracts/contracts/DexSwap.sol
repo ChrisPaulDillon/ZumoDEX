@@ -58,6 +58,14 @@ contract DexSwap {
         totalSales = totalSales + 1;
     }
 
+    function getMaximumBuy() public view returns (uint256) {
+        return address(this).balance / buyRate;
+    }
+
+    function getMaximumSell() public view returns (uint256) {
+        return token.balanceOf(this) * sellRate;
+    }
+
     function getBuyRate() public view returns (uint256) {
         return buyRate;
     }
