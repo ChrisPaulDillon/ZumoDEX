@@ -10,14 +10,14 @@ import useBalanceOf from "../../../../contracts/hooks/useBalanceOf";
 import useGetDexInfo from "../../../../contracts/hooks/useGetDexInfo";
 import useGetEthBalance from "../../../../contracts/hooks/useGetEthBalance";
 import useGetTokenInfo from "../../../../contracts/hooks/useGetTokenInfo";
+import useDetectWalletStatus from "../../../../hooks/useDetectWalletStatus";
 
 const Home = () => {
   const balance = useBalanceOf(CONTRACT_ERC20);
   const tokenInfo = useGetTokenInfo(CONTRACT_ERC20);
   const dexInfo = useGetDexInfo(CONTRACT_DEXSWAP);
   const ethBalance = useGetEthBalance();
-
-  console.log(ethBalance);
+  useDetectWalletStatus();
 
   return (
     <Box

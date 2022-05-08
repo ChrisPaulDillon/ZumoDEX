@@ -1,11 +1,15 @@
-import { createAction, createReducer } from "@reduxjs/toolkit";
+import {
+  ActionCreatorWithPayload,
+  createAction,
+  createReducer,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 
-export const updateUserLoggedIn = createAction<{ userExpertMode: boolean }>(
-  "state/updateUserLoggedIn"
-);
+export const logUserIn = createAction<{ address: string }>("state/logUserIn");
+export const logUserOut = createAction("state/logUserOut");
 
 export interface IGlobalState {
-  userAddress: string;
+  userAddress: string | undefined;
   isLoggedIn: boolean;
 }
 
@@ -15,8 +19,13 @@ export const initialState: IGlobalState = {
 };
 
 export default createReducer(initialState, (builder) =>
-  builder.addCase(updateUserLoggedIn, (state, action) => {
-    state.userAddress = "";
-    state.isLoggedIn = false;
-  })
+  builder
+    .addCase(logUserIn, (state: IGlobalState, { payload: { address } }) => {
+      state.userAddress = address;
+      state.isLoggedIn = true;
+    })
+    .addCase(logUserOut, (state: IGlobalState) => {
+      state.userAddress = undefined;
+      state.isLoggedIn = false;
+    })
 );

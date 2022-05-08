@@ -23,8 +23,6 @@ interface ISwapCard {
 }
 
 const SwapCard: React.FC<ISwapCard> = ({ dexInfo, ethBalance }) => {
-  console.log("Ether balance " + ethBalance);
-
   const etherBalance = ethBalance as number;
   return (
     <Box

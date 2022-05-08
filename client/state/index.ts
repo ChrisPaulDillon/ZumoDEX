@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, Store, compose, AnyAction } from "redux";
 import thunk from "redux-thunk";
 import { combineReducers } from "redux";
 import globalReducer, { IGlobalState } from "./reducer";
+import { useDispatch } from "react-redux";
 
 export interface IAppState {
   state: IGlobalState;
@@ -22,6 +23,8 @@ const rootReducer = (state: any, action: AnyAction) => {
 ///// rootReducer,
 ///* preloadedState, */ composeEnhancers(applyMiddleware(thunk))
 //);
+
+export const useAppDispatch = () => useDispatch();
 
 export default function configureStore(): Store<IAppState, any> {
   const store = createStore(rootReducer, undefined, applyMiddleware(thunk));
