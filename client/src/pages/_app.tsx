@@ -10,6 +10,8 @@ import customTheme from "lib/styles/customTheme";
 import "lib/styles/globals.css";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { Provider } from "react-redux";
+import configureStore from "../../state";
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider);
@@ -17,21 +19,25 @@ function getLibrary(provider: any): Web3Provider {
   return library;
 }
 
+const store = configureStore();
+
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <ChakraProvider theme={customTheme}>
-        <Head>
-          <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
-          />
-        </Head>
-        <DefaultSeo {...defaultSEOConfig} />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ChakraProvider>{" "}
+      <Provider store={store}>
+        <ChakraProvider theme={customTheme}>
+          <Head>
+            <meta
+              name="viewport"
+              content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
+            />
+          </Head>
+          <DefaultSeo {...defaultSEOConfig} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ChakraProvider>{" "}
+      </Provider>
     </Web3ReactProvider>
   );
 };
