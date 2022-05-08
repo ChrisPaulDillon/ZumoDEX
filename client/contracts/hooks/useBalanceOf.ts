@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
-import BigNumber from "bignumber.js";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { getERC20Contract } from "../contractHelper";
+import { getSignerSelector } from "../../state/reducer";
 
 const useBalanceOf = (tokenAddress: string) => {
   const { library, account } = useActiveWeb3React();
-  //const contract = useERC20(tokenAddress)
-  const [balanceState, setBalanceState] = useState<BigNumber>(new BigNumber(0));
+  const [balanceState, setBalanceState] = useState<Number>(0);
+  const signer = getSignerSelector();
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const contract = getERC20Contract(tokenAddress, library);
+      const contract = getERC20Contract(tokenAddress, signer);
       try {
-        const res = await contract.methods.balanceOf(account).call();
-        setBalanceState(new BigNumber(res));
+        const res = await contract.balanceOf(account);
+        setBalanceState(res);
       } catch (e) {
         console.error(e);
-        setBalanceState(new BigNumber(0));
       }
     };
 

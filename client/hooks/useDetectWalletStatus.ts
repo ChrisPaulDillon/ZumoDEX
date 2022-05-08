@@ -9,12 +9,18 @@ const useDetectWalletStatus = () => {
   const userAddress = useSelector((state: IAppState) => state.state.userAddress);
 
   useEffect(() => {
-    //@ts-ignore
-    if (window?.ethereum) {
+    const handleProviderSwitch = async () => {
       //@ts-ignore
-      const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-      dispatcher(updateWeb3Provider({ web3Provider: provider }));
-    }
+      if (window?.ethereum) {
+        //@ts-ignore
+        const provider = new ethers.providers.Web3Provider(window.ethereum, 97);
+        const result = await provider.send("eth_requestAccounts", []);
+        if (result) {
+          dispatcher(updateWeb3Provider({ web3Provider: provider }));
+        }
+      }
+    };
+    handleProviderSwitch();
   }, []);
 
   useEffect(() => {

@@ -1,29 +1,28 @@
 import { useEffect, useState } from "react";
-import BigNumber from "bignumber.js";
-import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { getERC20Contract } from "../contractHelper";
+import { getSignerSelector } from "../../state/reducer";
 
 export interface ITokenInfo {
   name: string;
   symbol: string;
-  totalSupply: BigNumber;
+  totalSupply: Number;
 }
 
 const useGetTokenInfo = (tokenAddress: string) => {
-  const { library } = useActiveWeb3React();
+  const signer = getSignerSelector();
   const [tokenInfo, setTokenInfo] = useState<ITokenInfo>({
     name: "",
     symbol: "",
-    totalSupply: new BigNumber(0),
+    totalSupply: 0,
   });
 
   useEffect(() => {
     const fetchTokenStats = async () => {
-      const contract = getERC20Contract(tokenAddress, library);
+      const contract = getERC20Contract(tokenAddress, signer);
       try {
-        const name = await contract.methods.name().call();
-        const symbol = await contract.methods.symbol().call();
-        const totalSupply = await contract.methods.totalSupply().call();
+        const name = await contract.name();
+        const symbol = await contract.symbol();
+        const totalSupply = await contract.totalSupply();
         setTokenInfo({ name: name, symbol: symbol, totalSupply: totalSupply });
       } catch (e) {
         console.error(e);

@@ -19,11 +19,9 @@ import { IDexInfo } from "../../../contracts/hooks/useGetDexInfo";
 
 interface ISwapCard {
   dexInfo: IDexInfo;
-  ethBalance: Number;
 }
 
-const SwapCard: React.FC<ISwapCard> = ({ dexInfo, ethBalance }) => {
-  const etherBalance = ethBalance as number;
+const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
   return (
     <Box
       maxW={"270px"}
@@ -46,12 +44,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo, ethBalance }) => {
             TDD
           </Text>
           <Box ml={2}>
-            <NumberInput
-              size="sm"
-              maxW="150px"
-              variant={"filled"}
-              defaultValue={0}
-            >
+            <NumberInput size="sm" maxW="150px" variant={"filled"} defaultValue={0}>
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -67,12 +60,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo, ethBalance }) => {
             ETH
           </Text>
           <Box ml={2}>
-            <NumberInput
-              size="sm"
-              variant={"filled"}
-              maxW="150px"
-              defaultValue={etherBalance ?? 0}
-            >
+            <NumberInput size="sm" variant={"filled"} maxW="150px" defaultValue={0}>
               <NumberInputField />{" "}
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -83,7 +71,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo, ethBalance }) => {
         </Flex>
         <Stack pt={10} spacing={10}>
           <Button>Swap</Button>
-          <Text>{dexInfo.totalSales} Total Sales</Text>
+          <Text>{dexInfo.totalSales.toString()} Total Sales</Text>
         </Stack>
       </Stack>
     </Box>

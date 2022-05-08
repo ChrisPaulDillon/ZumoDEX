@@ -1,30 +1,16 @@
-import { Provider } from "@ethersproject/providers";
-import { Signer } from "ethers";
-import web3NoAccount from "../util/web3";
-import web3 from "../util/web3";
-
+import { Contract } from "ethers";
 import erc20ABI from "./abi/ERC20.json";
 import dexSwapABI from "./abi/DexSwap.json";
+import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 
-export const getContract = (
-  abi: any,
-  address: string,
-  signer?: Signer | Provider
-) => {
-  const _web3 = web3 ?? web3NoAccount;
-  return new _web3.eth.Contract(abi, address);
+export const getContract = (abi: any, address: string, signer?: JsonRpcSigner | JsonRpcProvider): Contract => {
+  return new Contract(address, abi, signer);
 };
 
-export const getERC20Contract = (
-  address: string,
-  signer?: Signer | Provider
-) => {
+export const getERC20Contract = (address: string, signer?: JsonRpcSigner | JsonRpcProvider): Contract => {
   return getContract(erc20ABI, address, signer);
 };
 
-export const getDexSwapContract = (
-  address: string,
-  signer?: Signer | Provider
-) => {
+export const getDexSwapContract = (address: string, signer?: JsonRpcSigner | JsonRpcProvider): Contract => {
   return getContract(dexSwapABI, address, signer);
 };

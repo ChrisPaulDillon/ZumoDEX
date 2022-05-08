@@ -1,6 +1,8 @@
-import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
+import { JsonRpcProvider, JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
 import { createAction, createReducer } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
+import { useSelector } from "react-redux";
+import { IAppState } from ".";
 import { RPC_URL } from "../util/providerHelper";
 
 //We fallback on a json rpc connection if the user does not have a web3 wallet installed
@@ -46,3 +48,10 @@ export default createReducer(initialState, (builder) =>
       state.web3Provider = web3Provider;
     })
 );
+
+export const getSignerSelector = (): JsonRpcSigner | JsonRpcProvider => {
+  const jsonRpcProvider = useSelector((state: IAppState) => state.state.jsonRpcProvider);
+  const web3Provider = useSelector((state: IAppState) => state.state.web3Provider);
+  const connectorType = useSelector((state: IAppState) => state.state.connectorType);
+  return connectorType === CONNECTOR_TYPE.JSON_RPC ? jsonRpcProvider! : web3Provider?.getSigner()!;
+};

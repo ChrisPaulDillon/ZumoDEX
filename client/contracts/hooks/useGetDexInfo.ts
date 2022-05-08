@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
 
 export interface IDexInfo {
@@ -10,6 +11,7 @@ export interface IDexInfo {
 
 const useGetDexInfo = (dexSwapAddress: string) => {
   const { library } = useActiveWeb3React();
+  const signer = getSignerSelector();
   const [dexInfo, setDexInfo] = useState<IDexInfo>({
     buyRate: "",
     sellRate: "",
@@ -18,16 +20,15 @@ const useGetDexInfo = (dexSwapAddress: string) => {
 
   useEffect(() => {
     const fetchDexInfo = async () => {
-      const contract = getDexSwapContract(dexSwapAddress, library);
+      const contract = getDexSwapContract(dexSwapAddress, signer);
       try {
-        const buyRate = await contract.methods.getBuyRate().call();
-        const sellRate = await contract.methods.getSellRate().call();
-        const totalSales = await contract.methods.getTotalSales().call();
-
+        const buyRate = await contract.getBuyRate();
+        const sellRate = await contract.getSellRate();
+        const totalSales = await contract.getTotalSales();
         setDexInfo({
           buyRate: buyRate,
           sellRate: sellRate,
-          totalSales: totalSales.toNumber(),
+          totalSales: totalSales,
         });
       } catch (e) {
         console.error(e);

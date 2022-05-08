@@ -1,18 +1,10 @@
-import {
-  useColorModeValue,
-  Heading,
-  Text,
-  Skeleton,
-  Stack,
-} from "@chakra-ui/react";
-import BigNumber from "bignumber.js";
-import { getBalanceNumber } from "../../../util/balanceHelper";
+import { useColorModeValue, Heading, Text, Skeleton, Stack } from "@chakra-ui/react";
 import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
 import { ITokenInfo } from "../../../contracts/hooks/useGetTokenInfo";
 
 interface IDexDataCard {
   tokenInfo?: ITokenInfo;
-  userBalance: BigNumber;
+  userBalance: Number;
 }
 
 const DexDataCard: React.FC<IDexDataCard> = ({ tokenInfo, userBalance }) => {
@@ -32,18 +24,16 @@ const DexDataCard: React.FC<IDexDataCard> = ({ tokenInfo, userBalance }) => {
       <Heading textAlign={"center"} size="md">
         DEX Info
       </Heading>
-      <Text textAlign={"center"}>
-        {getBalanceNumber(tokenInfo?.totalSupply!, 2)} Max Supply
-      </Text>
+      <Text textAlign={"center"}>{tokenInfo?.totalSupply?.toString()} Max Supply</Text>
       {account ? (
         <Text textAlign={"center"}>
-          {getBalanceNumber(userBalance, 2)} {tokenInfo?.symbol}
+          {userBalance.toString()} {tokenInfo?.symbol}
         </Text>
       ) : (
         <Skeleton w="25%">
           {" "}
           <Text textAlign={"center"}>
-            {getBalanceNumber(userBalance, 2)} {tokenInfo?.symbol}
+            {userBalance.toString()} {tokenInfo?.symbol}
           </Text>
         </Skeleton>
       )}

@@ -1,25 +1,15 @@
-import {
-  useColorModeValue,
-  Heading,
-  Text,
-  Skeleton,
-  Stack,
-} from "@chakra-ui/react";
-import BigNumber from "bignumber.js";
-import { getBalanceNumber } from "../../../util/balanceHelper";
+import { useColorModeValue, Heading, Text, Skeleton, Stack } from "@chakra-ui/react";
 import { ITokenInfo } from "../../../contracts/hooks/useGetTokenInfo";
 import { useSelector } from "react-redux";
 import { IAppState } from "../../../state";
 
 interface ITDDStats {
   tokenInfo?: ITokenInfo;
-  userBalance: BigNumber;
+  userBalance: Number;
 }
 
 const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
-  const userAddress = useSelector(
-    (state: IAppState) => state.state.userAddress
-  );
+  const userAddress = useSelector((state: IAppState) => state.state.userAddress);
 
   return (
     <Stack
@@ -37,18 +27,16 @@ const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
         {tokenInfo?.name}
       </Heading>
       <Text textAlign={"center"}>Ticker - {tokenInfo?.symbol}</Text>
-      <Text textAlign={"center"}>
-        {getBalanceNumber(tokenInfo?.totalSupply!, 2)} Max Supply
-      </Text>
+      <Text textAlign={"center"}>{tokenInfo?.totalSupply.toString()!} Max Supply</Text>
       {userAddress ? (
         <Text textAlign={"center"}>
-          {getBalanceNumber(userBalance, 2)} {tokenInfo?.symbol}
+          {userBalance.toString()} {tokenInfo?.symbol}
         </Text>
       ) : (
         <Skeleton w="25%">
           {" "}
           <Text textAlign={"center"}>
-            {getBalanceNumber(userBalance, 2)} {tokenInfo?.symbol}
+            {userBalance.toString()} {tokenInfo?.symbol}
           </Text>
         </Skeleton>
       )}

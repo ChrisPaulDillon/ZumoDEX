@@ -30,7 +30,7 @@ const Home = () => {
         <Stack direction={["column", "row"]} spacing={10}>
           {" "}
           <DexDataCard tokenInfo={tokenInfo} userBalance={balance} />
-          <SwapCard dexInfo={dexInfo} ethBalance={ethBalance ?? 0} />
+          <SwapCard dexInfo={dexInfo} />
         </Stack>
       </Stack>
     </Box>
