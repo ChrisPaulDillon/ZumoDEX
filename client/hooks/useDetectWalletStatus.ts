@@ -1,13 +1,21 @@
-import { useEffect } from "react";
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { IAppState, useAppDispatch } from "../state";
-import { logUserIn } from "../state/reducer";
+import { logUserIn, updateWeb3Provider } from "../state/reducer";
 
 const useDetectWalletStatus = () => {
   const dispatcher = useAppDispatch();
-  const userAddress = useSelector(
-    (state: IAppState) => state.state.userAddress
-  );
+  const userAddress = useSelector((state: IAppState) => state.state.userAddress);
+
+  useEffect(() => {
+    //@ts-ignore
+    if (window?.ethereum) {
+      //@ts-ignore
+      const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+      dispatcher(updateWeb3Provider({ web3Provider: provider }));
+    }
+  }, []);
 
   useEffect(() => {
     //@ts-ignore

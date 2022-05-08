@@ -1,10 +1,7 @@
 import { Box, Flex, Stack } from "@chakra-ui/react";
 import TDDStats from "lib/components/TDDStats";
 import SwapCard from "../../components/SwapCard";
-import {
-  CONTRACT_DEXSWAP,
-  CONTRACT_ERC20,
-} from "../../../../contracts/contracts";
+import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "../../../../contracts/contracts";
 import DexDataCard from "lib/components/DexDataCard";
 import useBalanceOf from "../../../../contracts/hooks/useBalanceOf";
 import useGetDexInfo from "../../../../contracts/hooks/useGetDexInfo";
@@ -18,7 +15,6 @@ const Home = () => {
   const dexInfo = useGetDexInfo(CONTRACT_DEXSWAP);
   const ethBalance = useGetEthBalance();
   useDetectWalletStatus();
-
   return (
     <Box
       display={{ md: "flex" }}

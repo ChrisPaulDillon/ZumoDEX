@@ -7,8 +7,9 @@ import {
 } from "@chakra-ui/react";
 import BigNumber from "bignumber.js";
 import { getBalanceNumber } from "../../../util/balanceHelper";
-import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
 import { ITokenInfo } from "../../../contracts/hooks/useGetTokenInfo";
+import { useSelector } from "react-redux";
+import { IAppState } from "../../../state";
 
 interface ITDDStats {
   tokenInfo?: ITokenInfo;
@@ -16,7 +17,9 @@ interface ITDDStats {
 }
 
 const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
-  const { account } = useActiveWeb3React();
+  const userAddress = useSelector(
+    (state: IAppState) => state.state.userAddress
+  );
 
   return (
     <Stack
@@ -37,7 +40,7 @@ const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
       <Text textAlign={"center"}>
         {getBalanceNumber(tokenInfo?.totalSupply!, 2)} Max Supply
       </Text>
-      {account ? (
+      {userAddress ? (
         <Text textAlign={"center"}>
           {getBalanceNumber(userBalance, 2)} {tokenInfo?.symbol}
         </Text>
