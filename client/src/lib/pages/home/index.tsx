@@ -1,8 +1,7 @@
-import { Box, Flex, Stack } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import TDDStats from "lib/components/TDDStats";
 import SwapCard from "../../components/SwapCard";
 import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "../../../../contracts/contracts";
-import DexDataCard from "lib/components/DexDataCard";
 import useBalanceOf from "../../../../contracts/hooks/useBalanceOf";
 import useGetDexInfo from "../../../../contracts/hooks/useGetDexInfo";
 import useGetEthBalance from "../../../../contracts/hooks/useGetEthBalance";
@@ -29,8 +28,6 @@ const Home = () => {
       <Stack spacing={12}>
         <TDDStats tokenInfo={tokenInfo} userBalance={balance} />
         <Stack direction={["column", "row"]} spacing={10}>
-          {" "}
-          <DexDataCard tokenInfo={tokenInfo} userBalance={balance} />
           <SwapCard dexInfo={dexInfo} />
         </Stack>
       </Stack>

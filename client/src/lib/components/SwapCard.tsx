@@ -42,9 +42,9 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
     <Box
       maxW={"270px"}
       bg={useColorModeValue("blackAlpha.400", "gray.700")}
-      boxShadow={"2xl"}
       rounded={"lg"}
       overflow={"hidden"}
+      boxShadow={"0 0 40px 20px #0ff"}
       minH={"400px"}
       minW="270px"
       p={3}
