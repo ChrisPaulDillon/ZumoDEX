@@ -9,19 +9,20 @@ const useGetEthBalance = () => {
   const { account } = useActiveWeb3React();
   const provider = getSignerSelector();
   const isLoggedIn = useSelector((state: IAppState) => state.state.isLoggedIn);
+  const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const getEthBalance = async () => {
       const balance = await provider.getBalance(account!);
       const userBalance = ethers.utils.formatEther(balance);
-      dispatch(updateEtherBalance({etherBalance: Number(userBalance)}))
+      dispatch(updateEtherBalance({ etherBalance: Number(userBalance) }));
     };
 
     if (isLoggedIn) {
       getEthBalance();
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, connectorStatus]);
 };
 
 export default useGetEthBalance;

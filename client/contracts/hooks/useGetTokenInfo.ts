@@ -3,6 +3,8 @@ import { getERC20Contract } from "../contractHelper";
 import { getSignerSelector } from "../../state/reducer";
 import { ethers } from "ethers";
 import { getTokenBalance } from "../../util/balanceHelper";
+import { useSelector } from "react-redux";
+import { IAppState } from "../../state";
 
 export interface ITokenInfo {
   name: string;
@@ -12,6 +14,8 @@ export interface ITokenInfo {
 
 const useGetTokenInfo = (tokenAddress: string) => {
   const signer = getSignerSelector();
+  const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
+
   const [tokenInfo, setTokenInfo] = useState<ITokenInfo>({
     name: "",
     symbol: "",
@@ -32,7 +36,7 @@ const useGetTokenInfo = (tokenAddress: string) => {
     };
 
     fetchTokenStats();
-  }, [tokenAddress]);
+  }, [tokenAddress, connectorStatus]);
 
   return tokenInfo;
 };

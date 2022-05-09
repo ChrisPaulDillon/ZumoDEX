@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { IAppState } from "../../state";
 import { getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
 
@@ -10,8 +12,9 @@ export interface IDexInfo {
 }
 
 const useGetDexInfo = (dexSwapAddress: string) => {
-  const { library } = useActiveWeb3React();
   const signer = getSignerSelector();
+  const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
+
   const [dexInfo, setDexInfo] = useState<IDexInfo>({
     buyRate: "",
     sellRate: "",
@@ -36,7 +39,7 @@ const useGetDexInfo = (dexSwapAddress: string) => {
     };
 
     fetchDexInfo();
-  }, [dexSwapAddress]);
+  }, [dexSwapAddress, connectorStatus]);
 
   return dexInfo;
 };
