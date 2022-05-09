@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getERC20Contract } from "../contractHelper";
 import { getSignerSelector } from "../../state/reducer";
+import { ethers } from "ethers";
+import { getTokenBalance } from "../../util/balanceHelper";
 
 export interface ITokenInfo {
   name: string;
@@ -23,7 +25,7 @@ const useGetTokenInfo = (tokenAddress: string) => {
         const name = await contract.name();
         const symbol = await contract.symbol();
         const totalSupply = await contract.totalSupply();
-        setTokenInfo({ name: name, symbol: symbol, totalSupply: totalSupply });
+        setTokenInfo({ name: name, symbol: symbol, totalSupply: getTokenBalance(totalSupply) });
       } catch (e) {
         console.error(e);
       }
