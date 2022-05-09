@@ -7,7 +7,7 @@ contract DexSwap {
     uint256 private buyRate = 10000;
     uint256 private sellRate = 5000;
     uint256 private totalSales = 0;
-    address private _owner = "";
+    address private _owner;
 
     event TokensPurchased(
         address account,
@@ -37,11 +37,11 @@ contract DexSwap {
         uint256 weiTax = msg.value / 2;
         payable(_owner).transfer(weiTax);
         
-        token.transfer(msg.sender, weiTax);
+        token.transfer(msg.sender, tokenAmount);
 
         totalSales = totalSales + 1;
 
-        emit TokensPurchased(msg.sender, address(token), weiTax, buyRate);
+        emit TokensPurchased(msg.sender, address(token), tokenAmount, buyRate);
     }
 
     function sellTokens(uint256 _amount) public {
