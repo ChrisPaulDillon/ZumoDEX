@@ -6,10 +6,11 @@ import { CONTRACT_DEXSWAP } from "../contracts";
 const useBuyTokens = () => {
   const signer = getSignerSelector();
 
-    const buyTokens = async () => {
+    const buyTokens = async (amount: Number) => {
       const contract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
       try {
-        const tx = await contract.buyTokens({value: ethers.utils.parseEther("0.1")});
+        const wei = ethers.utils.parseEther(amount.toString());
+        const tx = await contract.buyTokens({value: wei});
         console.log(tx);
         
       } catch (e) {

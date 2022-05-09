@@ -13,7 +13,7 @@ const Home = () => {
   const balance = useBalanceOf(CONTRACT_ERC20);
   const tokenInfo = useGetTokenInfo(CONTRACT_ERC20);
   const dexInfo = useGetDexInfo(CONTRACT_DEXSWAP);
-  const ethBalance = useGetEthBalance();
+  useGetEthBalance();
 
   useDetectWalletStatus();
   return (
@@ -31,7 +31,7 @@ const Home = () => {
         <Stack direction={["column", "row"]} spacing={10}>
           {" "}
           <DexDataCard tokenInfo={tokenInfo} userBalance={balance} />
-          <SwapCard dexInfo={dexInfo} etherBalance={ethBalance} />
+          <SwapCard dexInfo={dexInfo} />
         </Stack>
       </Stack>
     </Box>

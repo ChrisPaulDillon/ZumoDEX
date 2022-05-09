@@ -14,6 +14,7 @@ export enum CONNECTOR_TYPE {
 export interface IGlobalState {
   userAddress: string | undefined;
   isLoggedIn: boolean;
+  etherBalance: Number;
   connectorType: CONNECTOR_TYPE;
   web3Provider: Web3Provider | undefined;
   jsonRpcProvider: JsonRpcProvider;
@@ -22,6 +23,7 @@ export interface IGlobalState {
 export const initialState: IGlobalState = {
   userAddress: "",
   isLoggedIn: false,
+  etherBalance: 0,
   connectorType: CONNECTOR_TYPE.JSON_RPC,
   web3Provider: undefined,
   jsonRpcProvider: new ethers.providers.JsonRpcProvider(RPC_URL, "any"),
@@ -29,6 +31,7 @@ export const initialState: IGlobalState = {
 
 export const logUserIn = createAction<{ address: string }>("state/logUserIn");
 export const logUserOut = createAction("state/logUserOut");
+export const updateEtherBalance = createAction<{ etherBalance: Number }>("state/updateEtherBalance");
 export const updateWeb3Provider = createAction<{
   web3Provider: Web3Provider;
 }>("state/updateConnectionType");
@@ -46,6 +49,9 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateWeb3Provider, (state: IGlobalState, { payload: { web3Provider } }) => {
       state.connectorType = CONNECTOR_TYPE.WALLET_CONNECT;
       state.web3Provider = web3Provider;
+    })
+    .addCase(updateEtherBalance, (state: IGlobalState, { payload: { etherBalance } }) => {
+      state.etherBalance = etherBalance;
     })
 );
 
