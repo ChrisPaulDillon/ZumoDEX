@@ -19,7 +19,9 @@ import { IDexInfo } from "../../../contracts/hooks/useGetDexInfo";
 import useBuyTokens from "../../../contracts/hooks/useBuyTokens";
 import { useSelector } from "react-redux";
 import { IAppState } from "../../../state";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import TokenInput from "./TokenInput";
+import EthereumInput from "./EthereumInput";
 
 interface ISwapCard {
   dexInfo: IDexInfo;
@@ -28,14 +30,19 @@ interface ISwapCard {
 const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
   const etherBalance = useSelector((state: IAppState) => state.state.etherBalance);
   const [etherAmount, setEtherAmount] = useState<Number>(0);
-
-  const { buyTokens } = useBuyTokens();
+  const [buttonLabel, setButtonLabel] = useState<string>("Buy");
+  const [inputs, setInputs] = useState<Array<React.ReactNode>>([
+    <EthereumInput etherAmount={etherAmount} setEtherAmount={setEtherAmount} />,
+    <TokenInput />,
+  ]);
 
   useEffect(() => {
     if (etherBalance !== 0) {
       setEtherAmount(etherBalance);
     }
   }, [etherBalance]);
+
+  const { buyTokens } = useBuyTokens();
 
   return (
     <Box
@@ -53,49 +60,20 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
         <Heading textAlign={"center"} size="md">
           Swap
         </Heading>
-        <Flex>
-          <Image src="/eth.svg" height={15} width={15} />{" "}
-          <Text fontSize={"sm"} mt={1} ml={1} mr={4}>
-            ETH
-          </Text>
-          <Box ml={2}>
-            <NumberInput
-              size="sm"
-              variant={"filled"}
-              maxW="150px"
-              precision={18}
-              value={etherAmount.toString()}
-              step={0.01}
-              min={0}
-              onChange={(e) => setEtherAmount(Number(e.valueOf()))}
-            >
-              <NumberInputField />{" "}
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </Box>
-        </Flex>
-        <IconButton as={IoMdArrowDown} aria-label="Swap Token" size="xs" />
-        <Flex>
-          <Image src="/zumo-mobile-logo.svg" height={20} width={20} />
-          <Text fontSize={"sm"} mt={1} ml={1} mr={4}>
-            TDD
-          </Text>
-          <Box ml={2}>
-            <NumberInput size="sm" maxW="150px" variant={"filled"} defaultValue={0} min={0} precision={2}>
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </Box>
-        </Flex>
+        {inputs[0]}
+        <IconButton
+          as={IoMdArrowDown}
+          aria-label="Swap Token"
+          size="xs"
+          onClick={() => {
+            setInputs([...inputs].reverse());
+            setButtonLabel(buttonLabel === "Buy" ? "Sell" : "Buy");
+          }}
+        />
+        {inputs[1]}
 
         <Stack pt={10} spacing={10}>
-          <Button onClick={async () => await buyTokens(etherAmount)}>Swap</Button>
+          <Button onClick={async () => await buyTokens(etherAmount)}>{buttonLabel}</Button>
           <Text>{dexInfo.totalSales.toString()} Total Sales</Text>
         </Stack>
       </Stack>
