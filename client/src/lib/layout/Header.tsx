@@ -1,8 +1,8 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
-import WalletConnectButton from "lib/components/WalletConnectButton";
 import Link from "next/link";
 import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
+import WalletConnectButton from "./WalletConnectButton";
 
 const Header = () => {
   return (
