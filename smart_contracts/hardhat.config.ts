@@ -25,7 +25,7 @@ if (!mnemonic) {
 }
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "hardhat",
+  defaultNetwork: "rinkeby",
   solidity: "0.8.8",
   networks: {
     hardhat: {
@@ -41,18 +41,16 @@ const config: HardhatUserConfig = {
       gasPrice: 20000000000,
       accounts: [process.env.MNEMONIC!],
     },
-    // mainnet: {
-    //   url: "https://bsc-dataseed.binance.org/",
-    //   chainId: 56,
-    //   gas: 2100000,
-    //   gasPrice: 20000000000,
-    //   accounts: [process.env.MNEMONIC!],
-    // },
+    rinkeby: {
+      url: process.env.RINKEBY_API,
+      chainId: 4,
+      gas: 2100000,
+      gasPrice: 20000000000,
+      accounts: [process.env.MNEMONIC!],
+    }
   },
   etherscan: {
-    apiKey: {
-      bscTestnet: process.env.BSCSCAN_API,
-    },
+    apiKey: process.env.ETHERSCAN_API,
   },
   namedAccounts: {
     deployer: {

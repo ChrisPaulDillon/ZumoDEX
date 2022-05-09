@@ -19,7 +19,7 @@ const deployToken: DeployFunction = async function (
   });
   log(`Deployed Token to Address: ${token.address}`);
 
-  if (!LOCAL_CHAINS.includes(network.name) && process.env.BSCSCAN_API) {
+  if (!LOCAL_CHAINS.includes(network.name) && process.env.ETHERSCAN_API) {
     await VerifyContract(
       token.address,
       [],

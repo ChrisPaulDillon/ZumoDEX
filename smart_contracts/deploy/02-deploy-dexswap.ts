@@ -21,7 +21,7 @@ const deployDexSwap: DeployFunction = async function (
   });
   log(`Deployed DexSwap to Address: ${dexSwap.address}`);
 
-  if (!LOCAL_CHAINS.includes(network.name) && process.env.BSCSCAN_API) {
+  if (!LOCAL_CHAINS.includes(network.name) && process.env.ETHERSCAN_API) {
     await VerifyContract(dexSwap.address, [token.address]);
   }
 };
