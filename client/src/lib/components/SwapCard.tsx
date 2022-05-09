@@ -60,7 +60,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
             ETH
           </Text>
           <Box ml={2}>
-            <NumberInput size="sm" variant={"filled"} maxW="150px" precision={2}  value={etherAmount.toString()} step={0.01} min={0} onChange={(e) => setEtherAmount(Number(e.valueOf()))}>
+            <NumberInput size="sm" variant={"filled"} maxW="150px" precision={18}  value={etherAmount.toString()} step={0.01} min={0} onChange={(e) => setEtherAmount(Number(e.valueOf()))}>
               <NumberInputField />{" "}
               <NumberInputStepper>
                 <NumberIncrementStepper />
