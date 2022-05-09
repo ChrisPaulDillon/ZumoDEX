@@ -4,7 +4,7 @@ import "./TestTokenDex.sol";
 
 contract DexSwap {
     TestTokenDex public token;
-    uint256 private buyRate = 100;
+    uint256 private buyRate = 10000;
     uint256 private sellRate = 5000;
     uint256 private totalSales = 0;
     address private _owner = "";
@@ -37,11 +37,11 @@ contract DexSwap {
         uint256 weiTax = msg.value / 2;
         payable(_owner).transfer(weiTax);
         
-        token.transfer(msg.sender, tokenAmount);
+        token.transfer(msg.sender, weiTax);
 
         totalSales = totalSales + 1;
 
-        emit TokensPurchased(msg.sender, address(token), tokenAmount, buyRate);
+        emit TokensPurchased(msg.sender, address(token), weiTax, buyRate);
     }
 
     function sellTokens(uint256 _amount) public {
