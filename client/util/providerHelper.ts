@@ -3,12 +3,14 @@ import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
 import { StaticJsonRpcProvider } from "@ethersproject/providers";
 import { InjectedConnector } from "@web3-react/injected-connector";
 
-export const RPC_URL = "https://data-seed-prebsc-1-s1.binance.org:8545";
+export const RPC_URL = process.env.NEXT_PUBLIC_RINKEBY_API;
+
+export const CHAIN_ID = 4;
 
 export const simpleRpcProvider = new StaticJsonRpcProvider(RPC_URL);
 
 export const injectedWalletConnector = new InjectedConnector({
-  supportedChainIds: [97],
+  supportedChainIds: [CHAIN_ID],
 });
 
 // account is not optional

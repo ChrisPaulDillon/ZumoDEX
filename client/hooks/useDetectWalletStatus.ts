@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { IAppState, useAppDispatch } from "../state";
 import { logUserIn, updateWeb3Provider } from "../state/reducer";
+import { CHAIN_ID } from "../util/providerHelper";
 
 const useDetectWalletStatus = () => {
   const dispatcher = useAppDispatch();
@@ -13,7 +14,7 @@ const useDetectWalletStatus = () => {
       //@ts-ignore
       if (window?.ethereum) {
         //@ts-ignore
-        const provider = new ethers.providers.Web3Provider(window.ethereum, 97);
+        const provider = new ethers.providers.Web3Provider(window.ethereum, CHAIN_ID);
         const result = await provider.send("eth_requestAccounts", []);
         if (result) {
           dispatcher(updateWeb3Provider({ web3Provider: provider }));

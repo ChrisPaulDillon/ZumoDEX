@@ -2,7 +2,7 @@
   "name": "zumo-swap",
   "version": "0.1.0",
   "private": true,
-  "author": "sozonome",
+  "author": "Chris Dillon ",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -34,9 +34,7 @@
     "react-icons": "^4.3.1",
     "react-redux": "^8.0.1",
     "redux": "^4.2.0",
-    "redux-thunk": "^2.4.1",
-    "web3": "^1.7.3",
-    "web3-core-helpers": "^1.7.3"
+    "redux-thunk": "^2.4.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^16.2.1",

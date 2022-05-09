@@ -2,8 +2,7 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../state";
 import { logUserOut, logUserIn } from "../state/reducer";
-import { injectedWalletConnector } from "../util/providerHelper";
-import web3 from "../util/web3";
+import { CHAIN_ID, injectedWalletConnector } from "../util/providerHelper";
 import useFireToast from "./useFireToast";
 
 const useWalletConnect = () => {
@@ -25,12 +24,12 @@ const useWalletConnect = () => {
           setError(error.toString());
           toast.Negative("Error", "You are currently on the wrong chain, please switch to the testnet!");
           //@ts-ignore
-          if (window.ethereum.networkVersion !== 97) {
+          if (window.ethereum.networkVersion !== CHAIN_ID) {
             try {
               //@ts-ignore
               await window.ethereum.request({
                 method: "wallet_switchEthereumChain",
-                params: [{ chainId: web3.utils.toHex(97) }],
+                params: [{ chainId: "0x" + CHAIN_ID }],
               });
               dispatch(logUserIn({ address: account! }));
             } catch (err) {
@@ -42,14 +41,14 @@ const useWalletConnect = () => {
                   method: "wallet_addEthereumChain",
                   params: [
                     {
-                      chainName: "Binance Smartchain Testnet",
-                      chainId: web3.utils.toHex(97),
+                      chainName: "Rinkeby Testnet",
+                      chainId: "0x" + CHAIN_ID,
                       nativeCurrency: {
-                        name: "BNB",
+                        name: "ETH",
                         decimals: 18,
-                        symbol: "BNB",
+                        symbol: "ETH",
                       },
-                      rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+                      rpcUrls: [process.env.RINKEBY_API],
                     },
                   ],
                 });
