@@ -1,32 +1,36 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import useFireToast from "../../hooks/useFireToast";
+import { IAppState } from "../../state";
 import { getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
 import { CONTRACT_DEXSWAP } from "../contracts";
 
 const useBuyTokens = () => {
   const signer = getSignerSelector();
+  const isLoggedIn = useSelector((state: IAppState) => state.state.isLoggedIn);
   const contract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
   const toast = useFireToast();
 
   useEffect(() => {
-    contract?.on("TokensPurchased", (account, token, amount, rate) => {
+    if (isLoggedIn) {
+      contract?.on("TokensPurchased", (account, token, amount, rate) => {
         toast.Positive("Success", "Successfully bought TTD Tokens!");
-    })
+      });
+    }
   }, []);
-  
-    const buyTokens = async (amount: Number) => {
-      try {
-        const wei = ethers.utils.parseEther(amount.toString());
-        const tx = await contract.buyTokens({value: wei});
-        console.log(tx);
-        
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    return {buyTokens}
+
+  const buyTokens = async (amount: Number) => {
+    try {
+      const wei = ethers.utils.parseEther(amount.toString());
+      const tx = await contract.buyTokens({ value: wei });
+      console.log(tx);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  return { buyTokens };
 };
 
 export default useBuyTokens;

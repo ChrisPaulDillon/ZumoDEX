@@ -2,12 +2,13 @@ import { ethers } from "ethers";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { IAppState, useAppDispatch } from "../state";
-import { logUserIn, updateWeb3Provider } from "../state/reducer";
-import { CHAIN_ID } from "../util/providerHelper";
+import { CONNECTOR_TYPE, logUserIn, updateJsonRpcConnection, updateWeb3Provider } from "../state/reducer";
+import { CHAIN_ID, RPC_URL } from "../util/providerHelper";
 
 const useDetectWalletStatus = () => {
   const dispatcher = useAppDispatch();
   const userAddress = useSelector((state: IAppState) => state.state.userAddress);
+  const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
 
   useEffect(() => {
     const handleProviderSwitch = async () => {
@@ -22,6 +23,13 @@ const useDetectWalletStatus = () => {
       }
     };
     handleProviderSwitch();
+  }, []);
+
+  useEffect(() => {
+    if (connectorStatus !== CONNECTOR_TYPE.JSON_RPC) {
+      const provider = new ethers.providers.JsonRpcProvider(RPC_URL, "any");
+      dispatcher(updateJsonRpcConnection({ jsonRpcConnector: provider }));
+    }
   }, []);
 
   useEffect(() => {

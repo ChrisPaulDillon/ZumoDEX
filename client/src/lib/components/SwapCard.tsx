@@ -1,20 +1,13 @@
 import {
   IconButton,
-  Flex,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInputStepper,
   Button,
   Box,
   useColorModeValue,
   Heading,
-  NumberInput,
-  NumberInputField,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { IoMdArrowDown } from "react-icons/io";
-import Image from "next/image";
 import { IDexInfo } from "../../../contracts/hooks/useGetDexInfo";
 import useBuyTokens from "../../../contracts/hooks/useBuyTokens";
 import { useSelector } from "react-redux";

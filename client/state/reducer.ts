@@ -7,26 +7,27 @@ import { RPC_URL } from "../util/providerHelper";
 
 //We fallback on a json rpc connection if the user does not have a web3 wallet installed
 export enum CONNECTOR_TYPE {
-  JSON_RPC,
-  WALLET_CONNECT,
+  NOT_CONNECTED = "Not Connected",
+  JSON_RPC = "Connected to Json RPC",
+  WALLET_CONNECT = "Connected to Wallet",
 }
 
 export interface IGlobalState {
   userAddress: string | undefined;
   isLoggedIn: boolean;
   etherBalance: Number;
-  connectorType: CONNECTOR_TYPE;
+  connectorStatus: CONNECTOR_TYPE;
   web3Provider: Web3Provider | undefined;
-  jsonRpcProvider: JsonRpcProvider;
+  jsonRpcProvider: JsonRpcProvider | undefined;
 }
 
 export const initialState: IGlobalState = {
   userAddress: "",
   isLoggedIn: false,
   etherBalance: 0,
-  connectorType: CONNECTOR_TYPE.JSON_RPC,
+  connectorStatus: CONNECTOR_TYPE.NOT_CONNECTED,
   web3Provider: undefined,
-  jsonRpcProvider: new ethers.providers.JsonRpcProvider(RPC_URL, "any"),
+  jsonRpcProvider: undefined,
 };
 
 export const logUserIn = createAction<{ address: string }>("state/logUserIn");
@@ -34,7 +35,10 @@ export const logUserOut = createAction("state/logUserOut");
 export const updateEtherBalance = createAction<{ etherBalance: Number }>("state/updateEtherBalance");
 export const updateWeb3Provider = createAction<{
   web3Provider: Web3Provider;
-}>("state/updateConnectionType");
+}>("state/updateWeb3Provider");
+export const updateJsonRpcConnection = createAction<{
+  jsonRpcConnector: JsonRpcProvider;
+}>("state/updateJsonRpcConnection");
 
 export default createReducer(initialState, (builder) =>
   builder
@@ -47,8 +51,12 @@ export default createReducer(initialState, (builder) =>
       state.isLoggedIn = false;
     })
     .addCase(updateWeb3Provider, (state: IGlobalState, { payload: { web3Provider } }) => {
-      state.connectorType = CONNECTOR_TYPE.WALLET_CONNECT;
+      state.connectorStatus = CONNECTOR_TYPE.WALLET_CONNECT;
       state.web3Provider = web3Provider;
+    })
+    .addCase(updateJsonRpcConnection, (state: IGlobalState, { payload: { jsonRpcConnector } }) => {
+      state.connectorStatus = CONNECTOR_TYPE.JSON_RPC;
+      state.jsonRpcProvider = jsonRpcConnector;
     })
     .addCase(updateEtherBalance, (state: IGlobalState, { payload: { etherBalance } }) => {
       state.etherBalance = etherBalance;
@@ -58,6 +66,6 @@ export default createReducer(initialState, (builder) =>
 export const getSignerSelector = (): JsonRpcSigner | JsonRpcProvider => {
   const jsonRpcProvider = useSelector((state: IAppState) => state.state.jsonRpcProvider);
   const web3Provider = useSelector((state: IAppState) => state.state.web3Provider);
-  const connectorType = useSelector((state: IAppState) => state.state.connectorType);
-  return connectorType === CONNECTOR_TYPE.JSON_RPC ? jsonRpcProvider! : web3Provider?.getSigner()!;
+  const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
+  return connectorStatus === CONNECTOR_TYPE.JSON_RPC ? jsonRpcProvider! : web3Provider?.getSigner()!;
 };
