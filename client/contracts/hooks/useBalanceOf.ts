@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { getERC20Contract } from "../contractHelper";
 import { getSignerSelector } from "../../state/reducer";
 import { getTokenBalance } from "../../util/balanceHelper";

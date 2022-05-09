@@ -26,18 +26,17 @@ interface ISwapCard {
 }
 
 const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
-  const etherBalance = useSelector((state: IAppState) => state.state.etherBalance)
+  const etherBalance = useSelector((state: IAppState) => state.state.etherBalance);
   const [etherAmount, setEtherAmount] = useState<Number>(0);
 
-  const {buyTokens} = useBuyTokens();
+  const { buyTokens } = useBuyTokens();
 
   useEffect(() => {
-    if(etherBalance !== 0) {
-      setEtherAmount(etherBalance)
+    if (etherBalance !== 0) {
+      setEtherAmount(etherBalance);
     }
- 
-  }, [etherBalance])
-  
+  }, [etherBalance]);
+
   return (
     <Box
       maxW={"270px"}
@@ -55,12 +54,21 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
           Swap
         </Heading>
         <Flex>
-          <Image src="/zumo-mobile-logo.svg" height={20} width={20} />{" "}
+          <Image src="/eth.svg" height={15} width={15} />{" "}
           <Text fontSize={"sm"} mt={1} ml={1} mr={4}>
             ETH
           </Text>
           <Box ml={2}>
-            <NumberInput size="sm" variant={"filled"} maxW="150px" precision={18}  value={etherAmount.toString()} step={0.01} min={0} onChange={(e) => setEtherAmount(Number(e.valueOf()))}>
+            <NumberInput
+              size="sm"
+              variant={"filled"}
+              maxW="150px"
+              precision={18}
+              value={etherAmount.toString()}
+              step={0.01}
+              min={0}
+              onChange={(e) => setEtherAmount(Number(e.valueOf()))}
+            >
               <NumberInputField />{" "}
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -76,7 +84,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
             TDD
           </Text>
           <Box ml={2}>
-            <NumberInput size="sm" maxW="150px" variant={"filled"} defaultValue={0} min={0} precision={2} >
+            <NumberInput size="sm" maxW="150px" variant={"filled"} defaultValue={0} min={0} precision={2}>
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -85,7 +93,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
             </NumberInput>
           </Box>
         </Flex>
- 
+
         <Stack pt={10} spacing={10}>
           <Button onClick={async () => await buyTokens(etherAmount)}>Swap</Button>
           <Text>{dexInfo.totalSales.toString()} Total Sales</Text>
