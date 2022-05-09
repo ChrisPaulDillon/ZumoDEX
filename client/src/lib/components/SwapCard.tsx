@@ -1,12 +1,4 @@
-import {
-  IconButton,
-  Button,
-  Box,
-  useColorModeValue,
-  Heading,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { IconButton, Button, Box, useColorModeValue, Heading, Stack, Text } from "@chakra-ui/react";
 import { IoMdArrowDown } from "react-icons/io";
 import { IDexInfo } from "../../../contracts/hooks/useGetDexInfo";
 import useBuyTokens from "../../../contracts/hooks/useBuyTokens";
@@ -39,7 +31,6 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
 
   return (
     <Box
-      maxW={"270px"}
       bg={useColorModeValue("blackAlpha.400", "gray.700")}
       rounded={"lg"}
       overflow={"hidden"}
