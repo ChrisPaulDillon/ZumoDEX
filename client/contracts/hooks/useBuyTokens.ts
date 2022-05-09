@@ -1,13 +1,22 @@
 import { ethers } from "ethers";
+import { useEffect } from "react";
+import useFireToast from "../../hooks/useFireToast";
 import { getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
 import { CONTRACT_DEXSWAP } from "../contracts";
 
 const useBuyTokens = () => {
   const signer = getSignerSelector();
+  const contract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
+  const toast = useFireToast();
 
+  useEffect(() => {
+    contract?.on("TokensPurchased", (account, token, amount, rate) => {
+        toast.Positive("Success", "Successfully bought TTD Tokens!");
+    })
+  }, []);
+  
     const buyTokens = async (amount: Number) => {
-      const contract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
       try {
         const wei = ethers.utils.parseEther(amount.toString());
         const tx = await contract.buyTokens({value: wei});
