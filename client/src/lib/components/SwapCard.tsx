@@ -16,13 +16,15 @@ import {
 import { IoMdArrowDown } from "react-icons/io";
 import Image from "next/image";
 import { IDexInfo } from "../../../contracts/hooks/useGetDexInfo";
+import useBuyTokens from "../../../contracts/hooks/useBuyTokens";
 
 interface ISwapCard {
   dexInfo: IDexInfo;
-  etherBalance: Number;
+  etherBalance?: Number;
 }
 
 const SwapCard: React.FC<ISwapCard> = ({ dexInfo, etherBalance }) => {
+  const {buyTokens} = useBuyTokens();
   return (
     <Box
       maxW={"270px"}
@@ -71,7 +73,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo, etherBalance }) => {
           </Box>
         </Flex>
         <Stack pt={10} spacing={10}>
-          <Button>Swap</Button>
+          <Button onClick={buyTokens}>Swap</Button>
           <Text>{dexInfo.totalSales.toString()} Total Sales</Text>
         </Stack>
       </Stack>
