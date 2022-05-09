@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { IAppState, useAppDispatch } from "../state";
 import { logUserIn, updateWeb3Provider } from "../state/reducer";
@@ -26,7 +26,6 @@ const useDetectWalletStatus = () => {
   useEffect(() => {
     //@ts-ignore
     if (window?.ethereum) {
-      console.log("web3 detected, opinion respected");
       //@ts-ignore
       window?.ethereum
         .request({ method: "eth_requestAccounts" })

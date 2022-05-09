@@ -1,22 +1,27 @@
+import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
-import web3NoAccount from "../../util/web3";
+import { IAppState } from "../../state";
+import { getSignerSelector } from "../../state/reducer";
 
 const useGetEthBalance = () => {
   const { account } = useActiveWeb3React();
   const [ethBalance, setEthBalance] = useState<Number>();
+  const provider = getSignerSelector();
+  const isLoggedIn = useSelector((state: IAppState) => state.state.isLoggedIn);
 
   useEffect(() => {
     const getEthBalance = async () => {
-      const balance = await web3NoAccount.eth.getBalance(account!);
-      const userBalance = web3NoAccount.utils.fromWei(balance);
+      const balance = await provider.getBalance(account!);
+      const userBalance = ethers.utils.formatEther(balance);
       setEthBalance(Number(userBalance));
     };
 
-    if (account) {
+    if (isLoggedIn) {
       getEthBalance();
     }
-  }, [account]);
+  }, [isLoggedIn]);
 
   return ethBalance;
 };

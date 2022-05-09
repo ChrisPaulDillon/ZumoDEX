@@ -19,9 +19,10 @@ import { IDexInfo } from "../../../contracts/hooks/useGetDexInfo";
 
 interface ISwapCard {
   dexInfo: IDexInfo;
+  etherBalance: Number;
 }
 
-const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
+const SwapCard: React.FC<ISwapCard> = ({ dexInfo, etherBalance }) => {
   return (
     <Box
       maxW={"270px"}
@@ -60,7 +61,7 @@ const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
             ETH
           </Text>
           <Box ml={2}>
-            <NumberInput size="sm" variant={"filled"} maxW="150px" defaultValue={0}>
+            <NumberInput size="sm" variant={"filled"} maxW="150px" defaultValue={etherBalance?.toString() ?? 0}>
               <NumberInputField />{" "}
               <NumberInputStepper>
                 <NumberIncrementStepper />
