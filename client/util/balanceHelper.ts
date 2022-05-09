@@ -1,17 +1,11 @@
-import BigNumber from "bignumber.js";
-import { BigNumberish, ethers } from "ethers";
-
-export const BIG_TEN = new BigNumber(10);
-
-export const getBalanceNumber = (balance: BigNumber, decimals = 18) => {
-  return getBalanceAmount(balance, decimals).toNumber();
-};
-
-export const getBalanceAmount = (amount: BigNumber, decimals = 18) => {
-  return new BigNumber(amount).dividedBy(BIG_TEN.pow(decimals));
-};
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 export const getTokenBalance = (amount: BigNumberish, decimals = 2): Number => {
-  const result = (ethers.utils.formatUnits(amount, decimals));
-  return Number(result)
+  const result = ethers.utils.formatUnits(amount, decimals);
+  return Number(result);
+};
+
+export const ConvertTokenNoToBN = (tokenAmount: Number): BigNumber => {
+  const result = ethers.utils.parseUnits(tokenAmount.toString(), 2);
+  return result;
 };
