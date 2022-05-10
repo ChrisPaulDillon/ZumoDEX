@@ -16,6 +16,6 @@
     "baseUrl": "src",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src", "commitlint.config.js", "jest.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src", "commitlint.config.js", "jest.config.js", "hooks/useFireToast.tsx"],
   "exclude": ["node_modules"]
 }

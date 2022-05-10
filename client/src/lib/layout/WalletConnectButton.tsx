@@ -14,8 +14,8 @@ const WalletConnectButton: React.FC<ButtonProps> = ({ ...rest }) => {
   const { login, logout } = useWalletConnect();
 
   const handleWalletConnect = () => {
-    if (connectorStatus === CONNECTOR_TYPE.JSON_RPC) {
-      toast.Negative("Erro", "No Web3 wallet detected, please install MetaMask");
+    if (connectorStatus !== CONNECTOR_TYPE.WALLET_CONNECT) {
+      toast.Negative("Error", "No Web3 wallet detected, please install MetaMask");
     } else if (isLoggedIn) {
       return logout();
     }

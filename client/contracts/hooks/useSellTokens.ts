@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import useFireToast from "../../hooks/useFireToast";

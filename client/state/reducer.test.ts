@@ -27,6 +27,11 @@ describe("Redux Reducer", () => {
     web3Provider = new Web3Provider(global.window.ethereum);
   });
 
+  afterEach(() => {
+    // Clear all mocks between tests
+    testingUtils.clearAllMocks();
+  });
+
   test("should return the initial state", () => {
     //@ts-ignore
     const test = new ethers.providers.Web3Provider(window.ethereum);
