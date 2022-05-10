@@ -1,7 +1,7 @@
 import Footer from "./Footer";
 import { screen } from "@testing-library/react";
 import configureStore from "../../state";
-import { testReduxRender } from "../../util/testHelper";
+import { testRender } from "../../util/testHelper";
 import { updateJsonRpcConnection, updateWeb3Provider } from "../../state/reducer";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { generateTestingUtils } from "eth-testing";
@@ -20,7 +20,7 @@ describe("Footer Component", () => {
 
   it("should display company label and not connected label", () => {
     const store = configureStore();
-    testReduxRender(<Footer />, { store });
+    testRender(<Footer />, { store });
     expect(screen.getByText("Zumo")).toBeInTheDocument();
     expect(screen.getByText("Status: Not Connected")).toBeInTheDocument();
   });
@@ -28,7 +28,7 @@ describe("Footer Component", () => {
   it("should display connected to json rpc label", () => {
     const store = configureStore();
     store.dispatch(updateJsonRpcConnection({ jsonRpcConnector: jsonRpcProvider }));
-    testReduxRender(<Footer />, { store });
+    testRender(<Footer />, { store });
     expect(screen.getByText("Zumo")).toBeInTheDocument();
     expect(screen.getByText("Status: Connected to Json RPC")).toBeInTheDocument();
   });
@@ -36,7 +36,7 @@ describe("Footer Component", () => {
   it("should display connected to wallet label", () => {
     const store = configureStore();
     store.dispatch(updateWeb3Provider({ web3Provider: web3Provider }));
-    testReduxRender(<Footer />, { store });
+    testRender(<Footer />, { store });
     expect(screen.getByText("Zumo")).toBeInTheDocument();
     expect(screen.getByText("Status: Connected to Wallet")).toBeInTheDocument();
   });
