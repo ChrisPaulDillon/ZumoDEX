@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
-export const getTokenBalance = (amount: BigNumberish, decimals = 2): Number => {
+export const ConvertTokenBalanceFromBN = (amount: BigNumberish, decimals = 2): Number => {
   const result = ethers.utils.formatUnits(amount, decimals);
   return Number(result);
 };
