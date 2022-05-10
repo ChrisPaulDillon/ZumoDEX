@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, Store, compose, AnyAction } from "redux";
+import { createStore, applyMiddleware, Store, AnyAction } from "redux";
 import thunk from "redux-thunk";
 import { combineReducers } from "redux";
 import globalReducer, { IGlobalState } from "./reducer";

@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getERC20Contract } from "../contractHelper";
-import { getLoginStatusSelector, getSignerSelector } from "../../state/reducer";
+import { getLoginStatusSelector, getSignerSelector, updateUserTokenBalance } from "../../state/reducer";
 import { getTokenBalance } from "../../util/balanceHelper";
+import { useAppDispatch } from "state";
+import { CONTRACT_ERC20 } from "contracts/contracts";
 
-const useBalanceOf = (tokenAddress: string) => {
+const useBalanceOf = () => {
   const { isLoggedIn, userAddress } = getLoginStatusSelector();
-  const [balanceState, setBalanceState] = useState<Number>(0);
   const signer = getSignerSelector();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const contract = getERC20Contract(tokenAddress, signer);
+      const contract = getERC20Contract(CONTRACT_ERC20, signer);
       try {
         const res = await contract.balanceOf(userAddress);
-        setBalanceState(getTokenBalance(res));
+        dispatch(updateUserTokenBalance({ tokenBalance: getTokenBalance(res) }));
       } catch (e) {
         console.error(e);
       }
@@ -22,9 +24,7 @@ const useBalanceOf = (tokenAddress: string) => {
     if (isLoggedIn) {
       fetchBalance();
     }
-  }, [userAddress, tokenAddress]);
-
-  return balanceState;
+  }, [userAddress]);
 };
 
 export default useBalanceOf;

@@ -9,7 +9,7 @@ import useGetTokenInfo from "../contracts/hooks/useGetTokenInfo";
 import useDetectWalletStatus from "../hooks/useDetectWalletStatus";
 
 const Home = () => {
-  const balance = useBalanceOf(CONTRACT_ERC20);
+  useBalanceOf();
   useGetTokenInfo(CONTRACT_ERC20);
   useGetDexInfo(CONTRACT_DEXSWAP);
   useGetEthBalance();
@@ -18,7 +18,7 @@ const Home = () => {
   return (
     <Box display={{ md: "flex" }} alignItems="center" justifyContent={"center"} minHeight="70vh" gap={14} mb={8} w="full">
       <Stack spacing={12}>
-        <TDDStats userBalance={balance} />
+        <TDDStats />
         <Stack direction={["column", "row"]} spacing={10}>
           <SwapCard />
         </Stack>

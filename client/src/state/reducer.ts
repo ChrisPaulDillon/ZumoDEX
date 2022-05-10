@@ -26,6 +26,7 @@ export interface IGlobalState {
   userAddress: string | undefined;
   isLoggedIn: boolean;
   etherBalance: Number;
+  userTokenBalance: Number;
   connectorStatus: CONNECTOR_TYPE;
   web3Provider: Web3Provider | undefined;
   jsonRpcProvider: JsonRpcProvider | undefined;
@@ -37,6 +38,7 @@ export const initialState: IGlobalState = {
   userAddress: "",
   isLoggedIn: false,
   etherBalance: 0,
+  userTokenBalance: 0,
   connectorStatus: CONNECTOR_TYPE.NOT_CONNECTED,
   web3Provider: undefined,
   jsonRpcProvider: undefined,
@@ -59,6 +61,9 @@ export const updateDexInfo = createAction<{
 export const updateTokenInfo = createAction<{
   tokenInfo: ITokenInfo;
 }>("state/tokenInfo");
+export const updateUserTokenBalance = createAction<{
+  tokenBalance: Number;
+}>("state/updateUserTokenBalance");
 
 export default createReducer(initialState, (builder) =>
   builder
@@ -86,6 +91,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateTokenInfo, (state: IGlobalState, { payload: { tokenInfo } }) => {
       state.tokenInfo = tokenInfo;
+    })
+    .addCase(updateUserTokenBalance, (state: IGlobalState, { payload: { tokenBalance } }) => {
+      state.userTokenBalance = tokenBalance;
     })
 );
 
@@ -120,4 +128,9 @@ export const getDexInfoSelector = (): IDexInfo => {
 export const getTokenInfoSelector = (): ITokenInfo => {
   const tokenInfo = useSelector((state: IAppState) => state.state.tokenInfo);
   return tokenInfo;
+};
+
+export const getUserTokenBalance = (): Number => {
+  const userTokenBalance = useSelector((state: IAppState) => state.state.userTokenBalance);
+  return userTokenBalance;
 };

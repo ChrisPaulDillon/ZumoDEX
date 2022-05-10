@@ -1,13 +1,10 @@
 import { useColorModeValue, Heading, Text, Skeleton, Stack } from "@chakra-ui/react";
-import { getLoginStatusSelector, getTokenInfoSelector } from "state/reducer";
+import { getLoginStatusSelector, getTokenInfoSelector, getUserTokenBalance } from "state/reducer";
 
-interface ITDDStats {
-  userBalance: Number;
-}
-
-const TDDStats: React.FC<ITDDStats> = ({ userBalance }) => {
+const TDDStats: React.FC = () => {
   const { userAddress } = getLoginStatusSelector();
   const tokenInfo = getTokenInfoSelector();
+  const userTokenBalance = getUserTokenBalance();
 
   return (
     <Stack
@@ -31,13 +28,13 @@ const TDDStats: React.FC<ITDDStats> = ({ userBalance }) => {
       </Text>
       {userAddress ? (
         <Text textAlign={"center"} fontSize="sm">
-          {userBalance.toString()} {tokenInfo?.symbol} Balance
+          {userTokenBalance.toString()} {tokenInfo?.symbol} Balance
         </Text>
       ) : (
         <Skeleton w="100%">
           {" "}
           <Text textAlign={"center"} fontSize="sm">
-            {userBalance.toString()} {tokenInfo?.symbol} Balance
+            {userTokenBalance.toString()} {tokenInfo?.symbol} Balance
           </Text>
         </Skeleton>
       )}
