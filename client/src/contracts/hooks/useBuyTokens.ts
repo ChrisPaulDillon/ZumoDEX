@@ -1,15 +1,13 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import useFireToast from "../../hooks/useFireToast";
-import { IAppState } from "../../state";
-import { getSignerSelector } from "../../state/reducer";
+import { getLoginStatusSelector, getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
 import { CONTRACT_DEXSWAP } from "../contracts";
 
 const useBuyTokens = () => {
   const signer = getSignerSelector();
-  const isLoggedIn = useSelector((state: IAppState) => state.state.isLoggedIn);
+  const { isLoggedIn, userAddress } = getLoginStatusSelector();
   const contract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
   const toast = useFireToast();
 

@@ -1,14 +1,17 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { IAppState, useAppDispatch } from "../../state";
-import { getSignerSelector, updateEtherBalance } from "../../state/reducer";
+import { useAppDispatch } from "../../state";
+import {
+  getConnectionStatusSelector,
+  getLoginStatusSelector,
+  getSignerSelector,
+  updateEtherBalance,
+} from "../../state/reducer";
 
 const useGetEthBalance = () => {
   const provider = getSignerSelector();
-  const userAddress = useSelector((state: IAppState) => state.state.userAddress);
-  const isLoggedIn = useSelector((state: IAppState) => state.state.isLoggedIn);
-  const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
+  const { userAddress, isLoggedIn } = getLoginStatusSelector();
+  const connectorStatus = getConnectionStatusSelector();
   const dispatch = useAppDispatch();
 
   useEffect(() => {

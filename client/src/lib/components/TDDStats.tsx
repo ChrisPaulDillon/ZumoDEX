@@ -1,7 +1,6 @@
 import { useColorModeValue, Heading, Text, Skeleton, Stack, HStack, Grid } from "@chakra-ui/react";
 import { ITokenInfo } from "../../contracts/hooks/useGetTokenInfo";
-import { useSelector } from "react-redux";
-import { IAppState } from "../../state";
+import { getLoginStatusSelector } from "state/reducer";
 
 interface ITDDStats {
   tokenInfo?: ITokenInfo;
@@ -9,7 +8,7 @@ interface ITDDStats {
 }
 
 const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
-  const userAddress = useSelector((state: IAppState) => state.state.userAddress);
+  const { userAddress } = getLoginStatusSelector();
 
   return (
     <Stack

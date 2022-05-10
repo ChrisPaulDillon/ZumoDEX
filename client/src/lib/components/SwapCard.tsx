@@ -2,18 +2,17 @@ import { IconButton, Button, Box, useColorModeValue, Heading, Stack, Text } from
 import { IoMdArrowDown } from "react-icons/io";
 import { IDexInfo } from "../../contracts/hooks/useGetDexInfo";
 import useBuyTokens from "../../contracts/hooks/useBuyTokens";
-import { useSelector } from "react-redux";
-import { IAppState } from "../../state";
 import React, { useEffect, useState } from "react";
 import TokenInput from "./TokenInput";
 import EthereumInput from "./EthereumInput";
+import { getEtherBalanceSelector } from "state/reducer";
 
 interface ISwapCard {
   dexInfo: IDexInfo;
 }
 
 const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
-  const etherBalance = useSelector((state: IAppState) => state.state.etherBalance);
+  const etherBalance = getEtherBalanceSelector();
   const [etherAmount, setEtherAmount] = useState<Number>(0);
   const [buttonLabel, setButtonLabel] = useState<string>("Buy");
   const [inputs, setInputs] = useState<Array<React.ReactNode>>([

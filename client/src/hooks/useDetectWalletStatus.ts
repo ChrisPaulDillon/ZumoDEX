@@ -1,14 +1,20 @@
 import { ethers } from "ethers";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { IAppState, useAppDispatch } from "../state";
-import { CONNECTOR_TYPE, logUserIn, updateJsonRpcConnection, updateWeb3Provider } from "../state/reducer";
+import { useAppDispatch } from "../state";
+import {
+  CONNECTOR_TYPE,
+  getConnectionStatusSelector,
+  getLoginStatusSelector,
+  logUserIn,
+  updateJsonRpcConnection,
+  updateWeb3Provider,
+} from "../state/reducer";
 import { CHAIN_ID, RPC_URL } from "../util/providerHelper";
 
 const useDetectWalletStatus = () => {
   const dispatcher = useAppDispatch();
-  const userAddress = useSelector((state: IAppState) => state.state.userAddress);
-  const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
+  const { userAddress } = getLoginStatusSelector();
+  const connectorStatus = getConnectionStatusSelector();
 
   useEffect(() => {
     const handleProviderSwitch = async () => {

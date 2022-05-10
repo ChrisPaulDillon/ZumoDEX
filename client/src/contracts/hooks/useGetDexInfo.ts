@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { IAppState } from "../../state";
-import { getSignerSelector } from "../../state/reducer";
+import { getConnectionStatusSelector, getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
 
 export interface IDexInfo {
@@ -12,7 +10,7 @@ export interface IDexInfo {
 
 const useGetDexInfo = (dexSwapAddress: string) => {
   const signer = getSignerSelector();
-  const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
+  const connectorStatus = getConnectionStatusSelector();
 
   const [dexInfo, setDexInfo] = useState<IDexInfo>({
     buyRate: "",
