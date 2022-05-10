@@ -1,6 +1,6 @@
 import { Box, Stack } from "@chakra-ui/react";
-import SwapCard from "lib/components/SwapCard";
-import TDDStats from "lib/components/TDDStats";
+import SwapCard from "components/SwapCard";
+import TDDStats from "components/TDDStats";
 import { CONTRACT_ERC20, CONTRACT_DEXSWAP } from "../contracts/contracts";
 import useBalanceOf from "../contracts/hooks/useBalanceOf";
 import useGetDexInfo from "../contracts/hooks/useGetDexInfo";

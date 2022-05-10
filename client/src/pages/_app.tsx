@@ -5,8 +5,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 
 import defaultSEOConfig from "../../next-seo.config";
-import Layout from "lib/layout";
-import customTheme from "lib/styles/customTheme";
+import Layout from "components/layout";
+import customTheme from "styles/customTheme";
 import "lib/styles/globals.css";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";

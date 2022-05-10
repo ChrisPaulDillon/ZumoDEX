@@ -1,5 +1,5 @@
 import { useColorModeValue, Heading, Text, Skeleton, Stack, HStack, Grid } from "@chakra-ui/react";
-import { ITokenInfo } from "../../contracts/hooks/useGetTokenInfo";
+import { ITokenInfo } from "../contracts/hooks/useGetTokenInfo";
 import { getLoginStatusSelector } from "state/reducer";
 
 interface ITDDStats {

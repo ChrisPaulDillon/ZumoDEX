@@ -1,7 +1,7 @@
 import { IconButton, Button, Box, useColorModeValue, Heading, Stack, Text } from "@chakra-ui/react";
 import { IoMdArrowDown } from "react-icons/io";
-import { IDexInfo } from "../../contracts/hooks/useGetDexInfo";
-import useBuyTokens from "../../contracts/hooks/useBuyTokens";
+import { IDexInfo } from "../contracts/hooks/useGetDexInfo";
+import useBuyTokens from "../contracts/hooks/useBuyTokens";
 import React, { useEffect, useState } from "react";
 import TokenInput from "./TokenInput";
 import EthereumInput from "./EthereumInput";
