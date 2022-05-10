@@ -3,15 +3,14 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-
 import defaultSEOConfig from "../../next-seo.config";
 import Layout from "components/layout";
 import customTheme from "styles/customTheme";
-import "lib/styles/globals.css";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Provider } from "react-redux";
 import configureStore from "../state";
+import "styles/globals.css";
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider);

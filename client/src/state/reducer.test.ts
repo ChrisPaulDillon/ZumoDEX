@@ -9,11 +9,8 @@ import {
 } from "./reducer";
 import reducer from "./reducer";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
-import { ethers } from "ethers";
 import { generateTestingUtils } from "eth-testing";
-
-const testAddress = "0xb794f5ea0ba39494ce839613fffba74279579268";
-const testEtherBalance = 10000000000000000;
+import { testAddress, testEtherBalance } from "util/testHelper";
 
 describe("Redux Reducer", () => {
   const testingUtils = generateTestingUtils({ providerType: "MetaMask" });
@@ -33,9 +30,6 @@ describe("Redux Reducer", () => {
   });
 
   test("should return the initial state", () => {
-    //@ts-ignore
-    const test = new ethers.providers.Web3Provider(window.ethereum);
-    console.log(test);
     expect(reducer(undefined, { type: "" })).toEqual(initialState);
   });
 
