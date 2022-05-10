@@ -1,9 +1,9 @@
 import WalletConnectButton from "./WalletConnectButton";
-import { screen } from "@testing-library/react";
+import { fireEvent, getByTestId, screen } from "@testing-library/react";
 import configureStore from "../../state";
 import { logUserIn } from "../../state/reducer";
 import { getAbbreviatedAddress } from "../../util/addressHelper";
-import { testAddress, testReduxRender } from "../../util/testHelper";
+import { testAddress, testReduxRender, testReduxWeb3Render } from "../../util/testHelper";
 
 describe("WalletConnectButton", () => {
   const store = configureStore();
@@ -21,5 +21,13 @@ describe("WalletConnectButton", () => {
     store.dispatch(logUserIn({ address: testAddress }));
     testReduxRender(<WalletConnectButton />, { store });
     expect(screen.getByText(getAbbreviatedAddress(testAddress))).toBeInTheDocument();
+  });
+
+  it("should display a toast message warning the user they do not have MetaMask installed", () => {
+    const store = configureStore();
+    const { container } = testReduxWeb3Render(<WalletConnectButton />, { store });
+    const button = getByTestId(container, "btn-wallet");
+    fireEvent.click(button);
+    expect(screen.getByText("No Web3 wallet detected, please install MetaMask")).toBeInTheDocument();
   });
 });

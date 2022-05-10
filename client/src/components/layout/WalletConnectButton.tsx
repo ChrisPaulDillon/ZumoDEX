@@ -20,7 +20,7 @@ const WalletConnectButton: React.FC<ButtonProps> = ({ ...rest }) => {
   };
 
   return (
-    <Button onClick={handleWalletConnect} {...rest}>
+    <Button data-testid="btn-wallet" onClick={handleWalletConnect} {...rest}>
       {isLoggedIn ? getAbbreviatedAddress(userAddress!) : "Connect Wallet"}
     </Button>
   );

@@ -10,7 +10,7 @@ import {
 import reducer from "./reducer";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { generateTestingUtils } from "eth-testing";
-import { testAddress, testEtherBalance } from "util/testHelper";
+import { testAddress, testEtherBalance } from "../util/testHelper";
 
 describe("Redux Reducer", () => {
   const testingUtils = generateTestingUtils({ providerType: "MetaMask" });
