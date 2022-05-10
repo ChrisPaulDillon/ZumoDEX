@@ -1,8 +1,10 @@
 import {
   CONNECTOR_TYPE,
+  IDexInfo,
   initialState,
   logUserIn,
   logUserOut,
+  updateDexInfo,
   updateEtherBalance,
   updateJsonRpcConnection,
   updateWeb3Provider,
@@ -60,5 +62,15 @@ describe("Redux Reducer", () => {
   test("should update the users ethereum balance", () => {
     const state = reducer(initialState, updateEtherBalance({ etherBalance: testEtherBalance }));
     expect(state.etherBalance).toEqual(testEtherBalance);
+  });
+
+  test("should update dex info", () => {
+    const dexInfo: IDexInfo = {
+      buyRate: "1000",
+      sellRate: "1000",
+      totalSales: 100000,
+    };
+    const state = reducer(initialState, updateDexInfo({ dexInfo: dexInfo }));
+    expect(state.dexInfo).toEqual(dexInfo);
   });
 });
