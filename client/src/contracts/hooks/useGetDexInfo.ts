@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
-import { getConnectionStatusSelector, getSignerSelector } from "../../state/reducer";
+import { useEffect } from "react";
+import { useAppDispatch } from "state";
+import { getConnectionStatusSelector, getSignerSelector, updateDexInfo } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
-
-export interface IDexInfo {
-  buyRate: string;
-  sellRate: string;
-  totalSales: number;
-}
 
 const useGetDexInfo = (dexSwapAddress: string) => {
   const signer = getSignerSelector();
   const connectorStatus = getConnectionStatusSelector();
-
-  const [dexInfo, setDexInfo] = useState<IDexInfo>({
-    buyRate: "",
-    sellRate: "",
-    totalSales: 0,
-  });
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchDexInfo = async () => {
@@ -25,11 +15,15 @@ const useGetDexInfo = (dexSwapAddress: string) => {
         const buyRate = await contract.getBuyRate();
         const sellRate = await contract.getSellRate();
         const totalSales = await contract.getTotalSales();
-        setDexInfo({
-          buyRate: buyRate,
-          sellRate: sellRate,
-          totalSales: totalSales,
-        });
+        dispatch(
+          updateDexInfo({
+            dexInfo: {
+              buyRate: buyRate,
+              sellRate: sellRate,
+              totalSales: totalSales,
+            },
+          })
+        );
       } catch (e) {
         console.error(e);
       }
@@ -37,8 +31,6 @@ const useGetDexInfo = (dexSwapAddress: string) => {
 
     fetchDexInfo();
   }, [dexSwapAddress, connectorStatus]);
-
-  return dexInfo;
 };
 
 export default useGetDexInfo;

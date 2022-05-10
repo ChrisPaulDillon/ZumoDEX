@@ -3,16 +3,12 @@ import { IoMdArrowDown } from "react-icons/io";
 import React, { useEffect, useState } from "react";
 import TokenInput from "./TokenInput";
 import EthereumInput from "./EthereumInput";
-import { getEtherBalanceSelector } from "state/reducer";
+import { getDexInfoSelector, getEtherBalanceSelector } from "state/reducer";
 import useBuyTokens from "contracts/hooks/useBuyTokens";
-import { IDexInfo } from "contracts/hooks/useGetDexInfo";
 
-interface ISwapCard {
-  dexInfo: IDexInfo;
-}
-
-const SwapCard: React.FC<ISwapCard> = ({ dexInfo }) => {
+const SwapCard: React.FC = () => {
   const etherBalance = getEtherBalanceSelector();
+  const dexInfo = getDexInfoSelector();
   const [etherAmount, setEtherAmount] = useState<Number>(0);
   const [buttonLabel, setButtonLabel] = useState<string>("Buy");
   const [inputs, setInputs] = useState<Array<React.ReactNode>>([

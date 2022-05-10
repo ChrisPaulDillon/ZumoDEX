@@ -3,6 +3,12 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { IAppState } from ".";
 
+export interface IDexInfo {
+  buyRate: string;
+  sellRate: string;
+  totalSales: number;
+}
+
 //We fallback on a json rpc connection if the user does not have a web3 wallet installed
 export enum CONNECTOR_TYPE {
   NOT_CONNECTED = "Not Connected",
@@ -17,6 +23,7 @@ export interface IGlobalState {
   connectorStatus: CONNECTOR_TYPE;
   web3Provider: Web3Provider | undefined;
   jsonRpcProvider: JsonRpcProvider | undefined;
+  dexInfo: IDexInfo;
 }
 
 export const initialState: IGlobalState = {
@@ -26,6 +33,7 @@ export const initialState: IGlobalState = {
   connectorStatus: CONNECTOR_TYPE.NOT_CONNECTED,
   web3Provider: undefined,
   jsonRpcProvider: undefined,
+  dexInfo: { buyRate: "", sellRate: "", totalSales: 0 },
 };
 
 export const logUserIn = createAction<{ address: string }>("state/logUserIn");
@@ -37,6 +45,9 @@ export const updateWeb3Provider = createAction<{
 export const updateJsonRpcConnection = createAction<{
   jsonRpcConnector: JsonRpcProvider;
 }>("state/updateJsonRpcConnection");
+export const updateDexInfo = createAction<{
+  dexInfo: IDexInfo;
+}>("state/updateDexInfo");
 
 export default createReducer(initialState, (builder) =>
   builder
@@ -58,6 +69,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateEtherBalance, (state: IGlobalState, { payload: { etherBalance } }) => {
       state.etherBalance = etherBalance;
+    })
+    .addCase(updateDexInfo, (state: IGlobalState, { payload: { dexInfo } }) => {
+      state.dexInfo = dexInfo;
     })
 );
 
@@ -82,4 +96,9 @@ export const getConnectionStatusSelector = (): CONNECTOR_TYPE => {
 export const getEtherBalanceSelector = (): Number => {
   const etherBalance = useSelector((state: IAppState) => state.state.etherBalance);
   return etherBalance;
+};
+
+export const getDexInfoSelector = (): IDexInfo => {
+  const dexInfo = useSelector((state: IAppState) => state.state.dexInfo);
+  return dexInfo;
 };
