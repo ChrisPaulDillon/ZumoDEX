@@ -1,14 +1,13 @@
-import { useColorModeValue, Heading, Text, Skeleton, Stack, HStack, Grid } from "@chakra-ui/react";
-import { ITokenInfo } from "contracts/hooks/useGetTokenInfo";
-import { getLoginStatusSelector } from "state/reducer";
+import { useColorModeValue, Heading, Text, Skeleton, Stack } from "@chakra-ui/react";
+import { getLoginStatusSelector, getTokenInfoSelector } from "state/reducer";
 
 interface ITDDStats {
-  tokenInfo?: ITokenInfo;
   userBalance: Number;
 }
 
-const TDDStats: React.FC<ITDDStats> = ({ tokenInfo, userBalance }) => {
+const TDDStats: React.FC<ITDDStats> = ({ userBalance }) => {
   const { userAddress } = getLoginStatusSelector();
+  const tokenInfo = getTokenInfoSelector();
 
   return (
     <Stack

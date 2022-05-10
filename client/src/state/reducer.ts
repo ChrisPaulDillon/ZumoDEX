@@ -3,6 +3,12 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { IAppState } from ".";
 
+export interface ITokenInfo {
+  name: string;
+  symbol: string;
+  totalSupply: Number;
+}
+
 export interface IDexInfo {
   buyRate: string;
   sellRate: string;
@@ -24,6 +30,7 @@ export interface IGlobalState {
   web3Provider: Web3Provider | undefined;
   jsonRpcProvider: JsonRpcProvider | undefined;
   dexInfo: IDexInfo;
+  tokenInfo: ITokenInfo;
 }
 
 export const initialState: IGlobalState = {
@@ -34,6 +41,7 @@ export const initialState: IGlobalState = {
   web3Provider: undefined,
   jsonRpcProvider: undefined,
   dexInfo: { buyRate: "", sellRate: "", totalSales: 0 },
+  tokenInfo: { name: "", symbol: "", totalSupply: 0 },
 };
 
 export const logUserIn = createAction<{ address: string }>("state/logUserIn");
@@ -48,6 +56,9 @@ export const updateJsonRpcConnection = createAction<{
 export const updateDexInfo = createAction<{
   dexInfo: IDexInfo;
 }>("state/updateDexInfo");
+export const updateTokenInfo = createAction<{
+  tokenInfo: ITokenInfo;
+}>("state/tokenInfo");
 
 export default createReducer(initialState, (builder) =>
   builder
@@ -72,6 +83,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateDexInfo, (state: IGlobalState, { payload: { dexInfo } }) => {
       state.dexInfo = dexInfo;
+    })
+    .addCase(updateTokenInfo, (state: IGlobalState, { payload: { tokenInfo } }) => {
+      state.tokenInfo = tokenInfo;
     })
 );
 
@@ -101,4 +115,9 @@ export const getEtherBalanceSelector = (): Number => {
 export const getDexInfoSelector = (): IDexInfo => {
   const dexInfo = useSelector((state: IAppState) => state.state.dexInfo);
   return dexInfo;
+};
+
+export const getTokenInfoSelector = (): ITokenInfo => {
+  const tokenInfo = useSelector((state: IAppState) => state.state.tokenInfo);
+  return tokenInfo;
 };

@@ -1,23 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getERC20Contract } from "../contractHelper";
-import { getConnectionStatusSelector, getSignerSelector } from "../../state/reducer";
+import { getConnectionStatusSelector, getSignerSelector, updateTokenInfo } from "../../state/reducer";
 import { getTokenBalance } from "../../util/balanceHelper";
-
-export interface ITokenInfo {
-  name: string;
-  symbol: string;
-  totalSupply: Number;
-}
+import { useAppDispatch } from "state";
 
 const useGetTokenInfo = (tokenAddress: string) => {
   const signer = getSignerSelector();
   const connectorStatus = getConnectionStatusSelector();
-
-  const [tokenInfo, setTokenInfo] = useState<ITokenInfo>({
-    name: "",
-    symbol: "",
-    totalSupply: 0,
-  });
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchTokenStats = async () => {
@@ -26,7 +16,7 @@ const useGetTokenInfo = (tokenAddress: string) => {
         const name = await contract.name();
         const symbol = await contract.symbol();
         const totalSupply = await contract.totalSupply();
-        setTokenInfo({ name: name, symbol: symbol, totalSupply: getTokenBalance(totalSupply) });
+        dispatch(updateTokenInfo({ tokenInfo: { name: name, symbol: symbol, totalSupply: getTokenBalance(totalSupply) } }));
       } catch (e) {
         console.error(e);
       }
@@ -34,8 +24,6 @@ const useGetTokenInfo = (tokenAddress: string) => {
 
     fetchTokenStats();
   }, [tokenAddress, connectorStatus]);
-
-  return tokenInfo;
 };
 
 export default useGetTokenInfo;

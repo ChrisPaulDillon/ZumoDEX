@@ -2,11 +2,13 @@ import {
   CONNECTOR_TYPE,
   IDexInfo,
   initialState,
+  ITokenInfo,
   logUserIn,
   logUserOut,
   updateDexInfo,
   updateEtherBalance,
   updateJsonRpcConnection,
+  updateTokenInfo,
   updateWeb3Provider,
 } from "./reducer";
 import reducer from "./reducer";
@@ -72,5 +74,15 @@ describe("Redux Reducer", () => {
     };
     const state = reducer(initialState, updateDexInfo({ dexInfo: dexInfo }));
     expect(state.dexInfo).toEqual(dexInfo);
+  });
+
+  test("should update token info", () => {
+    const tokenInfo: ITokenInfo = {
+      name: "TestTokenDex",
+      symbol: "TDD",
+      totalSupply: 100000,
+    };
+    const state = reducer(initialState, updateTokenInfo({ tokenInfo: tokenInfo }));
+    expect(state.tokenInfo).toEqual(tokenInfo);
   });
 });
