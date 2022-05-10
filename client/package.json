@@ -50,6 +50,7 @@
     "eslint": "^8.13.0",
     "eslint-config-next": "^12.1.5",
     "eslint-config-sznm": "^0.2.1",
+    "eth-testing": "^1.0.0",
     "i": "^0.3.7",
     "jest": "^28.1.0",
     "jest-environment-jsdom": "^28.1.0",
