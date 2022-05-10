@@ -1,10 +1,10 @@
 import { ButtonProps, Button } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import useFireToast from "../../../hooks/useFireToast";
-import useWalletConnect from "../../../hooks/useWalletConnect";
-import { IAppState } from "../../../state";
-import { CONNECTOR_TYPE } from "../../../state/reducer";
-import { getAbbreviatedAddress } from "../../../util/addressHelper";
+import useFireToast from "../../hooks/useFireToast";
+import useWalletConnect from "../../hooks/useWalletConnect";
+import { IAppState } from "../../state";
+import { CONNECTOR_TYPE } from "../../state/reducer";
+import { getAbbreviatedAddress } from "../../util/addressHelper";
 
 const WalletConnectButton: React.FC<ButtonProps> = ({ ...rest }) => {
   const userAddress = useSelector((state: IAppState) => state.state.userAddress);

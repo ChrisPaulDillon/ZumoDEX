@@ -11,7 +11,7 @@ import "lib/styles/globals.css";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Provider } from "react-redux";
-import configureStore from "../../state";
+import configureStore from "../state";
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider);

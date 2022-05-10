@@ -1,7 +1,7 @@
 import { useColorModeValue, Heading, Text, Skeleton, Stack, HStack, Grid } from "@chakra-ui/react";
-import { ITokenInfo } from "../../../contracts/hooks/useGetTokenInfo";
+import { ITokenInfo } from "../../contracts/hooks/useGetTokenInfo";
 import { useSelector } from "react-redux";
-import { IAppState } from "../../../state";
+import { IAppState } from "../../state";
 
 interface ITDDStats {
   tokenInfo?: ITokenInfo;

@@ -1,5 +1,5 @@
 import { toast, useToast } from "@chakra-ui/react";
-import { ToastError, ToastSuccess, ToastWarning } from "../src/lib/components/CustomToasts";
+import { ToastError, ToastSuccess, ToastWarning } from "../lib/components/CustomToasts";
 
 const useFireToast = () => {
   const toast = useToast();

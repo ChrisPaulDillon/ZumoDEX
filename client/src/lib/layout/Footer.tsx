@@ -1,7 +1,7 @@
 import { Badge, Flex, HStack, Link, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import { IAppState } from "../../../state";
-import { CONNECTOR_TYPE } from "../../../state/reducer";
+import { IAppState } from "../../state";
+import { CONNECTOR_TYPE } from "../../state/reducer";
 
 const Footer = () => {
   const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
