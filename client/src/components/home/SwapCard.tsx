@@ -76,7 +76,7 @@ const SwapCard: React.FC = () => {
     if (exchangeMode === EXCHANGE_MODE.BUY) {
       return await buyTokens(Number(etherAmount));
     } else if (exchangeMode === EXCHANGE_MODE.SELL) {
-      return await sellTokens(userTokenBalance);
+      return await sellTokens(Number(tddAmount));
     }
     return await onApprove();
   };
@@ -109,12 +109,13 @@ const SwapCard: React.FC = () => {
           </Heading>
           <Box>
             {inputs?.map((item, idx) => (
-              <Flex key={idx}>
-                <HStack>
-                  <Image src={item.imgSource} height={20} width={20} />
-                  <Text fontSize={"sm"}>{item.ticker}</Text>
-                </HStack>
+              <HStack key={idx}>
                 <Box p={4}>
+                  {" "}
+                  <HStack>
+                    <Image src={item.imgSource} height={20} width={20} />
+                    <Text fontSize={"sm"}>{item.ticker}</Text>
+                  </HStack>
                   <NumberInput
                     name={item.ticker}
                     size="sm"
@@ -131,7 +132,7 @@ const SwapCard: React.FC = () => {
                     </NumberInputStepper>
                   </NumberInput>
                 </Box>
-              </Flex>
+              </HStack>
             ))}
           </Box>
           <IconButton
@@ -139,13 +140,12 @@ const SwapCard: React.FC = () => {
             aria-label="Swap Token"
             size="xs"
             onClick={() => {
+              setExchangeMode(inputs[0].ticker === "ETH" ? EXCHANGE_MODE.SELL : EXCHANGE_MODE.BUY);
               setInputs([...inputs].reverse());
-              setExchangeMode(exchangeMode === EXCHANGE_MODE.BUY ? EXCHANGE_MODE.SELL : EXCHANGE_MODE.BUY);
               setEtherAmount("0");
               setTddAmount("0");
             }}
           />
-          {/* {inputs[1]} */}
 
           <Stack pt={10} spacing={10}>
             <Button isLoading={formState.isSubmitting} type="submit" isDisabled={!isLoggedIn}>

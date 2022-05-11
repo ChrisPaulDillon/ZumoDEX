@@ -1,3 +1,4 @@
+import useRefresh from "hooks/useRefresh";
 import { useEffect } from "react";
 import { useAppDispatch } from "state";
 import { getConnectionStatusSelector, getSignerSelector, updateDexInfo } from "../../state/reducer";
@@ -7,6 +8,7 @@ const useGetDexInfo = (dexSwapAddress: string) => {
   const signer = getSignerSelector();
   const connectorStatus = getConnectionStatusSelector();
   const dispatch = useAppDispatch();
+  const { fastRefresh } = useRefresh();
 
   useEffect(() => {
     const fetchDexInfo = async () => {
@@ -30,7 +32,7 @@ const useGetDexInfo = (dexSwapAddress: string) => {
     };
 
     fetchDexInfo();
-  }, [dexSwapAddress, connectorStatus]);
+  }, [dexSwapAddress, connectorStatus, fastRefresh]);
 };
 
 export default useGetDexInfo;
