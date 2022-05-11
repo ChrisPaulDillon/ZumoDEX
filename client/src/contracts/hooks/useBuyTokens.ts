@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import useFireToast from "../../hooks/useFireToast";
 import { getLoginStatusSelector, getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
@@ -19,15 +19,19 @@ const useBuyTokens = () => {
     }
   }, []);
 
-  const buyTokens = async (amount: Number) => {
-    try {
-      const wei = ethers.utils.parseEther(amount.toString());
-      const tx = await contract.buyTokens({ value: wei });
-      console.log(tx);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const buyTokens = useCallback(
+    async (amount: Number) => {
+      try {
+        const wei = ethers.utils.parseEther(amount.toString());
+        const tx = await contract.buyTokens({ value: wei });
+        console.log(tx);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [contract]
+  );
+
   return { buyTokens };
 };
 
