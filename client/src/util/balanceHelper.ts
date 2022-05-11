@@ -12,6 +12,9 @@ export const ConvertTokenNoToBN = (tokenAmount: Number): BigNumber => {
 };
 
 export const ConvertEtherToTTD = (etherAmount: string): string => {
+  if (etherAmount == "") {
+    return "0";
+  }
   const weiAmount = ethers.utils.parseEther(etherAmount);
   const tokenAmount = Number(weiAmount) / 10000;
   return tokenAmount.toString();

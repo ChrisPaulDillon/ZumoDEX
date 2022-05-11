@@ -17,14 +17,18 @@ const useContractEventListener = () => {
   useEffect(() => {
     if (connectionStatus === CONNECTOR_TYPE.WALLET_CONNECT) {
       dexContract?.on("TokensPurchased", (account, token, amount, rate) => {
-        toast.Positive("Success", "Successfully bought TTD Tokens!");
+        if (!toast.isActive(id)) {
+          toast.Positive("Success", "Successfully bought TTD Tokens!");
+        }
       });
 
       dexContract?.on("TokensSold", (account, token, amount, rate) => {
-        toast.Positive("Success", "Successfully sold TTD Tokens!");
+        if (!toast.isActive(id)) {
+          toast.Positive("Success", "Successfully sold TTD Tokens!");
+        }
       });
     }
-  }, [signer, dexContract]);
+  }, []);
 
   useEffect(() => {
     if (connectionStatus === CONNECTOR_TYPE.WALLET_CONNECT) {
@@ -34,7 +38,7 @@ const useContractEventListener = () => {
         }
       });
     }
-  }, [erc20Contract]);
+  }, []);
 };
 
 export default useContractEventListener;
