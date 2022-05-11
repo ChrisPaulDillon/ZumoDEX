@@ -15,7 +15,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { IoMdArrowDown } from "react-icons/io";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   getDexInfoSelector,
   getEtherBalanceSelector,
@@ -39,8 +39,6 @@ enum EXCHANGE_MODE {
 interface ITokenInput {
   ticker: string;
   imgSource: string;
-  value: string;
-  onChange: (value: any) => void;
 }
 
 const SwapCard: React.FC = () => {
@@ -60,27 +58,13 @@ const SwapCard: React.FC = () => {
   }, []);
 
   const [inputs, setInputs] = useState<Array<ITokenInput>>([
-    { ticker: "ETH", imgSource: "/eth.svg", value: etherAmount, onChange: handleEtherOnChange },
-    { ticker: "TDD", imgSource: "/zumo-mobile-logo.svg", value: tddAmount, onChange: setTddAmount },
+    { ticker: "ETH", imgSource: "/eth.svg" },
+    { ticker: "TDD", imgSource: "/zumo-mobile-logo.svg" },
   ]);
 
   const { buyTokens } = useBuyTokens();
   const { sellTokens } = useSellTokens();
   const { onApprove } = useApprove();
-
-  // useEffect(() => {
-  //   if (!isTokenSpendable) {
-  //     console.log(isTokenSpendable);
-
-  //     setExchangeMode(EXCHANGE_MODE.APPROVE);
-  //   }
-  // }, [isTokenSpendable]);
-
-  // useEffect(() => {
-  //   if (etherBalance !== 0) {
-  //     setEtherAmount(etherBalance);
-  //   }
-  // }, [etherBalance]);
 
   const onSubmit = async () => {
     if (exchangeMode === EXCHANGE_MODE.BUY) {
@@ -121,7 +105,6 @@ const SwapCard: React.FC = () => {
                     size="sm"
                     maxW="150px"
                     variant={"filled"}
-                    defaultValue={item.value}
                     value={item.ticker === "ETH" ? etherAmount : tddAmount}
                     min={0}
                     onChange={(e) => (item.ticker === "ETH" ? handleEtherOnChange(e) : handleEtherOnChange(e))}

@@ -3,11 +3,13 @@ import { getERC20Contract } from "../contractHelper";
 import { getConnectionStatusSelector, getSignerSelector, updateTokenInfo } from "../../state/reducer";
 import { ConvertTokenBalanceFromBN } from "../../util/balanceHelper";
 import { useAppDispatch } from "state";
+import useRefresh from "hooks/useRefresh";
 
 const useGetTokenInfo = (tokenAddress: string) => {
   const signer = getSignerSelector();
   const connectorStatus = getConnectionStatusSelector();
   const dispatch = useAppDispatch();
+  const { fastRefresh } = useRefresh();
 
   useEffect(() => {
     const fetchTokenStats = async () => {
@@ -23,7 +25,7 @@ const useGetTokenInfo = (tokenAddress: string) => {
     };
 
     fetchTokenStats();
-  }, [tokenAddress, connectorStatus]);
+  }, [tokenAddress, connectorStatus, fastRefresh]);
 };
 
 export default useGetTokenInfo;
