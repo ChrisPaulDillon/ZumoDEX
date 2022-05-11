@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import useFireToast from "../../hooks/useFireToast";
 import { getLoginStatusSelector, getSignerSelector } from "../../state/reducer";
 import { ConvertTokenNoToBN } from "../../util/balanceHelper";
@@ -19,15 +19,19 @@ const useSellTokens = () => {
     }
   }, []);
 
-  const sellTokens = async (amount: Number) => {
-    try {
-      const tokensBN = ConvertTokenNoToBN(amount);
-      const tx = await contract.sellTokens(tokensBN);
-      console.log(tx);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const sellTokens = useCallback(
+    async (amount: Number) => {
+      try {
+        const tokensBN = ConvertTokenNoToBN(amount);
+        const tx = await contract.sellTokens(tokensBN);
+        console.log(tx);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [contract]
+  );
+
   return { sellTokens };
 };
 
