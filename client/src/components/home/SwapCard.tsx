@@ -15,7 +15,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { IoMdArrowDown } from "react-icons/io";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   getDexInfoSelector,
   getEtherBalanceSelector,
@@ -26,7 +26,7 @@ import {
 import useBuyTokens from "contracts/hooks/useBuyTokens";
 import useSellTokens from "contracts/hooks/useSellTokens";
 import { useApprove } from "contracts/hooks/useApprove";
-import { ConvertEtherToTTD } from "util/balanceHelper";
+import { ConvertEtherToTTD, CovertTDDToEther } from "util/balanceHelper";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 
@@ -57,6 +57,12 @@ const SwapCard: React.FC = () => {
     setTddAmount(ttdVal);
   }, []);
 
+  const handleTDDOnChange = useCallback((value: string) => {
+    setTddAmount(value);
+    const etherVal = CovertTDDToEther(value);
+    setEtherAmount(etherVal);
+  }, []);
+
   const [inputs, setInputs] = useState<Array<ITokenInput>>([
     { ticker: "ETH", imgSource: "/eth.svg" },
     { ticker: "TDD", imgSource: "/zumo-mobile-logo.svg" },
@@ -74,6 +80,15 @@ const SwapCard: React.FC = () => {
     }
     return await onApprove();
   };
+
+  useEffect(() => {
+    if (isTokenSpendable) {
+      setExchangeMode(EXCHANGE_MODE.BUY);
+    } else {
+      setExchangeMode(EXCHANGE_MODE.APPROVE);
+    }
+  }, [isTokenSpendable]);
+
   const { handleSubmit, formState, register } = useForm();
 
   return (
@@ -103,11 +118,11 @@ const SwapCard: React.FC = () => {
                   <NumberInput
                     name={item.ticker}
                     size="sm"
-                    maxW="150px"
+                    maxW="200px"
                     variant={"filled"}
                     value={item.ticker === "ETH" ? etherAmount : tddAmount}
                     min={0}
-                    onChange={(e) => (item.ticker === "ETH" ? handleEtherOnChange(e) : handleEtherOnChange(e))}
+                    onChange={(e) => (item.ticker === "ETH" ? handleEtherOnChange(e) : handleTDDOnChange(e))}
                   >
                     <NumberInputField />
                     <NumberInputStepper>
@@ -125,7 +140,9 @@ const SwapCard: React.FC = () => {
             size="xs"
             onClick={() => {
               setInputs([...inputs].reverse());
-              setExchangeMode(exchangeMode === "Buy" ? EXCHANGE_MODE.SELL : EXCHANGE_MODE.BUY);
+              setExchangeMode(exchangeMode === EXCHANGE_MODE.BUY ? EXCHANGE_MODE.SELL : EXCHANGE_MODE.BUY);
+              setEtherAmount("0");
+              setTddAmount("0");
             }}
           />
           {/* {inputs[1]} */}
