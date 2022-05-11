@@ -1,8 +1,10 @@
 import { getERC20Contract } from "contracts/contractHelper";
 import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "contracts/contracts";
+import { ethers } from "ethers";
 import { useEffect } from "react";
 import { useAppDispatch } from "state";
 import { getLoginStatusSelector, getSignerSelector, updateTokenIsSpendable } from "state/reducer";
+import { ConvertTokenBalanceFromBN } from "../../util/balanceHelper";
 
 const useIsSpendable = () => {
   const signer = getSignerSelector();
@@ -14,7 +16,8 @@ const useIsSpendable = () => {
       const erc20Contract = getERC20Contract(CONTRACT_ERC20, signer);
       try {
         const tx = await erc20Contract.allowance(userAddress, CONTRACT_DEXSWAP);
-        dispatch(updateTokenIsSpendable({ isTokenSpendable: tx > 0 }));
+        const allowanceNo = ConvertTokenBalanceFromBN(tx);
+        dispatch(updateTokenIsSpendable({ isTokenSpendable: allowanceNo > 0 }));
       } catch (e) {
         console.log(e);
       }

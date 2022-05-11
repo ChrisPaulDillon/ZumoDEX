@@ -16,7 +16,13 @@ import {
 } from "@chakra-ui/react";
 import { IoMdArrowDown } from "react-icons/io";
 import React, { useCallback, useEffect, useState } from "react";
-import { getDexInfoSelector, getEtherBalanceSelector, getIsTokenSpendable, getUserTokenBalanceSelector } from "state/reducer";
+import {
+  getDexInfoSelector,
+  getEtherBalanceSelector,
+  getIsTokenSpendable,
+  getLoginStatusSelector,
+  getUserTokenBalanceSelector,
+} from "state/reducer";
 import useBuyTokens from "contracts/hooks/useBuyTokens";
 import useSellTokens from "contracts/hooks/useSellTokens";
 import { useApprove } from "contracts/hooks/useApprove";
@@ -38,13 +44,14 @@ interface ITokenInput {
 }
 
 const SwapCard: React.FC = () => {
+  const { isLoggedIn } = getLoginStatusSelector();
   const etherBalance = getEtherBalanceSelector();
   const userTokenBalance = getUserTokenBalanceSelector();
   const isTokenSpendable = getIsTokenSpendable();
   const dexInfo = getDexInfoSelector();
   const [etherAmount, setEtherAmount] = useState<string>("0");
   const [tddAmount, setTddAmount] = useState<string>("0");
-  const [exchangeMode, setExchangeMode] = useState<EXCHANGE_MODE>(EXCHANGE_MODE.BUY);
+  const [exchangeMode, setExchangeMode] = useState<EXCHANGE_MODE>(isTokenSpendable ? EXCHANGE_MODE.BUY : EXCHANGE_MODE.APPROVE);
 
   const handleEtherOnChange = useCallback((value: string) => {
     setEtherAmount(value);
@@ -61,11 +68,13 @@ const SwapCard: React.FC = () => {
   const { sellTokens } = useSellTokens();
   const { onApprove } = useApprove();
 
-  useEffect(() => {
-    if (!isTokenSpendable) {
-      setExchangeMode(EXCHANGE_MODE.APPROVE);
-    }
-  }, [isTokenSpendable]);
+  // useEffect(() => {
+  //   if (!isTokenSpendable) {
+  //     console.log(isTokenSpendable);
+
+  //     setExchangeMode(EXCHANGE_MODE.APPROVE);
+  //   }
+  // }, [isTokenSpendable]);
 
   // useEffect(() => {
   //   if (etherBalance !== 0) {
@@ -139,7 +148,7 @@ const SwapCard: React.FC = () => {
           {/* {inputs[1]} */}
 
           <Stack pt={10} spacing={10}>
-            <Button isLoading={formState.isSubmitting} type="submit">
+            <Button isLoading={formState.isSubmitting} type="submit" isDisabled={!isLoggedIn}>
               {exchangeMode}
             </Button>
             <Text>{dexInfo.totalSales.toString()} Total Sales</Text>

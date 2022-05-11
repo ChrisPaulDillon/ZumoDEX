@@ -22,8 +22,8 @@ const useGetEthBalance = () => {
         const balance = await provider.getBalance(userAddress!);
         const userBalance = ethers.utils.formatEther(balance);
         dispatch(updateEtherBalance({ etherBalance: Number(userBalance) }));
-      } catch (error) {
-        console.log(error);
+      } catch (e) {
+        console.log(e);
       }
     };
 
