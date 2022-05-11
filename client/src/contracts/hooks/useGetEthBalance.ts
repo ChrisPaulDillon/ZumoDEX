@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { useEffect } from "react";
 import { useAppDispatch } from "../../state";
 import {
+  CONNECTOR_TYPE,
   getConnectionStatusSelector,
   getLoginStatusSelector,
   getSignerSelector,
@@ -10,21 +11,26 @@ import {
 
 const useGetEthBalance = () => {
   const provider = getSignerSelector();
+  const connectionStatus = getConnectionStatusSelector();
   const { userAddress, isLoggedIn } = getLoginStatusSelector();
   const connectorStatus = getConnectionStatusSelector();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const getEthBalance = async () => {
-      const balance = await provider.getBalance(userAddress!);
-      const userBalance = ethers.utils.formatEther(balance);
-      dispatch(updateEtherBalance({ etherBalance: Number(userBalance) }));
+      try {
+        const balance = await provider.getBalance(userAddress!);
+        const userBalance = ethers.utils.formatEther(balance);
+        dispatch(updateEtherBalance({ etherBalance: Number(userBalance) }));
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    if (isLoggedIn) {
+    if (connectionStatus === CONNECTOR_TYPE.WALLET_CONNECT) {
       getEthBalance();
     }
-  }, [isLoggedIn, connectorStatus]);
+  }, [isLoggedIn, connectorStatus, provider]);
 };
 
 export default useGetEthBalance;
