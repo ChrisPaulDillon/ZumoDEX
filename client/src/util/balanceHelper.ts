@@ -1,12 +1,12 @@
 import { BigNumber, BigNumberish } from "ethers";
 import { ethers } from "ethers";
 
-export const ConvertTokenBalanceFromBN = (amount: BigNumberish, decimals = 2): Number => {
+export const ConvertTokenBalanceFromBN = (amount: BigNumberish, decimals = 2): number => {
   const result = ethers.utils.formatUnits(amount, decimals);
   return Number(result);
 };
 
-export const ConvertTokenNoToBN = (tokenAmount: Number): BigNumber => {
+export const ConvertTokenNoToBN = (tokenAmount: number): BigNumber => {
   const result = ethers.utils.parseUnits(tokenAmount.toString(), 2);
   return result;
 };

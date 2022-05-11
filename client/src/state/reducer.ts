@@ -6,7 +6,7 @@ import { IAppState } from ".";
 export interface ITokenInfo {
   name: string;
   symbol: string;
-  totalSupply: Number;
+  totalSupply: number;
 }
 
 export interface IDexInfo {
@@ -25,14 +25,15 @@ export enum CONNECTOR_TYPE {
 export interface IGlobalState {
   userAddress: string | undefined;
   isLoggedIn: boolean;
-  etherBalance: Number;
-  userTokenBalance: Number;
+  etherBalance: number;
+  userTokenBalance: number;
   isTokenSpendable: boolean;
   connectorStatus: CONNECTOR_TYPE;
   web3Provider: Web3Provider | undefined;
   jsonRpcProvider: JsonRpcProvider | undefined;
   dexInfo: IDexInfo;
   tokenInfo: ITokenInfo;
+  contractCallLoading: boolean;
 }
 
 export const initialState: IGlobalState = {
@@ -46,11 +47,12 @@ export const initialState: IGlobalState = {
   jsonRpcProvider: undefined,
   dexInfo: { buyRate: "", sellRate: "", totalSales: 0 },
   tokenInfo: { name: "", symbol: "", totalSupply: 0 },
+  contractCallLoading: false,
 };
 
 export const logUserIn = createAction<{ address: string }>("state/logUserIn");
 export const logUserOut = createAction("state/logUserOut");
-export const updateEtherBalance = createAction<{ etherBalance: Number }>("state/updateEtherBalance");
+export const updateEtherBalance = createAction<{ etherBalance: number }>("state/updateEtherBalance");
 export const updateWeb3Provider = createAction<{
   web3Provider: Web3Provider;
 }>("state/updateWeb3Provider");
@@ -64,11 +66,15 @@ export const updateTokenInfo = createAction<{
   tokenInfo: ITokenInfo;
 }>("state/tokenInfo");
 export const updateUserTokenBalance = createAction<{
-  tokenBalance: Number;
+  tokenBalance: number;
 }>("state/updateUserTokenBalance");
 export const updateTokenIsSpendable = createAction<{
   isTokenSpendable: boolean;
 }>("state/updateTokenIsSpendable");
+
+export const updateContractCallLoading = createAction<{
+  contractCallLoading: boolean;
+}>("state/updateContractCallLoading");
 
 export default createReducer(initialState, (builder) =>
   builder
@@ -103,6 +109,9 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateTokenIsSpendable, (state: IGlobalState, { payload: { isTokenSpendable } }) => {
       state.isTokenSpendable = isTokenSpendable;
     })
+    .addCase(updateContractCallLoading, (state: IGlobalState, { payload: { contractCallLoading } }) => {
+      state.contractCallLoading = contractCallLoading;
+    })
 );
 
 export const getSignerSelector = (): JsonRpcSigner | JsonRpcProvider => {
@@ -123,7 +132,7 @@ export const getConnectionStatusSelector = (): CONNECTOR_TYPE => {
   return connectorStatus;
 };
 
-export const getEtherBalanceSelector = (): Number => {
+export const getEtherBalanceSelector = (): number => {
   const etherBalance = useSelector((state: IAppState) => state.state.etherBalance);
   return etherBalance;
 };
@@ -138,7 +147,7 @@ export const getTokenInfoSelector = (): ITokenInfo => {
   return tokenInfo;
 };
 
-export const getUserTokenBalanceSelector = (): Number => {
+export const getUserTokenBalanceSelector = (): number => {
   const userTokenBalance = useSelector((state: IAppState) => state.state.userTokenBalance);
   return userTokenBalance;
 };

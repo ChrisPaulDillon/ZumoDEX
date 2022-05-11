@@ -9,7 +9,7 @@ const useSellTokens = () => {
   const contract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
 
   const sellTokens = useCallback(
-    async (amount: Number) => {
+    async (amount: number) => {
       try {
         const tokensBN = ConvertTokenNoToBN(amount);
         const tx = await contract.sellTokens(tokensBN);
