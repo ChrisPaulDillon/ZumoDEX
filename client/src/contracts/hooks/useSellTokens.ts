@@ -13,8 +13,8 @@ const useSellTokens = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      contract?.on("TokensPurchased", (account, token, amount, rate) => {
-        toast.Positive("Success", "Successfully bought TTD Tokens!");
+      contract?.on("TokensSold", (account, token, amount, rate) => {
+        toast.Positive("Success", "Successfully sold TTD Tokens!");
       });
     }
   }, []);

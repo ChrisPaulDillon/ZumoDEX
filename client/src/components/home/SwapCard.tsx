@@ -3,26 +3,34 @@ import { IoMdArrowDown } from "react-icons/io";
 import React, { useEffect, useState } from "react";
 import TokenInput from "./TokenInput";
 import EthereumInput from "./EthereumInput";
-import { getDexInfoSelector, getEtherBalanceSelector } from "state/reducer";
+import { getDexInfoSelector, getEtherBalanceSelector, getUserTokenBalance } from "state/reducer";
 import useBuyTokens from "contracts/hooks/useBuyTokens";
+import useSellTokens from "contracts/hooks/useSellTokens";
 
+enum EXCHANGE_MODE {
+  BUY = "Buy",
+  SELL = "Sell",
+}
 const SwapCard: React.FC = () => {
   const etherBalance = getEtherBalanceSelector();
+  const userTokenBalance = getUserTokenBalance();
+
   const dexInfo = getDexInfoSelector();
   const [etherAmount, setEtherAmount] = useState<Number>(0);
-  const [buttonLabel, setButtonLabel] = useState<string>("Buy");
+  const [exchangeMode, setExchangeMode] = useState<EXCHANGE_MODE>(EXCHANGE_MODE.BUY);
   const [inputs, setInputs] = useState<Array<React.ReactNode>>([
     <EthereumInput etherAmount={etherAmount} setEtherAmount={setEtherAmount} />,
     <TokenInput />,
   ]);
+
+  const { buyTokens } = useBuyTokens();
+  const { sellTokens } = useSellTokens();
 
   useEffect(() => {
     if (etherBalance !== 0) {
       setEtherAmount(etherBalance);
     }
   }, [etherBalance]);
-
-  const { buyTokens } = useBuyTokens();
 
   return (
     <Box
@@ -46,13 +54,15 @@ const SwapCard: React.FC = () => {
           size="xs"
           onClick={() => {
             setInputs([...inputs].reverse());
-            setButtonLabel(buttonLabel === "Buy" ? "Sell" : "Buy");
+            setExchangeMode(exchangeMode === "Buy" ? EXCHANGE_MODE.SELL : EXCHANGE_MODE.BUY);
           }}
         />
         {inputs[1]}
 
         <Stack pt={10} spacing={10}>
-          <Button onClick={async () => await buyTokens(etherAmount)}>{buttonLabel}</Button>
+          <Button onClick={async () => (exchangeMode === "Buy" ? await buyTokens(etherAmount) : await sellTokens(userTokenBalance))}>
+            {exchangeMode}
+          </Button>
           <Text>{dexInfo.totalSales.toString()} Total Sales</Text>
         </Stack>
       </Stack>
