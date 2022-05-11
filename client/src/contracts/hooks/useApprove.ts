@@ -1,21 +1,32 @@
-import { useWeb3React } from "@web3-react/core";
 import { getERC20Contract } from "contracts/contractHelper";
 import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "contracts/contracts";
 import { ethers } from "ethers";
-import { useCallback } from "react";
+import useFireToast from "hooks/useFireToast";
+import { useCallback, useEffect } from "react";
+import { getLoginStatusSelector, getSignerSelector } from "../../state/reducer";
 
 export const useApprove = () => {
-  const { account } = useWeb3React();
-  const erc20Contract = getERC20Contract(CONTRACT_ERC20);
+  const { userAddress, isLoggedIn } = getLoginStatusSelector();
+  const signer = getSignerSelector();
+  const erc20Contract = getERC20Contract(CONTRACT_ERC20, signer);
+  const toast = useFireToast();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      erc20Contract?.on("Approval", (owner, spender, amount) => {
+        toast.Positive("Success", "Approved, ready to purchase");
+      });
+    }
+  }, [userAddress]);
 
   const handleApprove = useCallback(async () => {
     try {
-      const tx = await erc20Contract.approve(CONTRACT_DEXSWAP, ethers.constants.MaxUint256).send({ from: account });
+      const tx = await erc20Contract.approve(CONTRACT_DEXSWAP, ethers.constants.MaxUint256).send({ from: userAddress });
       return tx;
     } catch (e) {
       return false;
     }
-  }, [account, erc20Contract]);
+  }, [userAddress, erc20Contract]);
 
   return { onApprove: handleApprove };
 };

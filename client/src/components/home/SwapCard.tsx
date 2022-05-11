@@ -3,18 +3,20 @@ import { IoMdArrowDown } from "react-icons/io";
 import React, { useEffect, useState } from "react";
 import TokenInput from "./TokenInput";
 import EthereumInput from "./EthereumInput";
-import { getDexInfoSelector, getEtherBalanceSelector, getUserTokenBalance } from "state/reducer";
+import { getDexInfoSelector, getEtherBalanceSelector, getIsTokenSpendable, getUserTokenBalanceSelector } from "state/reducer";
 import useBuyTokens from "contracts/hooks/useBuyTokens";
 import useSellTokens from "contracts/hooks/useSellTokens";
+import { useApprove } from "contracts/hooks/useApprove";
 
 enum EXCHANGE_MODE {
   BUY = "Buy",
   SELL = "Sell",
+  APPROVE = "Approve",
 }
 const SwapCard: React.FC = () => {
   const etherBalance = getEtherBalanceSelector();
-  const userTokenBalance = getUserTokenBalance();
-
+  const userTokenBalance = getUserTokenBalanceSelector();
+  const isTokenSpendable = getIsTokenSpendable();
   const dexInfo = getDexInfoSelector();
   const [etherAmount, setEtherAmount] = useState<Number>(0);
   const [exchangeMode, setExchangeMode] = useState<EXCHANGE_MODE>(EXCHANGE_MODE.BUY);
@@ -25,12 +27,28 @@ const SwapCard: React.FC = () => {
 
   const { buyTokens } = useBuyTokens();
   const { sellTokens } = useSellTokens();
+  const { onApprove } = useApprove();
+
+  useEffect(() => {
+    if (!isTokenSpendable) {
+      setExchangeMode(EXCHANGE_MODE.APPROVE);
+    }
+  }, [isTokenSpendable]);
 
   useEffect(() => {
     if (etherBalance !== 0) {
       setEtherAmount(etherBalance);
     }
   }, [etherBalance]);
+
+  const handleButtonClick = async () => {
+    if (exchangeMode === EXCHANGE_MODE.BUY) {
+      return await buyTokens(etherAmount);
+    } else if (exchangeMode === EXCHANGE_MODE.SELL) {
+      return await sellTokens(userTokenBalance);
+    }
+    return await onApprove();
+  };
 
   return (
     <Box
@@ -60,9 +78,7 @@ const SwapCard: React.FC = () => {
         {inputs[1]}
 
         <Stack pt={10} spacing={10}>
-          <Button onClick={async () => (exchangeMode === "Buy" ? await buyTokens(etherAmount) : await sellTokens(userTokenBalance))}>
-            {exchangeMode}
-          </Button>
+          <Button onClick={handleButtonClick}>{exchangeMode}</Button>
           <Text>{dexInfo.totalSales.toString()} Total Sales</Text>
         </Stack>
       </Stack>

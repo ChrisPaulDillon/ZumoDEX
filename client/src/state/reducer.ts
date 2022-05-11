@@ -27,6 +27,7 @@ export interface IGlobalState {
   isLoggedIn: boolean;
   etherBalance: Number;
   userTokenBalance: Number;
+  isTokenSpendable: boolean;
   connectorStatus: CONNECTOR_TYPE;
   web3Provider: Web3Provider | undefined;
   jsonRpcProvider: JsonRpcProvider | undefined;
@@ -39,6 +40,7 @@ export const initialState: IGlobalState = {
   isLoggedIn: false,
   etherBalance: 0,
   userTokenBalance: 0,
+  isTokenSpendable: false,
   connectorStatus: CONNECTOR_TYPE.NOT_CONNECTED,
   web3Provider: undefined,
   jsonRpcProvider: undefined,
@@ -64,6 +66,9 @@ export const updateTokenInfo = createAction<{
 export const updateUserTokenBalance = createAction<{
   tokenBalance: Number;
 }>("state/updateUserTokenBalance");
+export const updateTokenIsSpendable = createAction<{
+  isTokenSpendable: boolean;
+}>("state/updateTokenIsSpendable");
 
 export default createReducer(initialState, (builder) =>
   builder
@@ -94,6 +99,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserTokenBalance, (state: IGlobalState, { payload: { tokenBalance } }) => {
       state.userTokenBalance = tokenBalance;
+    })
+    .addCase(updateTokenIsSpendable, (state: IGlobalState, { payload: { isTokenSpendable } }) => {
+      state.isTokenSpendable = isTokenSpendable;
     })
 );
 
@@ -130,7 +138,12 @@ export const getTokenInfoSelector = (): ITokenInfo => {
   return tokenInfo;
 };
 
-export const getUserTokenBalance = (): Number => {
+export const getUserTokenBalanceSelector = (): Number => {
   const userTokenBalance = useSelector((state: IAppState) => state.state.userTokenBalance);
   return userTokenBalance;
+};
+
+export const getIsTokenSpendable = (): boolean => {
+  const isTokenSpendable = useSelector((state: IAppState) => state.state.isTokenSpendable);
+  return isTokenSpendable;
 };

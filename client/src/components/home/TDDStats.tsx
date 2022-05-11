@@ -1,10 +1,10 @@
 import { useColorModeValue, Heading, Text, Skeleton, Stack } from "@chakra-ui/react";
-import { getLoginStatusSelector, getTokenInfoSelector, getUserTokenBalance } from "state/reducer";
+import { getLoginStatusSelector, getTokenInfoSelector, getUserTokenBalanceSelector } from "state/reducer";
 
 const TDDStats: React.FC = () => {
   const { userAddress } = getLoginStatusSelector();
   const tokenInfo = getTokenInfoSelector();
-  const userTokenBalance = getUserTokenBalance();
+  const userTokenBalance = getUserTokenBalanceSelector();
 
   return (
     <Stack

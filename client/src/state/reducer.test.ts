@@ -9,6 +9,7 @@ import {
   updateEtherBalance,
   updateJsonRpcConnection,
   updateTokenInfo,
+  updateTokenIsSpendable,
   updateUserTokenBalance,
   updateWeb3Provider,
 } from "./reducer";
@@ -91,5 +92,10 @@ describe("Redux Reducer", () => {
     const userTokenBalance = 1000000000;
     const state = reducer(initialState, updateUserTokenBalance({ tokenBalance: userTokenBalance }));
     expect(state.userTokenBalance).toEqual(userTokenBalance);
+  });
+
+  test("should update user token spendable variable", () => {
+    const state = reducer(initialState, updateTokenIsSpendable({ isTokenSpendable: true }));
+    expect(state.isTokenSpendable).toEqual(true);
   });
 });
