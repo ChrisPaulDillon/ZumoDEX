@@ -28,6 +28,8 @@ Navigate to the client folder and issue the following commands:
 
 > npm install
 
+> npm run build
+
 > npm run dev
 
 Navigate to localhost:3000
