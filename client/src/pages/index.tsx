@@ -19,9 +19,7 @@ const Home = () => {
     <Box display={{ md: "flex" }} alignItems="center" justifyContent={"center"} minHeight="70vh" gap={14} mb={8} w="full">
       <Stack spacing={12}>
         <TDDStats />
-        <Stack direction={["column", "row"]} spacing={10}>
-          <SwapCard />
-        </Stack>
+        <SwapCard />
       </Stack>
     </Box>
   );

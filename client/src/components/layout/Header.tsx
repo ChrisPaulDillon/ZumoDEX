@@ -3,13 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 import WalletConnectButton from "./WalletConnectButton";
+import MotionBox from "components/motion/Box";
 
 const Header = () => {
   return (
     <Flex as="header" width="full" align="center">
-      <Box pr={2}>
+      <MotionBox animate={{ y: 2 }} transition={{ repeat: Infinity, duration: 2, repeatType: "reverse" }} pr={2}>
         <Image src="/zumo-mobile-logo.svg" height={30} width={30} alt="Zumo" />
-      </Box>
+      </MotionBox>
       <Heading as="h1" size="md">
         <Link href="/">ZumoSwap!</Link>
       </Heading>
