@@ -14,7 +14,7 @@ import {
   Flex,
   HStack,
 } from "@chakra-ui/react";
-import { IoMdArrowDown } from "react-icons/io";
+import { MdOutlineSwapVert } from "react-icons/md";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   getDexInfoSelector,
@@ -89,11 +89,21 @@ const SwapCard: React.FC = () => {
     }
   }, [isTokenSpendable]);
 
-  const { handleSubmit, formState, register } = useForm();
+  const { handleSubmit, formState } = useForm();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Box bg={useColorModeValue("gray.400", "gray.700")} rounded={"lg"} overflow={"hidden"} minH={"400px"} minW="200px" p={3}>
+      <Box
+        bg={useColorModeValue("gray.400", "gray.700")}
+        rounded={"lg"}
+        overflow={"hidden"}
+        minH={"400px"}
+        maxW={[250, 750, 750]}
+        p={3}
+        justifyContent="center"
+        alignItems={"center"}
+        border="2px"
+      >
         {" "}
         <Stack spacing={4} alignItems="center" justifyContent="center">
           <Heading textAlign={"center"} size="md">
@@ -128,7 +138,7 @@ const SwapCard: React.FC = () => {
             ))}
           </Box>
           <IconButton
-            as={IoMdArrowDown}
+            as={MdOutlineSwapVert}
             aria-label="Swap Token"
             size="xs"
             onClick={() => {

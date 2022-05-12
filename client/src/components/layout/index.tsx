@@ -1,4 +1,4 @@
-import { Box, Container, useColorModeValue } from "@chakra-ui/react";
+import { Box, Container, Flex, useColorModeValue } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 import Footer from "./Footer";
@@ -22,9 +22,9 @@ const Layout = ({ children }: LayoutProps) => {
     >
       <Container maxW="container.lg" pt={2}>
         <Header />
-        <Box as="main" my={22} >
+        <Flex as="main" my={22} justify="center" alignItems={"center"}>
           {children}
-        </Box>
+        </Flex>
         <Footer />
       </Container>
     </Box>

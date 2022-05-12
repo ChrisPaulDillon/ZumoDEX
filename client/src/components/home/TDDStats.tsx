@@ -7,7 +7,16 @@ const TDDStats: React.FC = () => {
   const userTokenBalance = getUserTokenBalanceSelector();
 
   return (
-    <Stack rounded="lg" minH={"150px"} minW={"250px"} bg={useColorModeValue("gray.400", "gray.700")} flexDir="column" w="100%" p={2}>
+    <Stack
+      rounded="lg"
+      minH={"150px"}
+      maxW={[250, 750, 750]}
+      bg={useColorModeValue("gray.400", "gray.700")}
+      flexDir="column"
+      w="100%"
+      p={2}
+      border="2px"
+    >
       <Heading textAlign={"center"} size="md">
         {tokenInfo?.name}
       </Heading>
