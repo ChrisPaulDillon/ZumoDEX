@@ -60,8 +60,8 @@ const SwapCard: React.FC = () => {
     setEtherAmount(value);
     //don't attempt to convert as the ether amount is not valid anyway
     // if (!inputs[0].isError) {
-    //   const ttdVal = ConvertEtherToTTD(value);
-    //   setTddAmount(ttdVal);
+    const ttdVal = ConvertEtherToTTD(value);
+    setTddAmount(ttdVal);
     // }
   }, []);
 
@@ -146,7 +146,8 @@ const SwapCard: React.FC = () => {
                     <NumberInput
                       name={item.ticker}
                       size="sm"
-                      minW="200px"
+                      // minW="200px"
+                      w="auto"
                       variant={"filled"}
                       value={item.ticker === "ETH" ? etherAmount : tddAmount}
                       min={0}
@@ -183,7 +184,9 @@ const SwapCard: React.FC = () => {
               {exchangeMode === EXCHANGE_MODE.BUY && `You are currently buying TDD at a rate of ${dexInfo.buyRate} wei to 1 TDD`}
               {exchangeMode === EXCHANGE_MODE.SELL && `You are currently selling TDD at a rate of ${dexInfo.sellRate} wei to 1 TDD`}
             </Text>
-            <Badge colorScheme={"pink"}>Maxmimum Buy: {dexInfo.maximumBuy}</Badge>
+            <Badge colorScheme={"pink"}>
+              {EXCHANGE_MODE.BUY ? `Maxmimum Buy: ${dexInfo.maximumBuy}` : `Maxmimum Sell: ${dexInfo.maximumBuy}`}
+            </Badge>
             <Button
               isLoading={formState.isSubmitting}
               type="submit"

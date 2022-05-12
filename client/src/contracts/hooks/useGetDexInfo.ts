@@ -1,4 +1,5 @@
 import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "contracts/contracts";
+import { ethers } from "ethers";
 import useRefresh from "hooks/useRefresh";
 import { useEffect } from "react";
 import { useAppDispatch } from "state";
@@ -20,8 +21,24 @@ const useGetDexInfo = () => {
         const buyRate = await dexSwapContract.getBuyRate();
         const sellRate = await dexSwapContract.getSellRate();
         const totalSales = await dexSwapContract.getTotalSales();
-        const dexTokenBalance = await erc20Contract.balanceOf(CONTRACT_DEXSWAP);
+        const dexTokenBalance = await erc20Contract.balanceOf(dexSwapContract.address);
         const dexTokenBalanceNo = ConvertTokenBalanceFromBN(dexTokenBalance);
+        const maxBuy = Number(ConvertEtherToTTD(dexTokenBalanceNo.toString()));
+
+        // const exchangeEtherBalance = await signer.getBalance(dexSwapContract.address);
+        // console.log(exchangeEtherBalance);
+
+        // const exchangeEtherBalanceNo = ethers.utils.formatEther(exchangeEtherBalance);
+
+        // const maxSell = ConvertEtherToTTD(exchangeEtherBalance.toString());
+        // console.log(maxSell);
+
+        // const etherBalNo = ethers.utils.formatEther(etherBalance);
+        // const maxSell = Number(CovertTDDToEther(etherBalNo));
+        // console.log(etherBalNo);
+
+        // console.log(maxSell);
+
         dispatch(
           updateDexInfo({
             dexInfo: {
@@ -29,7 +46,9 @@ const useGetDexInfo = () => {
               sellRate: sellRate,
               totalSales: totalSales,
               exchangeTokenBalance: dexTokenBalanceNo,
-              maximumBuy: Number(ConvertEtherToTTD(dexTokenBalanceNo.toString())),
+              maximumBuy: maxBuy,
+              exchangeEtherBalance: Number(0),
+              maximumSell: Number(0),
             },
           })
         );
@@ -39,7 +58,7 @@ const useGetDexInfo = () => {
     };
 
     fetchDexInfo();
-  }, [connectorStatus, fastRefresh]);
+  }, [signer, connectorStatus, fastRefresh]);
 };
 
 export default useGetDexInfo;
