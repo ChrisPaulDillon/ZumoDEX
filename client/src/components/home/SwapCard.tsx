@@ -121,7 +121,7 @@ const SwapCard: React.FC = () => {
                   <NumberInput
                     name={item.ticker}
                     size="sm"
-                    maxW="200px"
+                    minW="200px"
                     variant={"filled"}
                     value={item.ticker === "ETH" ? etherAmount : tddAmount}
                     min={0}
@@ -149,11 +149,17 @@ const SwapCard: React.FC = () => {
             }}
           />
 
-          <Stack pt={10} spacing={10}>
+          <Stack pt={5} spacing={10} maxW="300px">
+            {" "}
+            <Text textAlign={"center"} fontSize="sm">
+              {exchangeMode === EXCHANGE_MODE.APPROVE && "You must approve the dex contract to spend your tokens before using the exchange"}
+              {exchangeMode === EXCHANGE_MODE.BUY && `You are currently buying TDD at a rate of ${dexInfo.buyRate} wei to 1 TDD`}
+              {exchangeMode === EXCHANGE_MODE.SELL && `You are currently selling TDD at a rate of ${dexInfo.sellRate} wei to 1 TDD`}
+            </Text>
             <Button isLoading={formState.isSubmitting} type="submit" isDisabled={!isLoggedIn}>
               {exchangeMode}
             </Button>
-            <Text>{dexInfo.totalSales.toString()} Total Sales</Text>
+            <Text textAlign={"center"}>{dexInfo.totalSales.toString()} Total Sales</Text>
           </Stack>
         </Stack>
       </Box>
