@@ -10,11 +10,13 @@ import {
   updateWeb3Provider,
 } from "../state/reducer";
 import { CHAIN_ID, RPC_URL } from "../util/providerHelper";
+import useFireToast from "./useFireToast";
 
 const useDetectWalletStatus = () => {
   const dispatcher = useAppDispatch();
   const { userAddress } = getLoginStatusSelector();
   const connectorStatus = getConnectionStatusSelector();
+  const toast = useFireToast();
 
   useEffect(() => {
     const handleProviderSwitch = async () => {
@@ -32,10 +34,15 @@ const useDetectWalletStatus = () => {
   }, []);
 
   useEffect(() => {
-    if (connectorStatus !== CONNECTOR_TYPE.JSON_RPC) {
-      const provider = new ethers.providers.JsonRpcProvider(RPC_URL, "any");
-      dispatcher(updateJsonRpcConnection({ jsonRpcConnector: provider }));
-    }
+    const getRPCProvider = async () => {
+      if (connectorStatus !== CONNECTOR_TYPE.JSON_RPC && RPC_URL) {
+        const provider = await new ethers.providers.JsonRpcProvider(RPC_URL, 4);
+        dispatcher(updateJsonRpcConnection({ jsonRpcConnector: provider }));
+      } else {
+        toast.Warning("Warning", "Json RPC url could not be found, please make sure your configuration is correct!");
+      }
+    };
+    getRPCProvider();
   }, []);
 
   useEffect(() => {
