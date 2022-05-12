@@ -6,7 +6,7 @@ import { CHAIN_ID, injectedWalletConnector } from "../util/providerHelper";
 import useFireToast from "./useFireToast";
 
 const useWalletConnect = () => {
-  const { active, account, library, connector, activate, deactivate } = useWeb3React();
+  const { active, account, activate, deactivate } = useWeb3React();
   const [error, setError] = useState<string>("");
   const toast = useFireToast();
   const dispatch = useAppDispatch();
@@ -31,7 +31,6 @@ const useWalletConnect = () => {
                 method: "wallet_switchEthereumChain",
                 params: [{ chainId: "0x" + CHAIN_ID }],
               });
-              dispatch(logUserIn({ address: account! }));
             } catch (err) {
               // This error code indicates that the chain has not been added to MetaMask
               //@ts-ignore
@@ -53,6 +52,13 @@ const useWalletConnect = () => {
                   ],
                 });
               }
+            }
+            //@ts-ignore
+            const requestAccount = await window.ethereum.request({
+              method: "eth_requestAccounts",
+            });
+            if (requestAccount?.length > 0) {
+              dispatch(logUserIn({ address: requestAccount[0] }));
             }
           }
         }

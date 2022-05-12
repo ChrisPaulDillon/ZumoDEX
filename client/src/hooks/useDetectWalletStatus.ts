@@ -4,8 +4,8 @@ import { useAppDispatch } from "../state";
 import {
   CONNECTOR_TYPE,
   getConnectionStatusSelector,
-  getLoginStatusSelector,
   logUserIn,
+  logUserOut,
   updateJsonRpcConnection,
   updateWeb3Provider,
 } from "../state/reducer";
@@ -14,25 +14,27 @@ import useFireToast from "./useFireToast";
 
 const useDetectWalletStatus = () => {
   const dispatcher = useAppDispatch();
-  const { userAddress } = getLoginStatusSelector();
   const connectorStatus = getConnectionStatusSelector();
   const toast = useFireToast();
 
-  useEffect(() => {
-    const handleProviderSwitch = async () => {
-      //@ts-ignore
-      if (window?.ethereum) {
-        //@ts-ignore
-        const provider = new ethers.providers.Web3Provider(window.ethereum, CHAIN_ID);
-        const result = await provider.send("eth_requestAccounts", []);
-        if (result) {
-          dispatcher(updateWeb3Provider({ web3Provider: provider }));
-        }
-      }
-    };
-    handleProviderSwitch();
-  }, []);
+  // useEffect(() => {
+  //   const handleProviderSwitch = async () => {
+  //     //@ts-ignore
+  //     if (window?.ethereum) {
+  //       //@ts-ignore
+  //       const provider = new ethers.providers.Web3Provider(window.ethereum, CHAIN_ID);
+  //       const result = await provider.send("eth_requestAccounts", []);
+  //       if (result) {
+  //         dispatcher(updateWeb3Provider({ web3Provider: provider }));
+  //       }
+  //     }
+  //   };
+  //   handleProviderSwitch();
+  // }, []);
 
+  /*
+   * Uses json RPC as a fallback if a web3 wallet is not detected
+   */
   useEffect(() => {
     const getRPCProvider = async () => {
       //@ts-ignore
@@ -48,6 +50,9 @@ const useDetectWalletStatus = () => {
     getRPCProvider();
   }, []);
 
+  /**
+   * handles automatically requesting the user to login to metamask if the wallet is detected
+   */
   useEffect(() => {
     //@ts-ignore
     if (window?.ethereum) {
@@ -65,13 +70,37 @@ const useDetectWalletStatus = () => {
     }
   }, []);
 
+  /**
+   * Helper function for when the user logs in or out of their wallet
+   */
   function handleAccountsChanged(accounts: string | any[]) {
     if (accounts.length === 0) {
       console.log("Please connect to MetaMask.");
-    } else if (accounts[0] !== userAddress) {
-      dispatcher(logUserIn({ address: accounts[0].toString() }));
+      return;
     }
+    dispatcher(logUserIn({ address: accounts[0].toString() }));
   }
+
+  /**
+   * Listener for detecting a user has logged in or out of their web3 wallet,
+   * also creates a new provider based on wallet detection
+   */
+  useEffect(() => {
+    //@ts-ignore
+    if (window?.ethereum) {
+      //@ts-ignore
+      window.ethereum.on("accountsChanged", (accounts) => {
+        if (accounts.length > 0) {
+          dispatcher(logUserIn({ address: accounts[0].toString() }));
+        } else {
+          dispatcher(logUserOut());
+        }
+      });
+      //@ts-ignore
+      const provider = new ethers.providers.Web3Provider(window.ethereum, CHAIN_ID);
+      dispatcher(updateWeb3Provider({ web3Provider: provider }));
+    }
+  }, []);
 };
 
 export default useDetectWalletStatus;
