@@ -2,9 +2,9 @@
  * @type import('hardhat/config').HardhatUserConfig
  */
 import "hardhat-deploy";
-import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
 import "@typechain/hardhat";
+import "@nomiclabs/hardhat-waffle";
 import { HardhatUserConfig } from "hardhat/config";
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
@@ -25,7 +25,7 @@ if (!mnemonic) {
 }
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "testnet",
+  defaultNetwork: "hardhat",
   solidity: "0.8.8",
   networks: {
     hardhat: {

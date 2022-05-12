@@ -32,6 +32,8 @@ describe("DexSwap", function () {
       );
 
       const [owner] = await ethers.getSigners();
+      console.log(owner);
+
       const ethAmount = web3.utils.toWei("10000", "wei");
 
       //Act
