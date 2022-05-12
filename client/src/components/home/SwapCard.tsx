@@ -16,10 +16,13 @@ import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
+  Skeleton,
 } from "@chakra-ui/react";
 import { MdOutlineSwapVert } from "react-icons/md";
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  CONNECTOR_TYPE,
+  getConnectionStatusSelector,
   getDexInfoSelector,
   getEtherBalanceSelector,
   getIsTokenSpendable,
@@ -51,6 +54,7 @@ const SwapCard: React.FC = () => {
   const etherBalance = getEtherBalanceSelector();
   const userTokenBalance = getUserTokenBalanceSelector();
   const isTokenSpendable = getIsTokenSpendable();
+  const connectorStatus = getConnectionStatusSelector();
   const dexInfo = getDexInfoSelector();
   const [etherAmount, setEtherAmount] = useState<string>("0");
   const [tddAmount, setTddAmount] = useState<string>("0");
@@ -117,87 +121,90 @@ const SwapCard: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Box
-        bg={useColorModeValue("gray.400", "gray.700")}
-        rounded={"lg"}
-        overflow={"hidden"}
-        minH={"400px"}
-        maxW={[250, 750, 750]}
-        p={3}
-        justifyContent="center"
-        alignItems={"center"}
-        border="2px"
-      >
-        {" "}
-        <Stack spacing={4} alignItems="center" justifyContent="center">
-          <Heading textAlign={"center"} size="md">
-            Swap
-          </Heading>
-          <Box>
-            {inputs?.map((item, idx) => (
-              <FormControl isRequired isInvalid={item.isError}>
-                <HStack key={idx}>
-                  <Box p={4}>
-                    {" "}
-                    <HStack>
-                      <Image src={item.imgSource} height={20} width={20} />
-                      <Text fontSize={"sm"}>{item.ticker}</Text>
-                    </HStack>
-                    <NumberInput
-                      name={item.ticker}
-                      size="sm"
-                      // minW="200px"
-                      w="auto"
-                      variant={"filled"}
-                      value={item.ticker === "ETH" ? etherAmount : tddAmount}
-                      min={0}
-                      onChange={(e) => (item.ticker === "ETH" ? handleEtherOnChange(e) : handleTDDOnChange(e))}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                    {item.isError && <FormErrorMessage>{item.errorMsg}</FormErrorMessage>}
-                  </Box>
-                </HStack>
-              </FormControl>
-            ))}
-          </Box>
-          <IconButton
-            as={MdOutlineSwapVert}
-            aria-label="Swap Token"
-            size="xs"
-            onClick={() => {
-              setExchangeMode(inputs[0].ticker === "ETH" ? EXCHANGE_MODE.SELL : EXCHANGE_MODE.BUY);
-              setInputs([...inputs].reverse());
-              setEtherAmount("0");
-              setTddAmount("0");
-            }}
-          />
+      <Skeleton isLoaded={connectorStatus !== CONNECTOR_TYPE.NOT_CONNECTED}>
+        <Box
+          bg={useColorModeValue("gray.400", "gray.700")}
+          rounded={"lg"}
+          overflow={"hidden"}
+          minH={"400px"}
+          maxW={[250, 750, 750]}
+          p={3}
+          justifyContent="center"
+          alignItems={"center"}
+          border="2px"
+        >
+          {" "}
+          <Stack spacing={4} alignItems="center" justifyContent="center">
+            <Heading textAlign={"center"} size="md">
+              Swap
+            </Heading>
+            <Box>
+              {inputs?.map((item, idx) => (
+                <FormControl isRequired isInvalid={item.isError}>
+                  <HStack key={idx}>
+                    <Box p={4}>
+                      {" "}
+                      <HStack>
+                        <Image src={item.imgSource} height={20} width={20} />
+                        <Text fontSize={"sm"}>{item.ticker}</Text>
+                      </HStack>
+                      <NumberInput
+                        name={item.ticker}
+                        size="sm"
+                        // minW="200px"
+                        w="auto"
+                        variant={"filled"}
+                        value={item.ticker === "ETH" ? etherAmount : tddAmount}
+                        min={0}
+                        onChange={(e) => (item.ticker === "ETH" ? handleEtherOnChange(e) : handleTDDOnChange(e))}
+                      >
+                        <NumberInputField />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                      {item.isError && <FormErrorMessage>{item.errorMsg}</FormErrorMessage>}
+                    </Box>
+                  </HStack>
+                </FormControl>
+              ))}
+            </Box>
+            <IconButton
+              as={MdOutlineSwapVert}
+              aria-label="Swap Token"
+              size="xs"
+              onClick={() => {
+                setExchangeMode(inputs[0].ticker === "ETH" ? EXCHANGE_MODE.SELL : EXCHANGE_MODE.BUY);
+                setInputs([...inputs].reverse());
+                setEtherAmount("0");
+                setTddAmount("0");
+              }}
+            />
 
-          <Stack pt={5} spacing={10} maxW="300px">
-            {" "}
-            <Text textAlign={"center"} fontSize="sm">
-              {exchangeMode === EXCHANGE_MODE.APPROVE && "You must approve the dex contract to spend your tokens before using the exchange"}
-              {exchangeMode === EXCHANGE_MODE.BUY && `You are currently buying TDD at a rate of ${dexInfo.buyRate} wei to 1 TDD`}
-              {exchangeMode === EXCHANGE_MODE.SELL && `You are currently selling TDD at a rate of ${dexInfo.sellRate} wei to 1 TDD`}
-            </Text>
-            <Badge colorScheme={"pink"}>
-              {EXCHANGE_MODE.BUY ? `Maxmimum Buy: ${dexInfo.maximumBuy}` : `Maxmimum Sell: ${dexInfo.maximumBuy}`}
-            </Badge>
-            <Button
-              isLoading={formState.isSubmitting}
-              type="submit"
-              isDisabled={!isLoggedIn || inputs.find((item) => item.isError)?.isError === true}
-            >
-              {exchangeMode}
-            </Button>
-            <Text textAlign={"center"}>{dexInfo.totalSales.toString()} Total Sales</Text>
+            <Stack pt={5} spacing={10} maxW="300px">
+              {" "}
+              <Text textAlign={"center"} fontSize="sm">
+                {exchangeMode === EXCHANGE_MODE.APPROVE &&
+                  "You must approve the dex contract to spend your tokens before using the exchange"}
+                {exchangeMode === EXCHANGE_MODE.BUY && `You are currently buying TDD at a rate of ${dexInfo.buyRate} wei to 1 TDD`}
+                {exchangeMode === EXCHANGE_MODE.SELL && `You are currently selling TDD at a rate of ${dexInfo.sellRate} wei to 1 TDD`}
+              </Text>
+              <Badge colorScheme={"pink"}>
+                {EXCHANGE_MODE.BUY ? `Maxmimum Buy: ${dexInfo.maximumBuy}` : `Maxmimum Sell: ${dexInfo.maximumBuy}`}
+              </Badge>
+              <Button
+                isLoading={formState.isSubmitting}
+                type="submit"
+                isDisabled={!isLoggedIn || inputs.find((item) => item.isError)?.isError === true}
+              >
+                {exchangeMode}
+              </Button>
+              <Text textAlign={"center"}>{dexInfo.totalSales.toString()} Total Sales</Text>
+            </Stack>
           </Stack>
-        </Stack>
-      </Box>
+        </Box>
+      </Skeleton>
     </form>
   );
 };
