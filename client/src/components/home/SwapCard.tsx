@@ -13,7 +13,6 @@ import {
   NumberInputStepper,
   HStack,
   FormControl,
-  FormErrorMessage,
   Skeleton,
 } from "@chakra-ui/react";
 import { MdOutlineSwapVert } from "react-icons/md";
@@ -43,8 +42,6 @@ enum EXCHANGE_MODE {
 interface ITokenInput {
   ticker: string;
   imgSource: string;
-  errorMsg: string;
-  isError: boolean;
 }
 
 const SwapCard: React.FC = () => {
@@ -57,6 +54,7 @@ const SwapCard: React.FC = () => {
   const [etherAmount, setEtherAmount] = useState<string>("0");
   const [tddAmount, setTddAmount] = useState<string>("0");
   const [exchangeMode, setExchangeMode] = useState<EXCHANGE_MODE>(isTokenSpendable ? EXCHANGE_MODE.BUY : EXCHANGE_MODE.APPROVE);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleEtherOnChange = useCallback((value: string) => {
     setEtherAmount(value);
@@ -74,48 +72,28 @@ const SwapCard: React.FC = () => {
     {
       ticker: "ETH",
       imgSource: "/eth.svg",
-      errorMsg: "You currently do not have this much ether!",
-      isError: false,
     },
     {
       ticker: "TDD",
       imgSource: "/zumo-mobile-logo.svg",
-      errorMsg: "You do not have this many tokens!",
-      isError: false,
     },
   ]);
 
   useEffect(() => {
-    if (Number(tddAmount) > dexInfo.exchangeTokenBalance) {
-      setInputs(
-        inputs.map((item) =>
-          item.ticker === "ETH" ? { ...item, errorMsg: "Ether amount exceeds exchange reserves", isError: true } : item
-        )
-      );
-    } else if (Number(tddAmount) > userTokenBalance && exchangeMode === EXCHANGE_MODE.SELL) {
-      setInputs(
-        inputs.map((item) => (item.ticker === "TDD" ? { ...item, errorMsg: "You do not have this many tokens!", isError: true } : item))
-      );
-    } else {
-      setInputs(inputs.map((item) => (item.ticker === "TDD" ? { ...item, isError: false } : item)));
-    }
-  }, [tddAmount]);
-
-  useEffect(() => {
-    if (Number(etherAmount) > dexInfo.exchangeEtherBalance) {
-      setInputs(
-        inputs.map((item) =>
-          item.ticker === "ETH" ? { ...item, errorMsg: "Ether amount exceeds exchange reserves", isError: true } : item
-        )
-      );
+    if (Number(tddAmount) > userTokenBalance && exchangeMode === EXCHANGE_MODE.SELL) {
+      setErrorMessage("You do not have this many tokens!");
     } else if (Number(etherAmount) > userEtherBalance && exchangeMode === EXCHANGE_MODE.BUY) {
-      setInputs(
-        inputs.map((item) => (item.ticker === "ETH" ? { ...item, errorMsg: "You do not have this many tokens!", isError: true } : item))
-      );
+      setErrorMessage("You do not have this much ether!");
+    } else if (Number(etherAmount) > dexInfo.exchangeEtherBalance && exchangeMode === EXCHANGE_MODE.SELL) {
+      setErrorMessage("Ether amount exceeds exchange reserves");
+    } else if (Number(tddAmount) > dexInfo.exchangeTokenBalance && exchangeMode === EXCHANGE_MODE.BUY) {
+      console.log("lmao");
+
+      setErrorMessage("TDD amount exceeds exchange reserves");
     } else {
-      setInputs(inputs.map((item) => (item.ticker === "ETH" ? { ...item, isError: false } : item)));
+      setErrorMessage("");
     }
-  }, [etherAmount]);
+  }, [tddAmount, etherAmount]);
 
   useEffect(() => {
     if (isTokenSpendable) {
@@ -161,7 +139,7 @@ const SwapCard: React.FC = () => {
             </Heading>
             <Box>
               {inputs?.map((item, idx) => (
-                <FormControl isRequired isInvalid={item.isError} key={idx}>
+                <FormControl isRequired key={idx}>
                   <HStack>
                     <Box p={4}>
                       <HStack>
@@ -191,18 +169,18 @@ const SwapCard: React.FC = () => {
                             ? FormatToReadableBalance(userEtherBalance.toString())
                             : FormatToReadableBalance(userTokenBalance.toString())}
                         </Text>
-                        <Box mt={1}>
-                          {item.isError && (
-                            <Text fontSize={"xs"} color="red">
-                              {item.errorMsg}
-                            </Text>
-                          )}
-                        </Box>
                       </Box>
                     </Box>
                   </HStack>
                 </FormControl>
               ))}
+            </Box>
+            <Box mt={1}>
+              {errorMessage !== "" && (
+                <Text fontSize={"xs"} color="red">
+                  {errorMessage}
+                </Text>
+              )}
             </Box>
             <IconButton
               as={MdOutlineSwapVert}
@@ -228,11 +206,7 @@ const SwapCard: React.FC = () => {
                 {exchangeMode === EXCHANGE_MODE.BUY && `Maxmimum Buy: ${dexInfo.exchangeTokenBalance} TDD`}
                 {exchangeMode === EXCHANGE_MODE.SELL && `Maxmimum Sell: ${dexInfo.exchangeEtherBalance} ETH`}
               </Text>
-              <Button
-                isLoading={formState.isSubmitting}
-                type="submit"
-                isDisabled={!isLoggedIn || inputs.find((item) => item.isError)?.isError === true}
-              >
+              <Button isLoading={formState.isSubmitting} type="submit" isDisabled={!isLoggedIn || errorMessage !== ""}>
                 {exchangeMode}
               </Button>
               <Text textAlign={"center"}>{dexInfo.totalSales.toString()} Total Sales</Text>
