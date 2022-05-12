@@ -10,7 +10,13 @@ Front end is built with React, Chakra-UI, TypeScript, Jest, React Testing Librar
 
 ### Smart Contracts
 
-Navigate to the smart_contracts folder and issue the following commands:
+Navigate to the smart_contracts folder and create a .env file within the client folder. Add the following:
+
+> MNEMONIC="YOUR_API_KEY"
+
+> RINKEBY_API="YOUR_API_KEY"
+
+Then perform the following commands:
 
 > npm install
 
