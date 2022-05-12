@@ -1,14 +1,14 @@
-import { Box, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { getUserTokenBalanceSelector } from "state/reducer";
 import Image from "next/image";
 import { FormatToReadableBalance } from "util/balanceHelper";
 
-const TokenBalance = () => {
+const TokenBalance: React.FC<BoxProps> = ({ ...rest }) => {
   const userTokenBalance = getUserTokenBalanceSelector();
 
   return (
     <Skeleton isLoaded={userTokenBalance > 0}>
-      <Box>
+      <Box {...rest}>
         <Stack isInline>
           {" "}
           <Image src="/zumo-mobile-logo.svg" alt="zumo logo" width={25} height={25} />

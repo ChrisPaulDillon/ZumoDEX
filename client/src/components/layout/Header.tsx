@@ -19,9 +19,9 @@ const Header = () => {
           </Heading>
         </HStack>
         <HStack>
-          <WalletConnectButton mx={2} />
-          <ThemeToggle /> <TokenBalance />
-          <Box mb={2}></Box>
+          <WalletConnectButton mr={1} />
+          <ThemeToggle />
+          <TokenBalance ml={1} />
         </HStack>
       </Flex>{" "}
     </Box>

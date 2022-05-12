@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
+import useRefresh from "hooks/useRefresh";
 import { useEffect } from "react";
 import { useAppDispatch } from "../../state";
 import {
@@ -17,6 +18,7 @@ const useGetEthBalance = () => {
   const { isLoggedIn } = getLoginStatusSelector();
   const connectorStatus = getConnectionStatusSelector();
   const dispatch = useAppDispatch();
+  const { fastRefresh } = useRefresh();
 
   useEffect(() => {
     const getEthBalance = async () => {
@@ -32,7 +34,7 @@ const useGetEthBalance = () => {
     if (connectionStatus === CONNECTOR_TYPE.WALLET_CONNECT && isLoggedIn) {
       getEthBalance();
     }
-  }, [isLoggedIn, connectorStatus, provider]);
+  }, [isLoggedIn, connectorStatus, provider, fastRefresh]);
 };
 
 export default useGetEthBalance;

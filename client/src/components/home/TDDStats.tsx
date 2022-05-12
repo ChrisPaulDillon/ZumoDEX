@@ -1,10 +1,10 @@
-import { useColorModeValue, Heading, Text, Skeleton, Stack, Box, HStack } from "@chakra-ui/react";
-import { CONNECTOR_TYPE, getConnectionStatusSelector, getTokenInfoSelector, getUserTokenBalanceSelector } from "state/reducer";
+import { useColorModeValue, Heading, Text, Skeleton, Stack, Box } from "@chakra-ui/react";
+import { CONNECTOR_TYPE, getConnectionStatusSelector, getDexInfoSelector, getTokenInfoSelector } from "state/reducer";
 
 const TDDStats: React.FC = () => {
   const tokenInfo = getTokenInfoSelector();
-  const userTokenBalance = getUserTokenBalanceSelector();
   const connectorStatus = getConnectionStatusSelector();
+  const dexInfo = getDexInfoSelector();
 
   return (
     <Skeleton isLoaded={connectorStatus !== CONNECTOR_TYPE.NOT_CONNECTED}>
@@ -27,6 +27,9 @@ const TDDStats: React.FC = () => {
           </Text>
           <Text textAlign={"center"} fontSize="sm">
             {tokenInfo?.totalSupply.toString()} Max Supply
+          </Text>
+          <Text textAlign={"center"} fontSize="sm">
+            {dexInfo?.exchangeTokenBalance.toString()} Exchange Balance
           </Text>
         </Box>
       </Stack>
