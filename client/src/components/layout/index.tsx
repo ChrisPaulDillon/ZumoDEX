@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 import Footer from "./Footer";
@@ -10,14 +10,23 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <Box margin="0 auto" maxWidth={800} transition="0.5s ease-out">
-      <Box margin="8">
+    <Box
+      margin="0 auto"
+      transition="0.5s ease-out"
+      backgroundImage={useColorModeValue('url("bg-light.svg")', 'url("/bg-dark.svg")')}
+      backgroundPosition="bottom"
+      backgroundSize="cover"
+      minH={"1000px"}
+      backgroundRepeat={"no-repeat"}
+      height="100%"
+    >
+      <Container maxW="container.lg" pt={2}>
         <Header />
-        <Box as="main" marginY={22}>
+        <Box as="main" my={22} >
           {children}
         </Box>
         <Footer />
-      </Box>
+      </Container>
     </Box>
   );
 };

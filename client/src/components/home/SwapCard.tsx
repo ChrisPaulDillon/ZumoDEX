@@ -93,15 +93,7 @@ const SwapCard: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Box
-        bg={useColorModeValue("blackAlpha.400", "gray.700")}
-        rounded={"lg"}
-        overflow={"hidden"}
-        boxShadow={"0 0 40px 20px #0ff"}
-        minH={"400px"}
-        minW="270px"
-        p={3}
-      >
+      <Box bg={useColorModeValue("gray.400", "gray.700")} rounded={"lg"} overflow={"hidden"} minH={"400px"} minW="200px" p={3}>
         {" "}
         <Stack spacing={4} alignItems="center" justifyContent="center">
           <Heading textAlign={"center"} size="md">

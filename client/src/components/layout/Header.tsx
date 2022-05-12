@@ -7,18 +7,20 @@ import MotionBox from "components/motion/Box";
 
 const Header = () => {
   return (
-    <Flex as="header" width="full" align="center">
-      <MotionBox animate={{ y: 3 }} transition={{ repeat: Infinity, duration: 2, repeatType: "reverse" }} pr={2}>
-        <Image src="/zumo-mobile-logo.svg" height={30} width={30} alt="Zumo" />
-      </MotionBox>
-      <Heading as="h1" size="md">
-        <Link href="/">ZumoSwap!</Link>
-      </Heading>
-      <Box marginLeft="auto">
-        <WalletConnectButton mx={2} />
-        <ThemeToggle />
-      </Box>
-    </Flex>
+    <Box pt={2}>
+      <Flex as="header" width="full" align="center">
+        <MotionBox animate={{ y: 3 }} transition={{ repeat: Infinity, duration: 2, repeatType: "reverse" }} pr={2}>
+          <Image src="/zumo-mobile-logo.svg" height={30} width={30} alt="Zumo" />
+        </MotionBox>
+        <Heading as="h1" size="md">
+          <Link href="/">ZumoSwap!</Link>
+        </Heading>
+        <Box marginLeft="auto">
+          <WalletConnectButton mx={2} />
+          <ThemeToggle />
+        </Box>
+      </Flex>{" "}
+    </Box>
   );
 };
 
