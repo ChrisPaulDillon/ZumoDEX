@@ -89,6 +89,8 @@ export default createReducer(initialState, (builder) =>
     .addCase(logUserOut, (state: IGlobalState) => {
       state.userAddress = undefined;
       state.isLoggedIn = false;
+      state.etherBalance = 0;
+      state.userTokenBalance = 0;
     })
     .addCase(updateWeb3Provider, (state: IGlobalState, { payload: { web3Provider } }) => {
       state.connectorStatus = CONNECTOR_TYPE.WALLET_CONNECT;

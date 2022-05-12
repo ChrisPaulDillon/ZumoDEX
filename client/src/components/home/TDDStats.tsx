@@ -28,19 +28,6 @@ const TDDStats: React.FC = () => {
           <Text textAlign={"center"} fontSize="sm">
             {tokenInfo?.totalSupply.toString()} Max Supply
           </Text>
-          <HStack justify={"center"}>
-            <Skeleton isLoaded={connectorStatus === CONNECTOR_TYPE.WALLET_CONNECT}>
-              {" "}
-              <Box minW="50px">
-                <Text textAlign={"center"} fontSize="sm">
-                  {userTokenBalance.toString()}
-                </Text>
-              </Box>
-            </Skeleton>
-            <Text textAlign={"center"} fontSize="sm">
-              {tokenInfo?.symbol} Balance
-            </Text>
-          </HStack>
         </Box>
       </Stack>
     </Skeleton>

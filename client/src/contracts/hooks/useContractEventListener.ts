@@ -28,9 +28,7 @@ const useContractEventListener = () => {
   useEffect(() => {
     if (connectionStatus === CONNECTOR_TYPE.WALLET_CONNECT) {
       erc20Contract?.on("Approval", () => {
-        if (!toast.isActive(id)) {
-          toast.Positive("Success", "Approved, ready to purchase", id);
-        }
+        toast.Positive("Success", "Approved, ready to purchase", id);
       });
     }
   }, []);

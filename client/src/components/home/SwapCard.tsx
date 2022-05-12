@@ -189,7 +189,7 @@ const SwapCard: React.FC = () => {
                                   : handleTDDOnChange(userTokenBalance.toString())
                               }
                             >
-                              {FormatToReadableBalance(item.balance.toFixed(2))}
+                              {FormatToReadableBalance(item.balance.toString())}
                             </Button>
                           }
                         </Text>
