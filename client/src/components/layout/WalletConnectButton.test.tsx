@@ -7,9 +7,6 @@ import { testAddress, testRender } from "../../util/testHelper";
 
 describe("WalletConnectButton", () => {
   const store = configureStore();
-  //const spy = jest.spyOn(store, getConnectionStatusSelector());
-  //spy.mockReturnValue({ username: "test" });
-  beforeEach(() => {});
 
   it("should display 'Connect Wallet' upon initial load", () => {
     testRender(<WalletConnectButton />, { store });

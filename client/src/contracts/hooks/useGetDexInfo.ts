@@ -1,5 +1,4 @@
 import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "contracts/contracts";
-import { ethers } from "ethers";
 import useRefresh from "hooks/useRefresh";
 import { useEffect } from "react";
 import { useAppDispatch } from "state";

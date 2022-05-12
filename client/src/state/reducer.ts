@@ -122,6 +122,7 @@ export const getSignerSelector = (): JsonRpcSigner | JsonRpcProvider => {
   const jsonRpcProvider = useSelector((state: IAppState) => state.state.jsonRpcProvider);
   const web3Provider = useSelector((state: IAppState) => state.state.web3Provider);
   const connectorStatus = useSelector((state: IAppState) => state.state.connectorStatus);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   return connectorStatus === CONNECTOR_TYPE.JSON_RPC ? jsonRpcProvider! : web3Provider?.getSigner()!;
 };
 

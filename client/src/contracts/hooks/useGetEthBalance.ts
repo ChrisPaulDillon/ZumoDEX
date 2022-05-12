@@ -1,6 +1,4 @@
 import { useWeb3React } from "@web3-react/core";
-import { getDexSwapContract } from "contracts/contractHelper";
-import { CONTRACT_DEXSWAP } from "contracts/contracts";
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import { useAppDispatch } from "../../state";

@@ -1,11 +1,9 @@
-import { fireEvent, getByTestId, queryByTestId, render } from "@testing-library/react";
+import { fireEvent, getByTestId, queryByTestId } from "@testing-library/react";
 import configureStore from "../../state";
 import { testRender } from "../../util/testHelper";
 import ThemeToggle from "./ThemeToggle";
 
 describe("ThemeToggle Component", () => {
-  beforeEach(() => {});
-
   it("should display sun icon and be in dark mode", () => {
     const store = configureStore();
     const { container } = testRender(<ThemeToggle />, { store: store });

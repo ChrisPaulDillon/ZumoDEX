@@ -9,7 +9,7 @@ const useBuyTokens = () => {
   const contract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
 
   const buyTokens = useCallback(
-    async (amount: Number) => {
+    async (amount: number) => {
       try {
         const wei = ethers.utils.parseEther(amount.toString());
         const tx = await contract.buyTokens({ value: wei });

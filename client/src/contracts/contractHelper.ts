@@ -3,6 +3,7 @@ import erc20ABI from "./abi/ERC20.json";
 import dexSwapABI from "./abi/DexSwap.json";
 import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getContract = (abi: any, address: string, signer?: JsonRpcSigner | JsonRpcProvider): Contract => {
   return new Contract(address, abi, signer);
 };

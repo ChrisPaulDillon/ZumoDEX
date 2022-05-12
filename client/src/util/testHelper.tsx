@@ -9,10 +9,7 @@ import customTheme from "../styles/customTheme";
 export const testAddress = "0x0000000000000000000000";
 export const testEtherBalance = 10000000000000000;
 
-export const testRender = (
-  jsx: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined,
-  { store, ...otherOpts }: any
-) => {
+export const testRender = (jsx: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined, { store, ...otherOpts }: any) => {
   return render(
     <ChakraProvider theme={customTheme}>
       <Web3ReactProvider getLibrary={getLibrary}>

@@ -4,8 +4,6 @@ import configureStore from "../../state";
 import { testRender } from "../../util/testHelper";
 
 describe("Header Component", () => {
-  beforeEach(() => {});
-
   it("should display company label and wallet label", () => {
     const store = configureStore();
     testRender(<Header />, { store });

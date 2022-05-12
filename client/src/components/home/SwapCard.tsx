@@ -140,8 +140,8 @@ const SwapCard: React.FC = () => {
             </Heading>
             <Box>
               {inputs?.map((item, idx) => (
-                <FormControl isRequired isInvalid={item.isError}>
-                  <HStack key={idx}>
+                <FormControl isRequired isInvalid={item.isError} key={idx}>
+                  <HStack>
                     <Box p={4}>
                       {" "}
                       <HStack>
