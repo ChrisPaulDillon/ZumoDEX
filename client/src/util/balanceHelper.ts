@@ -1,14 +1,20 @@
 import { BigNumber, BigNumberish } from "ethers";
 import { ethers } from "ethers";
 import web3Instance from "./web3";
+
 export const ConvertTokenBalanceFromBN = (amount: BigNumberish, decimals = 2): number => {
   const result = ethers.utils.formatUnits(amount, decimals);
   return Number(result);
 };
 
-export const ConvertTokenNoToBN = (tokenAmount: number): BigNumber => {
-  const result = ethers.utils.parseUnits(tokenAmount.toString(), 2);
-  return result;
+export const ConvertTokenNoToBN = (tokenAmount: string): BigNumber | undefined => {
+  try {
+    const result = ethers.utils.parseUnits(tokenAmount, 2);
+    return result;
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
 };
 
 export const ConvertEtherToTTD = (etherAmount: string): string => {

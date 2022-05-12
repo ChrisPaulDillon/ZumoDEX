@@ -111,7 +111,7 @@ const SwapCard: React.FC = () => {
     if (exchangeMode === EXCHANGE_MODE.BUY) {
       return await buyTokens(etherAmount);
     } else if (exchangeMode === EXCHANGE_MODE.SELL) {
-      return await sellTokens(Number(tddAmount));
+      return await sellTokens(tddAmount);
     }
     return await onApprove();
   };
