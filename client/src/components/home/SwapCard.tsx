@@ -43,7 +43,6 @@ enum EXCHANGE_MODE {
 interface ITokenInput {
   ticker: string;
   imgSource: string;
-  balance: number;
   errorMsg: string;
   isError: boolean;
 }
@@ -61,11 +60,8 @@ const SwapCard: React.FC = () => {
 
   const handleEtherOnChange = useCallback((value: string) => {
     setEtherAmount(value);
-    //don't attempt to convert as the ether amount is not valid anyway
-    // if (!inputs[0].isError) {
     const ttdVal = ConvertEtherToTTD(value);
     setTddAmount(ttdVal);
-    // }
   }, []);
 
   const handleTDDOnChange = useCallback((value: string) => {
@@ -78,43 +74,44 @@ const SwapCard: React.FC = () => {
     {
       ticker: "ETH",
       imgSource: "/eth.svg",
-      balance: userEtherBalance,
       errorMsg: "You currently do not have this much ether!",
       isError: false,
     },
     {
       ticker: "TDD",
       imgSource: "/zumo-mobile-logo.svg",
-      balance: userTokenBalance,
       errorMsg: "You do not have this many tokens!",
       isError: false,
     },
   ]);
 
-  const { buyTokens } = useBuyTokens();
-  const { sellTokens } = useSellTokens();
-  const { onApprove } = useApprove();
-
-  const onSubmit = async () => {
-    if (exchangeMode === EXCHANGE_MODE.BUY) {
-      return await buyTokens(Number(etherAmount));
-    } else if (exchangeMode === EXCHANGE_MODE.SELL) {
-      return await sellTokens(Number(tddAmount));
-    }
-    return await onApprove();
-  };
-
   useEffect(() => {
-    if (Number(tddAmount) > userTokenBalance && EXCHANGE_MODE.SELL) {
-      setInputs(inputs.map((item) => (item.ticker === "TDD" ? { ...item, isError: true } : item)));
+    if (Number(tddAmount) > dexInfo.exchangeTokenBalance) {
+      setInputs(
+        inputs.map((item) =>
+          item.ticker === "ETH" ? { ...item, errorMsg: "Ether amount exceeds exchange reserves", isError: true } : item
+        )
+      );
+    } else if (Number(tddAmount) > userTokenBalance && exchangeMode === EXCHANGE_MODE.SELL) {
+      setInputs(
+        inputs.map((item) => (item.ticker === "TDD" ? { ...item, errorMsg: "You do not have this many tokens!", isError: true } : item))
+      );
     } else {
       setInputs(inputs.map((item) => (item.ticker === "TDD" ? { ...item, isError: false } : item)));
     }
   }, [tddAmount]);
 
   useEffect(() => {
-    if (Number(etherAmount) > userEtherBalance && EXCHANGE_MODE.BUY) {
-      setInputs(inputs.map((item) => (item.ticker === "ETH" ? { ...item, isError: true } : item)));
+    if (Number(etherAmount) > dexInfo.exchangeEtherBalance) {
+      setInputs(
+        inputs.map((item) =>
+          item.ticker === "ETH" ? { ...item, errorMsg: "Ether amount exceeds exchange reserves", isError: true } : item
+        )
+      );
+    } else if (Number(etherAmount) > userEtherBalance && exchangeMode === EXCHANGE_MODE.BUY) {
+      setInputs(
+        inputs.map((item) => (item.ticker === "ETH" ? { ...item, errorMsg: "You do not have this many tokens!", isError: true } : item))
+      );
     } else {
       setInputs(inputs.map((item) => (item.ticker === "ETH" ? { ...item, isError: false } : item)));
     }
@@ -127,6 +124,19 @@ const SwapCard: React.FC = () => {
       setExchangeMode(EXCHANGE_MODE.APPROVE);
     }
   }, [isTokenSpendable]);
+
+  const { buyTokens } = useBuyTokens();
+  const { sellTokens } = useSellTokens();
+  const { onApprove } = useApprove();
+
+  const onSubmit = async () => {
+    if (exchangeMode === EXCHANGE_MODE.BUY) {
+      return await buyTokens(etherAmount);
+    } else if (exchangeMode === EXCHANGE_MODE.SELL) {
+      return await sellTokens(Number(tddAmount));
+    }
+    return await onApprove();
+  };
 
   const { handleSubmit, formState } = useForm();
 
@@ -177,22 +187,17 @@ const SwapCard: React.FC = () => {
                       <Box pt={1} pl={1}>
                         <Text fontSize={"xs"} color={useColorModeValue("green.800", "green.200")}>
                           Available:{" "}
-                          {
-                            <Button
-                              size="xs"
-                              variant={"ghost"}
-                              color={useColorModeValue("green.800", "green.200")}
-                              onClick={() =>
-                                item.ticker === "ETH"
-                                  ? handleEtherOnChange(userEtherBalance.toString())
-                                  : handleTDDOnChange(userTokenBalance.toString())
-                              }
-                            >
-                              {FormatToReadableBalance(item.balance.toString())}
-                            </Button>
-                          }
+                          {item.ticker === "ETH"
+                            ? FormatToReadableBalance(userEtherBalance.toString())
+                            : FormatToReadableBalance(userTokenBalance.toString())}
                         </Text>
-                        {item.isError && <FormErrorMessage>{item.errorMsg}</FormErrorMessage>}
+                        <Box mt={1}>
+                          {item.isError && (
+                            <Text fontSize={"xs"} color="red">
+                              {item.errorMsg}
+                            </Text>
+                          )}
+                        </Box>
                       </Box>
                     </Box>
                   </HStack>
