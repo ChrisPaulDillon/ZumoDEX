@@ -9,7 +9,7 @@ const useFireToast = () => {
       id: id,
       position: "top",
       render: () => <ToastSuccess title={title} description={description} />,
-      duration: 9000,
+      duration: 5000,
       isClosable: true,
     });
   };
@@ -19,7 +19,7 @@ const useFireToast = () => {
       id: id,
       position: "top",
       render: () => <ToastError title={title} description={description} />,
-      duration: 9000,
+      duration: 5000,
       isClosable: true,
     });
   };
@@ -29,7 +29,7 @@ const useFireToast = () => {
       id: id,
       position: "top",
       render: () => <ToastWarning title={title} description={description} />,
-      duration: 9000,
+      duration: 5000,
       isClosable: true,
     });
   };

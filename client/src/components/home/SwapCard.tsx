@@ -11,9 +11,11 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Flex,
   HStack,
   Badge,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
 } from "@chakra-ui/react";
 import { MdOutlineSwapVert } from "react-icons/md";
 import React, { useCallback, useEffect, useState } from "react";
@@ -40,6 +42,8 @@ enum EXCHANGE_MODE {
 interface ITokenInput {
   ticker: string;
   imgSource: string;
+  errorMsg: string;
+  isError: boolean;
 }
 
 const SwapCard: React.FC = () => {
@@ -54,8 +58,11 @@ const SwapCard: React.FC = () => {
 
   const handleEtherOnChange = useCallback((value: string) => {
     setEtherAmount(value);
-    const ttdVal = ConvertEtherToTTD(value);
-    setTddAmount(ttdVal);
+    //don't attempt to convert as the ether amount is not valid anyway
+    // if (!inputs[0].isError) {
+    //   const ttdVal = ConvertEtherToTTD(value);
+    //   setTddAmount(ttdVal);
+    // }
   }, []);
 
   const handleTDDOnChange = useCallback((value: string) => {
@@ -65,8 +72,8 @@ const SwapCard: React.FC = () => {
   }, []);
 
   const [inputs, setInputs] = useState<Array<ITokenInput>>([
-    { ticker: "ETH", imgSource: "/eth.svg" },
-    { ticker: "TDD", imgSource: "/zumo-mobile-logo.svg" },
+    { ticker: "ETH", imgSource: "/eth.svg", errorMsg: "You currently do not have this much ether!", isError: false },
+    { ticker: "TDD", imgSource: "/zumo-mobile-logo.svg", errorMsg: "You do not have this many tokens!", isError: false },
   ]);
 
   const { buyTokens } = useBuyTokens();
@@ -81,6 +88,22 @@ const SwapCard: React.FC = () => {
     }
     return await onApprove();
   };
+
+  useEffect(() => {
+    if (Number(tddAmount) > userTokenBalance && EXCHANGE_MODE.SELL) {
+      setInputs(inputs.map((item) => (item.ticker === "TDD" ? { ...item, isError: true } : item)));
+    } else {
+      setInputs(inputs.map((item) => (item.ticker === "TDD" ? { ...item, isError: false } : item)));
+    }
+  }, [tddAmount]);
+
+  useEffect(() => {
+    if (Number(etherAmount) > etherBalance && EXCHANGE_MODE.BUY) {
+      setInputs(inputs.map((item) => (item.ticker === "ETH" ? { ...item, isError: true } : item)));
+    } else {
+      setInputs(inputs.map((item) => (item.ticker === "ETH" ? { ...item, isError: false } : item)));
+    }
+  }, [etherAmount]);
 
   useEffect(() => {
     if (isTokenSpendable) {
@@ -112,30 +135,33 @@ const SwapCard: React.FC = () => {
           </Heading>
           <Box>
             {inputs?.map((item, idx) => (
-              <HStack key={idx}>
-                <Box p={4}>
-                  {" "}
-                  <HStack>
-                    <Image src={item.imgSource} height={20} width={20} />
-                    <Text fontSize={"sm"}>{item.ticker}</Text>
-                  </HStack>
-                  <NumberInput
-                    name={item.ticker}
-                    size="sm"
-                    minW="200px"
-                    variant={"filled"}
-                    value={item.ticker === "ETH" ? etherAmount : tddAmount}
-                    min={0}
-                    onChange={(e) => (item.ticker === "ETH" ? handleEtherOnChange(e) : handleTDDOnChange(e))}
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </Box>
-              </HStack>
+              <FormControl isRequired isInvalid={item.isError}>
+                <HStack key={idx}>
+                  <Box p={4}>
+                    {" "}
+                    <HStack>
+                      <Image src={item.imgSource} height={20} width={20} />
+                      <Text fontSize={"sm"}>{item.ticker}</Text>
+                    </HStack>
+                    <NumberInput
+                      name={item.ticker}
+                      size="sm"
+                      minW="200px"
+                      variant={"filled"}
+                      value={item.ticker === "ETH" ? etherAmount : tddAmount}
+                      min={0}
+                      onChange={(e) => (item.ticker === "ETH" ? handleEtherOnChange(e) : handleTDDOnChange(e))}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                    {item.isError && <FormErrorMessage>{item.errorMsg}</FormErrorMessage>}
+                  </Box>
+                </HStack>
+              </FormControl>
             ))}
           </Box>
           <IconButton
