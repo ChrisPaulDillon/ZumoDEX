@@ -3,7 +3,7 @@ import SwapCard from "components/home/SwapCard";
 import TDDStats from "components/home/TDDStats";
 import useContractEventListener from "contracts/hooks/useContractEventListener";
 import useIsSpendable from "contracts/hooks/useIsSpendable";
-import { CONTRACT_ERC20, CONTRACT_DEXSWAP } from "../contracts/contracts";
+import { CONTRACT_ERC20 } from "../contracts/contracts";
 import useBalanceOf from "../contracts/hooks/useBalanceOf";
 import useGetDexInfo from "../contracts/hooks/useGetDexInfo";
 import useGetEthBalance from "../contracts/hooks/useGetEthBalance";
@@ -13,7 +13,7 @@ import useDetectWalletStatus from "../hooks/useDetectWalletStatus";
 const Home = () => {
   useBalanceOf();
   useGetTokenInfo(CONTRACT_ERC20);
-  useGetDexInfo(CONTRACT_DEXSWAP);
+  useGetDexInfo();
   useGetEthBalance();
   useDetectWalletStatus();
   useIsSpendable();

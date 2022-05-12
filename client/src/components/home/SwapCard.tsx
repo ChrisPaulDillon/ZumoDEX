@@ -13,6 +13,7 @@ import {
   NumberInputStepper,
   Flex,
   HStack,
+  Badge,
 } from "@chakra-ui/react";
 import { MdOutlineSwapVert } from "react-icons/md";
 import React, { useCallback, useEffect, useState } from "react";
@@ -156,6 +157,7 @@ const SwapCard: React.FC = () => {
               {exchangeMode === EXCHANGE_MODE.BUY && `You are currently buying TDD at a rate of ${dexInfo.buyRate} wei to 1 TDD`}
               {exchangeMode === EXCHANGE_MODE.SELL && `You are currently selling TDD at a rate of ${dexInfo.sellRate} wei to 1 TDD`}
             </Text>
+            <Badge colorScheme={"pink"}>Maxmimum Buy: {dexInfo.maximumBuy}</Badge>
             <Button isLoading={formState.isSubmitting} type="submit" isDisabled={!isLoggedIn}>
               {exchangeMode}
             </Button>

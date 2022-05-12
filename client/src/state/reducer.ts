@@ -13,6 +13,8 @@ export interface IDexInfo {
   buyRate: string;
   sellRate: string;
   totalSales: number;
+  exchangeTokenBalance: number;
+  maximumBuy: number;
 }
 
 //We fallback on a json rpc connection if the user does not have a web3 wallet installed
@@ -45,7 +47,7 @@ export const initialState: IGlobalState = {
   connectorStatus: CONNECTOR_TYPE.NOT_CONNECTED,
   web3Provider: undefined,
   jsonRpcProvider: undefined,
-  dexInfo: { buyRate: "", sellRate: "", totalSales: 0 },
+  dexInfo: { buyRate: "", sellRate: "", totalSales: 0, exchangeTokenBalance: 0, maximumBuy: 0 },
   tokenInfo: { name: "", symbol: "", totalSupply: 0 },
   contractCallLoading: false,
 };

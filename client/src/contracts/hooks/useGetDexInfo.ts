@@ -1,10 +1,12 @@
+import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "contracts/contracts";
 import useRefresh from "hooks/useRefresh";
 import { useEffect } from "react";
 import { useAppDispatch } from "state";
+import { ConvertEtherToTTD, ConvertTokenBalanceFromBN } from "util/balanceHelper";
 import { getConnectionStatusSelector, getSignerSelector, updateDexInfo } from "../../state/reducer";
-import { getDexSwapContract } from "../contractHelper";
+import { getDexSwapContract, getERC20Contract } from "../contractHelper";
 
-const useGetDexInfo = (dexSwapAddress: string) => {
+const useGetDexInfo = () => {
   const signer = getSignerSelector();
   const connectorStatus = getConnectionStatusSelector();
   const dispatch = useAppDispatch();
@@ -12,17 +14,22 @@ const useGetDexInfo = (dexSwapAddress: string) => {
 
   useEffect(() => {
     const fetchDexInfo = async () => {
-      const contract = getDexSwapContract(dexSwapAddress, signer);
+      const dexSwapContract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
+      const erc20Contract = getERC20Contract(CONTRACT_ERC20, signer);
       try {
-        const buyRate = await contract.getBuyRate();
-        const sellRate = await contract.getSellRate();
-        const totalSales = await contract.getTotalSales();
+        const buyRate = await dexSwapContract.getBuyRate();
+        const sellRate = await dexSwapContract.getSellRate();
+        const totalSales = await dexSwapContract.getTotalSales();
+        const dexTokenBalance = await erc20Contract.balanceOf(CONTRACT_DEXSWAP);
+        const dexTokenBalanceNo = ConvertTokenBalanceFromBN(dexTokenBalance);
         dispatch(
           updateDexInfo({
             dexInfo: {
               buyRate: buyRate,
               sellRate: sellRate,
               totalSales: totalSales,
+              exchangeTokenBalance: dexTokenBalanceNo,
+              maximumBuy: Number(ConvertEtherToTTD(dexTokenBalanceNo.toString())),
             },
           })
         );
@@ -32,7 +39,7 @@ const useGetDexInfo = (dexSwapAddress: string) => {
     };
 
     fetchDexInfo();
-  }, [dexSwapAddress, connectorStatus, fastRefresh]);
+  }, [connectorStatus, fastRefresh]);
 };
 
 export default useGetDexInfo;
