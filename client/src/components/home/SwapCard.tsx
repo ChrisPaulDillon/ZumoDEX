@@ -15,7 +15,6 @@ import {
   Badge,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   Skeleton,
 } from "@chakra-ui/react";
 import { MdOutlineSwapVert } from "react-icons/md";
@@ -32,7 +31,7 @@ import {
 import useBuyTokens from "contracts/hooks/useBuyTokens";
 import useSellTokens from "contracts/hooks/useSellTokens";
 import { useApprove } from "contracts/hooks/useApprove";
-import { ConvertEtherToTTD, CovertTDDToEther } from "util/balanceHelper";
+import { ConvertEtherToTTD, CovertTDDToEther, FormatToReadableBalance } from "util/balanceHelper";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 
@@ -45,13 +44,14 @@ enum EXCHANGE_MODE {
 interface ITokenInput {
   ticker: string;
   imgSource: string;
+  balance: number;
   errorMsg: string;
   isError: boolean;
 }
 
 const SwapCard: React.FC = () => {
   const { isLoggedIn } = getLoginStatusSelector();
-  const etherBalance = getEtherBalanceSelector();
+  const userEtherBalance = getEtherBalanceSelector();
   const userTokenBalance = getUserTokenBalanceSelector();
   const isTokenSpendable = getIsTokenSpendable();
   const connectorStatus = getConnectionStatusSelector();
@@ -76,8 +76,20 @@ const SwapCard: React.FC = () => {
   }, []);
 
   const [inputs, setInputs] = useState<Array<ITokenInput>>([
-    { ticker: "ETH", imgSource: "/eth.svg", errorMsg: "You currently do not have this much ether!", isError: false },
-    { ticker: "TDD", imgSource: "/zumo-mobile-logo.svg", errorMsg: "You do not have this many tokens!", isError: false },
+    {
+      ticker: "ETH",
+      imgSource: "/eth.svg",
+      balance: userEtherBalance,
+      errorMsg: "You currently do not have this much ether!",
+      isError: false,
+    },
+    {
+      ticker: "TDD",
+      imgSource: "/zumo-mobile-logo.svg",
+      balance: userTokenBalance,
+      errorMsg: "You do not have this many tokens!",
+      isError: false,
+    },
   ]);
 
   const { buyTokens } = useBuyTokens();
@@ -102,7 +114,7 @@ const SwapCard: React.FC = () => {
   }, [tddAmount]);
 
   useEffect(() => {
-    if (Number(etherAmount) > etherBalance && EXCHANGE_MODE.BUY) {
+    if (Number(etherAmount) > userEtherBalance && EXCHANGE_MODE.BUY) {
       setInputs(inputs.map((item) => (item.ticker === "ETH" ? { ...item, isError: true } : item)));
     } else {
       setInputs(inputs.map((item) => (item.ticker === "ETH" ? { ...item, isError: false } : item)));
@@ -143,10 +155,9 @@ const SwapCard: React.FC = () => {
                 <FormControl isRequired isInvalid={item.isError} key={idx}>
                   <HStack>
                     <Box p={4}>
-                      {" "}
                       <HStack>
                         <Image src={item.imgSource} height={20} width={20} />
-                        <Text fontSize={"sm"}>{item.ticker}</Text>
+                        <Text fontSize={"sm"}>{item.ticker}</Text>{" "}
                       </HStack>
                       <NumberInput
                         name={item.ticker}
@@ -163,8 +174,13 @@ const SwapCard: React.FC = () => {
                           <NumberIncrementStepper />
                           <NumberDecrementStepper />
                         </NumberInputStepper>
-                      </NumberInput>
-                      {item.isError && <FormErrorMessage>{item.errorMsg}</FormErrorMessage>}
+                      </NumberInput>{" "}
+                      <Box pt={1} pl={1}>
+                        <Text fontSize={"xs"} color={useColorModeValue("green.800", "green.200")}>
+                          Available: {FormatToReadableBalance(item.balance.toFixed(2))}
+                        </Text>
+                        {item.isError && <FormErrorMessage>{item.errorMsg}</FormErrorMessage>}
+                      </Box>
                     </Box>
                   </HStack>
                 </FormControl>
