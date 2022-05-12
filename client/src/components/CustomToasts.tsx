@@ -1,48 +1,36 @@
-import { Box, Stack, useColorMode, Text, useTimeout, Flex } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { IconType } from "react-icons";
-import { IconButton } from "@chakra-ui/react";
-
+import { Box, useColorMode, Flex, chakra, useColorModeValue } from "@chakra-ui/react";
+import React from "react";
 import { FaBan, FaCheckCircle, FaExclamation } from "react-icons/fa";
+import { IoMdCheckmarkCircle } from "react-icons/io";
 
 interface ToastBodyProps {
   title: string;
   description: string;
   toastType: string;
-  Icon: IconType;
-  iconColour: string;
+  Icon: any;
+  color: string;
 }
 
-const ToastBody: React.FC<ToastBodyProps> = ({ title, description, toastType, Icon, iconColour }) => {
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useTimeout(() => {
-    setLoading(false);
-  }, 900);
-
+const ToastBody: React.FC<ToastBodyProps> = ({ title, description, toastType, Icon, color }) => {
   return (
-    <Box bg="gray.700" rounded="lg">
-      <Stack isInline justify="space-between" p={1}>
-        <Flex flexDirection="column" ml={2} mb={1}>
-          <Text fontWeight="semibold" fontSize="2xl" color={iconColour}>
-            {title}
-          </Text>
-          <Text fontWeight="light" color={"white"}>
-            {description ?? toastType}
-          </Text>
+    <Flex w="full" alignItems="center" justifyContent="center">
+      <Flex maxW="sm" w="full" mx="auto" bg={useColorModeValue("white", "gray.800")} shadow="md" rounded="lg" overflow="hidden">
+        <Flex justifyContent="center" alignItems="center" w={12} bg={color}>
+          <Icon as={IoMdCheckmarkCircle} color="white" boxSize={6} />
         </Flex>
-        <Flex alignItems="center" justifyItems="center" alignContent="center" justify="center">
-          <IconButton
-            icon={<Icon />}
-            color={iconColour}
-            aria-label=""
-            variant="ghost"
-            fontSize="20px"
-            isLoading={loading}
-          />
-        </Flex>
-      </Stack>
-    </Box>
+
+        <Box mx={-3} py={2} px={4}>
+          <Box mx={3}>
+            <chakra.span color={color} fontWeight="bold">
+              {title ?? toastType}
+            </chakra.span>
+            <chakra.p color={useColorModeValue("gray.600", "gray.200")} fontSize="sm">
+              {description}
+            </chakra.p>
+          </Box>
+        </Box>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -52,27 +40,17 @@ interface ToastProps {
 }
 
 export const ToastSuccess: React.FC<ToastProps> = ({ title, description }) => {
-  return (
-    <ToastBody title={title} description={description} toastType="Success" Icon={FaCheckCircle} iconColour="green" />
-  );
+  return <ToastBody title={title} description={description} toastType="Success" Icon={FaCheckCircle} color="green.500" />;
 };
 
 export const ToastError: React.FC<ToastProps> = ({ title, description }) => {
   const { colorMode } = useColorMode();
 
-  return <ToastBody title={title} description={description} toastType="Error" Icon={FaBan} iconColour="red.500" />;
+  return <ToastBody title={title} description={description} toastType="Error" Icon={FaBan} color="red.500" />;
 };
 
 export const ToastWarning: React.FC<ToastProps> = ({ title, description }) => {
   const { colorMode } = useColorMode();
 
-  return (
-    <ToastBody
-      title={title}
-      description={description}
-      toastType="Warning"
-      Icon={FaExclamation}
-      iconColour="orange.500"
-    />
-  );
+  return <ToastBody title={title} description={description} toastType="Warning" Icon={FaExclamation} color="orange.500" />;
 };
