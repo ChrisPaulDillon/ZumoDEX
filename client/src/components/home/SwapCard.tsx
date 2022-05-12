@@ -177,7 +177,21 @@ const SwapCard: React.FC = () => {
                       </NumberInput>{" "}
                       <Box pt={1} pl={1}>
                         <Text fontSize={"xs"} color={useColorModeValue("green.800", "green.200")}>
-                          Available: {FormatToReadableBalance(item.balance.toFixed(2))}
+                          Available:{" "}
+                          {
+                            <Button
+                              size="xs"
+                              variant={"ghost"}
+                              color={useColorModeValue("green.800", "green.200")}
+                              onClick={() =>
+                                item.ticker === "ETH"
+                                  ? handleEtherOnChange(userEtherBalance.toString())
+                                  : handleTDDOnChange(userTokenBalance.toString())
+                              }
+                            >
+                              {FormatToReadableBalance(item.balance.toFixed(2))}
+                            </Button>
+                          }
                         </Text>
                         {item.isError && <FormErrorMessage>{item.errorMsg}</FormErrorMessage>}
                       </Box>
