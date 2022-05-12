@@ -184,7 +184,11 @@ const SwapCard: React.FC = () => {
               {exchangeMode === EXCHANGE_MODE.SELL && `You are currently selling TDD at a rate of ${dexInfo.sellRate} wei to 1 TDD`}
             </Text>
             <Badge colorScheme={"pink"}>Maxmimum Buy: {dexInfo.maximumBuy}</Badge>
-            <Button isLoading={formState.isSubmitting} type="submit" isDisabled={!isLoggedIn}>
+            <Button
+              isLoading={formState.isSubmitting}
+              type="submit"
+              isDisabled={!isLoggedIn || inputs.find((item) => item.isError)?.isError === true}
+            >
               {exchangeMode}
             </Button>
             <Text textAlign={"center"}>{dexInfo.totalSales.toString()} Total Sales</Text>
