@@ -24,6 +24,11 @@ if (!mnemonic) {
   throw new Error("Please set your MNEMONIC in a .env file");
 }
 
+const rinkebyRpc: string | undefined = process.env.RINKEBY_API;
+if (!rinkebyRpc) {
+  throw new Error("Please set your RINKEBY_API in a .env file");
+}
+
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   solidity: "0.8.8",
@@ -35,11 +40,11 @@ const config: HardhatUserConfig = {
       chainId: 31337,
     },
     testnet: {
-      url: process.env.RINKEBY_API,
+      url: rinkebyRpc,
       chainId: 4,
       gas: 2100000,
       gasPrice: 20000000000,
-      accounts: [process.env.MNEMONIC!],
+      accounts: [mnemonic],
     },
   },
   etherscan: {
