@@ -12,7 +12,6 @@ import {
   NumberInputField,
   NumberInputStepper,
   HStack,
-  Badge,
   FormControl,
   FormErrorMessage,
   Skeleton,
@@ -220,9 +219,10 @@ const SwapCard: React.FC = () => {
                 {exchangeMode === EXCHANGE_MODE.BUY && `You are currently buying TDD at a rate of ${dexInfo.buyRate} wei to 1 TDD`}
                 {exchangeMode === EXCHANGE_MODE.SELL && `You are currently selling TDD at a rate of ${dexInfo.sellRate} wei to 1 TDD`}
               </Text>
-              <Badge colorScheme={"pink"}>
-                {EXCHANGE_MODE.BUY ? `Maxmimum Buy: ${dexInfo.maximumBuy}` : `Maxmimum Sell: ${dexInfo.maximumBuy}`}
-              </Badge>
+              <Text fontSize={"sm"} textAlign={"center"}>
+                {exchangeMode === EXCHANGE_MODE.BUY && `Maxmimum Buy: ${dexInfo.exchangeTokenBalance} TDD`}
+                {exchangeMode === EXCHANGE_MODE.SELL && `Maxmimum Sell: ${dexInfo.exchangeEtherBalance} ETH`}
+              </Text>
               <Button
                 isLoading={formState.isSubmitting}
                 type="submit"
