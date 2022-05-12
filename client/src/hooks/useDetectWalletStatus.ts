@@ -35,11 +35,14 @@ const useDetectWalletStatus = () => {
 
   useEffect(() => {
     const getRPCProvider = async () => {
-      if (connectorStatus !== CONNECTOR_TYPE.JSON_RPC && RPC_URL) {
-        const provider = await new ethers.providers.JsonRpcProvider(RPC_URL, 4);
-        dispatcher(updateJsonRpcConnection({ jsonRpcConnector: provider }));
-      } else {
-        toast.Warning("Warning", "Json RPC url could not be found, please make sure your configuration is correct!");
+      //@ts-ignore
+      if (window?.ethereum === undefined) {
+        if (connectorStatus !== CONNECTOR_TYPE.JSON_RPC && RPC_URL) {
+          const provider = await new ethers.providers.JsonRpcProvider(RPC_URL, 4);
+          dispatcher(updateJsonRpcConnection({ jsonRpcConnector: provider }));
+        } else {
+          toast.Warning("Warning", "Json RPC url could not be found, please make sure your configuration is correct!");
+        }
       }
     };
     getRPCProvider();
