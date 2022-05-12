@@ -12,7 +12,7 @@ const TokenBalance: React.FC<BoxProps> = ({ ...rest }) => {
         <Stack isInline>
           {" "}
           <Image src="/zumo-mobile-logo.svg" alt="zumo logo" width={25} height={25} />
-          <Text fontSize="lg">{`$${FormatToReadableBalance(userTokenBalance.toString())}`}</Text>
+          <Text fontSize="lg">{`${FormatToReadableBalance(userTokenBalance.toString())}`}</Text>
         </Stack>
       </Box>
     </Skeleton>

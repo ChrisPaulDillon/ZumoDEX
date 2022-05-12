@@ -4,6 +4,7 @@ import useRefresh from "hooks/useRefresh";
 import { useEffect } from "react";
 import { useAppDispatch } from "state";
 import { ConvertTokenBalanceFromBN } from "util/balanceHelper";
+import web3Instance from "util/web3";
 import { getConnectionStatusSelector, getSignerSelector, updateDexInfo } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
 
@@ -23,7 +24,7 @@ const useGetDexInfo = () => {
         const dexTokenBalance = await dexSwapContract.getMaximumBuy();
         const dexEtherBalance = await dexSwapContract.getMaximumSell();
         const dexTokenBalanceNo = ConvertTokenBalanceFromBN(dexTokenBalance);
-        const dexEtherBalanceNo = ethers.utils.formatEther(dexEtherBalance);
+        const dexEtherBalanceNo = web3Instance.utils.fromWei(dexEtherBalance.toString());
 
         dispatch(
           updateDexInfo({

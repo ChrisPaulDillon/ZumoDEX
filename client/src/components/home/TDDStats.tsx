@@ -1,6 +1,7 @@
 import { useColorModeValue, Heading, Text, Skeleton, Stack, VStack, Box, HStack, Divider } from "@chakra-ui/react";
 import { CONNECTOR_TYPE, getConnectionStatusSelector, getDexInfoSelector, getTokenInfoSelector } from "state/reducer";
 import Image from "next/image";
+import { FormatToReadableBalance } from "util/balanceHelper";
 const TDDStats: React.FC = () => {
   const tokenInfo = getTokenInfoSelector();
   const connectorStatus = getConnectionStatusSelector();
@@ -39,10 +40,10 @@ const TDDStats: React.FC = () => {
             {tokenInfo?.totalSupply.toString()} Max Supply
           </Text>
           <Text textAlign={"center"} fontSize="sm">
-            {dexInfo?.exchangeTokenBalance.toString()} Exchange TDD Balance
+            {FormatToReadableBalance(dexInfo?.exchangeTokenBalance.toString())} Exchange TDD Balance
           </Text>
           <Text textAlign={"center"} fontSize="sm">
-            {dexInfo?.exchangeEtherBalance.toString()} Exchange Ether Balance
+            {FormatToReadableBalance(dexInfo?.exchangeEtherBalance.toString())} Exchange Ether Balance
           </Text>
         </VStack>
       </Stack>

@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish } from "ethers";
 import { ethers } from "ethers";
-
+import web3Instance from "./web3";
 export const ConvertTokenBalanceFromBN = (amount: BigNumberish, decimals = 2): number => {
   const result = ethers.utils.formatUnits(amount, decimals);
   return Number(result);
@@ -24,8 +24,8 @@ export const ConvertEtherToTTD = (etherAmount: string): string => {
 export const CovertTDDToEther = (tddAmount: string): string => {
   try {
     const weiAmount = Number(tddAmount) * 5000;
-    const ether = ethers.utils.formatEther(weiAmount);
-    return ether.toString();
+    const ether = web3Instance.utils.fromWei(weiAmount.toString());
+    return ether;
   } catch (e) {
     return "0";
   }
