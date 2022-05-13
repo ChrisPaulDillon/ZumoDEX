@@ -25,7 +25,7 @@ import {
   getIsTokenSpendable,
   getLoginStatusSelector,
   getUserTokenBalanceSelector,
-} from "state/reducer";
+} from "../../state/reducer";
 import useBuyTokens from "contracts/hooks/useBuyTokens";
 import useSellTokens from "contracts/hooks/useSellTokens";
 import { useApprove } from "contracts/hooks/useApprove";

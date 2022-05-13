@@ -4,7 +4,7 @@ import { ConvertTokenBalanceFromBN, ConvertTokenNoToBN } from "./balanceHelper";
 describe("ConvertTokenNoToBN", () => {
   it("should convert balance to big number with an additional two decimals", () => {
     const tokenBalance = 1000000000;
-    const result = ConvertTokenNoToBN(tokenBalance);
+    const result = ConvertTokenNoToBN(tokenBalance.toString());
     expect(result.toNumber().toString().length).toEqual(tokenBalance.toString().length + 2);
   });
 });

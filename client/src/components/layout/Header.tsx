@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 import WalletConnectButton from "./WalletConnectButton";
-import MotionBox from "components/motion/Box";
+import MotionBox from "../motion/Box";
 import TokenBalance from "./TokenBalance";
 
 const Header = () => {

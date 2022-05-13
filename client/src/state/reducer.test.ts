@@ -73,6 +73,8 @@ describe("Redux Reducer", () => {
       buyRate: "1000",
       sellRate: "1000",
       totalSales: 100000,
+      exchangeTokenBalance: 10,
+      exchangeEtherBalance: 10,
     };
     const state = reducer(initialState, updateDexInfo({ dexInfo: dexInfo }));
     expect(state.dexInfo).toEqual(dexInfo);
