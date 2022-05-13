@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { getERC20Contract } from "../contractHelper";
 import { getLoginStatusSelector, getSignerSelector, updateUserTokenBalance } from "../../state/reducer";
 import { ConvertTokenBalanceFromBN } from "../../util/balanceHelper";
-import { useAppDispatch } from "state";
-import { CONTRACT_ERC20 } from "contracts/contracts";
+import { useAppDispatch } from "../../state";
+import { CONTRACT_ERC20 } from "../../contracts/contracts";
 
 const useBalanceOf = () => {
   const { isLoggedIn, userAddress } = getLoginStatusSelector();

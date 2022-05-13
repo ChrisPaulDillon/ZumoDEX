@@ -26,10 +26,10 @@ import {
   getLoginStatusSelector,
   getUserTokenBalanceSelector,
 } from "../../state/reducer";
-import useBuyTokens from "contracts/hooks/useBuyTokens";
-import useSellTokens from "contracts/hooks/useSellTokens";
-import { useApprove } from "contracts/hooks/useApprove";
-import { ConvertEtherToTTD, CovertTDDToEther, FormatToReadableBalance } from "util/balanceHelper";
+import useBuyTokens from "../../contracts/hooks/useBuyTokens";
+import useSellTokens from "../../contracts/hooks/useSellTokens";
+import { useApprove } from "../../contracts/hooks/useApprove";
+import { ConvertEtherToTTD, CovertTDDToEther, FormatToReadableBalance } from "../../util/balanceHelper";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 
@@ -145,6 +145,7 @@ const SwapCard: React.FC = () => {
                         <Text fontSize={"sm"}>{item.ticker}</Text>{" "}
                       </HStack>
                       <NumberInput
+                        data-testid={`input-${item.ticker}`}
                         name={item.ticker}
                         size="sm"
                         // minW="200px"
@@ -185,6 +186,7 @@ const SwapCard: React.FC = () => {
               )}
             </Box>
             <IconButton
+              data-testid="btn-swap"
               as={MdOutlineSwapVert}
               aria-label="Swap Token"
               size="xs"
@@ -209,6 +211,7 @@ const SwapCard: React.FC = () => {
                 {exchangeMode === EXCHANGE_MODE.SELL && `Maxmimum Sell: ${dexInfo.exchangeEtherBalance} ETH`}
               </Text>
               <Button
+                data-testid="btn-submit"
                 isLoading={formState.isSubmitting}
                 type="submit"
                 isDisabled={!isLoggedIn || errorMessage !== "" || etherAmount === "0" || tddAmount === "0"}

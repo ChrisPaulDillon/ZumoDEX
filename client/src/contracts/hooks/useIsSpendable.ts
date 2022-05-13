@@ -1,8 +1,8 @@
-import { getERC20Contract } from "contracts/contractHelper";
-import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "contracts/contracts";
+import { getERC20Contract } from "../../contracts/contractHelper";
+import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "../../contracts/contracts";
 import { useEffect } from "react";
-import { useAppDispatch } from "state";
-import { getLoginStatusSelector, getSignerSelector, updateTokenIsSpendable } from "state/reducer";
+import { useAppDispatch } from "../../state";
+import { getLoginStatusSelector, getSignerSelector, updateTokenIsSpendable } from "../../state/reducer";
 import { ConvertTokenBalanceFromBN } from "../../util/balanceHelper";
 
 const useIsSpendable = () => {

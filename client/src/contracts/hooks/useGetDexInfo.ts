@@ -1,7 +1,7 @@
 import { CONTRACT_DEXSWAP } from "contracts/contracts";
 import useRefresh from "hooks/useRefresh";
 import { useEffect } from "react";
-import { useAppDispatch } from "state";
+import { useAppDispatch } from "../../state";
 import { ConvertTokenBalanceFromBN, ConvertTokenNoToBN } from "util/balanceHelper";
 import web3Instance from "util/web3";
 import { getConnectionStatusSelector, getSignerSelector, updateDexInfo } from "../../state/reducer";

@@ -1,9 +1,9 @@
-import { getERC20Contract } from "contracts/contractHelper";
-import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "contracts/contracts";
+import { getERC20Contract } from "../../contracts/contractHelper";
+import { CONTRACT_DEXSWAP, CONTRACT_ERC20 } from "../../contracts/contracts";
 import { ethers } from "ethers";
-import useFireToast from "hooks/useFireToast";
+import useFireToast from "../../hooks/useFireToast";
 import { useCallback, useEffect } from "react";
-import { useAppDispatch } from "state";
+import { useAppDispatch } from "../../state";
 import { getLoginStatusSelector, getSignerSelector, updateTokenIsSpendable } from "../../state/reducer";
 
 export const useApprove = () => {

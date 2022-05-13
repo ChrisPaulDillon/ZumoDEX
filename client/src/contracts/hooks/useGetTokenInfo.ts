@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { getERC20Contract } from "../contractHelper";
 import { getConnectionStatusSelector, getSignerSelector, updateTokenInfo } from "../../state/reducer";
 import { ConvertTokenBalanceFromBN } from "../../util/balanceHelper";
-import { useAppDispatch } from "state";
-import useRefresh from "hooks/useRefresh";
+import { useAppDispatch } from "../../state";
+import useRefresh from "../../hooks/useRefresh";
 
 const useGetTokenInfo = (tokenAddress: string) => {
   const signer = getSignerSelector();

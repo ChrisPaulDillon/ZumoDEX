@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import useFireToast from "hooks/useFireToast";
+import useFireToast from "../../hooks/useFireToast";
 import { useCallback, useEffect } from "react";
 import { getLoginStatusSelector, getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
