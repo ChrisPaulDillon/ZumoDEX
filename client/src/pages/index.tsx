@@ -1,7 +1,6 @@
 import { Box, Stack } from "@chakra-ui/react";
 import SwapCard from "components/home/SwapCard";
 import TDDStats from "components/home/TDDStats";
-import useContractEventListener from "contracts/hooks/useContractEventListener";
 import useIsSpendable from "contracts/hooks/useIsSpendable";
 import { CONTRACT_ERC20 } from "../contracts/contracts";
 import useBalanceOf from "../contracts/hooks/useBalanceOf";
@@ -17,8 +16,7 @@ const Home = () => {
   useGetEthBalance();
   useDetectWalletStatus();
   useIsSpendable();
-  useContractEventListener();
-
+  
   return (
     <Box display={{ md: "flex" }} alignItems="center" justifyContent={"center"} minHeight="70vh" gap={14} mb={8} w="full">
       <Stack spacing={12}>

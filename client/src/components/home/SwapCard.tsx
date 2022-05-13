@@ -87,8 +87,6 @@ const SwapCard: React.FC = () => {
     } else if (Number(etherAmount) > dexInfo.exchangeEtherBalance && exchangeMode === EXCHANGE_MODE.SELL) {
       setErrorMessage("Ether amount exceeds exchange reserves");
     } else if (Number(tddAmount) > dexInfo.exchangeTokenBalance && exchangeMode === EXCHANGE_MODE.BUY) {
-      console.log("lmao");
-
       setErrorMessage("TDD amount exceeds exchange reserves");
     } else {
       setErrorMessage("");
@@ -206,7 +204,11 @@ const SwapCard: React.FC = () => {
                 {exchangeMode === EXCHANGE_MODE.BUY && `Maxmimum Buy: ${dexInfo.exchangeTokenBalance} TDD`}
                 {exchangeMode === EXCHANGE_MODE.SELL && `Maxmimum Sell: ${dexInfo.exchangeEtherBalance} ETH`}
               </Text>
-              <Button isLoading={formState.isSubmitting} type="submit" isDisabled={!isLoggedIn || errorMessage !== ""}>
+              <Button
+                isLoading={formState.isSubmitting}
+                type="submit"
+                isDisabled={!isLoggedIn || errorMessage !== "" || etherAmount === "0" || tddAmount === "0"}
+              >
                 {exchangeMode}
               </Button>
               <Text textAlign={"center"}>{dexInfo.totalSales.toString()} Total Sales</Text>

@@ -17,6 +17,7 @@ export const useApprove = () => {
     if (isLoggedIn) {
       erc20Contract?.on("Approval", (owner, spender, amount) => {
         toast.Positive("Success", "Approved, ready to purchase");
+        dispatch(updateTokenIsSpendable({ isTokenSpendable: true }));
       });
     }
   }, [userAddress]);
