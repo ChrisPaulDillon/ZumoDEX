@@ -12,7 +12,7 @@ const TDDStats: React.FC = () => {
       <Stack
         rounded="lg"
         minH={"125px"}
-        maxW={[250, 750, 750]}
+        maxW={[400, 750, 750]}
         bg={useColorModeValue("gray.400", "gray.700")}
         flexDir="column"
         w="100%"

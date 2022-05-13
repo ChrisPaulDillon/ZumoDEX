@@ -124,7 +124,7 @@ const SwapCard: React.FC = () => {
           rounded={"lg"}
           overflow={"hidden"}
           minH={"400px"}
-          maxW={[250, 750, 750]}
+          maxW={[400, 750, 750]}
           p={3}
           justifyContent="center"
           alignItems={"center"}

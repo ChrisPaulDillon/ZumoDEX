@@ -8,7 +8,7 @@ const TokenBalance: React.FC<BoxProps> = ({ ...rest }) => {
 
   return (
     <Skeleton isLoaded={userTokenBalance > 0}>
-      <Box {...rest}>
+      <Box {...rest} display={{ base: "none", xl: "inherit", md: "none" }}>
         <Stack isInline>
           {" "}
           <Image src="/zumo-mobile-logo.svg" alt="zumo logo" width={25} height={25} />
