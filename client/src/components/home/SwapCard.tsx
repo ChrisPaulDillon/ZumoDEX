@@ -214,7 +214,7 @@ const SwapCard: React.FC = () => {
                 data-testid="btn-submit"
                 isLoading={formState.isSubmitting}
                 type="submit"
-                isDisabled={!isLoggedIn || errorMessage !== "" || etherAmount === "0" || tddAmount === "0"}
+                isDisabled={!isLoggedIn || errorMessage !== "" || Number(etherAmount) <= 0 || Number(tddAmount) <= 0}
               >
                 {exchangeMode}
               </Button>
