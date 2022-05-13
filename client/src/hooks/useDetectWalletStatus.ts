@@ -1,7 +1,7 @@
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useEffect } from "react";
-import { handleAccountsChanged, handleNetworkSwitch } from "util/metaMaskHelper";
+import { handleAccountsChanged, handleNetworkSwitch } from "../util/metaMaskHelper";
 import { useAppDispatch } from "../state";
 import {
   CONNECTOR_TYPE,

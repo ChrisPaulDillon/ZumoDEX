@@ -1,5 +1,5 @@
 import { ButtonProps, Button } from "@chakra-ui/react";
-import useDetectWalletStatus from "hooks/useDetectWalletStatus";
+import useDetectWalletStatus from "../../hooks/useDetectWalletStatus";
 import useFireToast from "../../hooks/useFireToast";
 import { CONNECTOR_TYPE, getConnectionStatusSelector, getLoginStatusSelector } from "../../state/reducer";
 import { getAbbreviatedAddress } from "../../util/addressHelper";
