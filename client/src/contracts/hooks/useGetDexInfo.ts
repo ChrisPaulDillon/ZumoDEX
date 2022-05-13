@@ -1,9 +1,8 @@
 import { CONTRACT_DEXSWAP } from "contracts/contracts";
-import { ethers } from "ethers";
 import useRefresh from "hooks/useRefresh";
 import { useEffect } from "react";
 import { useAppDispatch } from "state";
-import { ConvertTokenBalanceFromBN } from "util/balanceHelper";
+import { ConvertTokenBalanceFromBN, ConvertTokenNoToBN } from "util/balanceHelper";
 import web3Instance from "util/web3";
 import { getConnectionStatusSelector, getSignerSelector, updateDexInfo } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
@@ -29,8 +28,8 @@ const useGetDexInfo = () => {
         dispatch(
           updateDexInfo({
             dexInfo: {
-              buyRate: buyRate,
-              sellRate: sellRate,
+              buyRate: ConvertTokenNoToBN(buyRate.toString())!.toString(),
+              sellRate: ConvertTokenNoToBN(sellRate.toString())!.toString(),
               totalSales: totalSales,
               exchangeTokenBalance: dexTokenBalanceNo,
               exchangeEtherBalance: Number(dexEtherBalanceNo),

@@ -1,14 +1,15 @@
 import { useColorModeValue, Heading, Text, Skeleton, Stack, VStack, Box, HStack, Divider } from "@chakra-ui/react";
-import { CONNECTOR_TYPE, getConnectionStatusSelector, getDexInfoSelector, getTokenInfoSelector } from "state/reducer";
+import { CONNECTOR_TYPE, getConnectionStatusSelector, getDexInfoSelector, getTokenInfoSelector } from "../../state/reducer";
 import Image from "next/image";
-import { FormatToReadableBalance } from "util/balanceHelper";
+import { FormatToReadableBalance } from "../../util/balanceHelper";
+
 const TDDStats: React.FC = () => {
   const tokenInfo = getTokenInfoSelector();
   const connectorStatus = getConnectionStatusSelector();
   const dexInfo = getDexInfoSelector();
 
   return (
-    <Skeleton isLoaded={connectorStatus !== CONNECTOR_TYPE.NOT_CONNECTED}>
+    <Skeleton isLoaded={connectorStatus !== CONNECTOR_TYPE.NOT_CONNECTED} data-testid="skeleton-tdd">
       <Stack
         rounded="lg"
         minH={"125px"}
