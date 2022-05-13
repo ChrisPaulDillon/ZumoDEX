@@ -21,19 +21,9 @@ const useDetectWalletStatus = () => {
   const toast = useFireToast();
 
   useEffect(() => {
-    if (active) {
-      dispatcher(logUserIn({ address: account! }));
-    }
-  }, [active]);
-
-  const login = () => {
-    try {
-      activate(injectedWalletConnector, async (error: Error) => {
-        if (error instanceof UnsupportedChainIdError) {
-          toast.Negative("Error", "You are currently on the wrong chain, please switch to the testnet!");
-          //@ts-ignore
-          await handleNetworkSwitch();
-        }
+    const checkUserWalletStatus = async () => {
+      //@ts-ignore
+      if (window?.ethereum) {
         //@ts-ignore
         const requestAccount = await window.ethereum.request({
           method: "eth_requestAccounts",
@@ -41,7 +31,32 @@ const useDetectWalletStatus = () => {
         if (requestAccount?.length > 0) {
           dispatcher(logUserIn({ address: requestAccount[0] }));
         }
+      }
+    };
+    checkUserWalletStatus();
+  }, []);
+
+  const login = async () => {
+    try {
+      activate(injectedWalletConnector, async (error: Error) => {
+        if (error instanceof UnsupportedChainIdError) {
+          toast.Negative("Error", "You are currently on the wrong chain, please switch to the testnet!");
+          //@ts-ignore
+          await handleNetworkSwitch();
+        }
       });
+    } catch (ex) {
+      console.log(ex);
+    }
+
+    try {
+      //@ts-ignore
+      const requestAccount = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      if (requestAccount?.length > 0) {
+        dispatcher(logUserIn({ address: requestAccount[0] }));
+      }
     } catch (ex) {
       console.log(ex);
     }

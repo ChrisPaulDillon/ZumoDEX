@@ -1,5 +1,4 @@
 import { ethers } from "ethers";
-import useFireToast from "../../hooks/useFireToast";
 import { useCallback, useEffect } from "react";
 import { getLoginStatusSelector, getSignerSelector } from "../../state/reducer";
 import { getDexSwapContract } from "../contractHelper";
@@ -10,15 +9,14 @@ const useBuyTokens = () => {
   const { isLoggedIn } = getLoginStatusSelector();
   const contract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
   const dexContract = getDexSwapContract(CONTRACT_DEXSWAP, signer);
-  const toast = useFireToast();
 
   useEffect(() => {
     if (isLoggedIn) {
       dexContract?.on("TokensPurchased", () => {
-        toast.Positive("Success", "Successfully bought TTD Tokens!");
+        //handle event
       });
     }
-  }, [isLoggedIn]);
+  }, []);
 
   const buyTokens = useCallback(
     async (amount: string) => {
