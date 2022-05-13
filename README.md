@@ -6,11 +6,16 @@ Smart Contracts are built with Solidity, Hardhat, Chai & Mocha.
 
 Front end is built with React, Chakra-UI, TypeScript, Jest, React Testing Library.
 
+## Requirements
+
+Please install the Web3 wallet extension MetaMask as this will be used to interact with the smart contracts and a private key is required if you wish to
+deploy the contracts on the testnet.
+
 ## Instructions
 
 ### Smart Contracts
 
-Navigate to the smart_contracts folder and create a .env file within the client folder. Add the following:
+Navigate to the smart_contracts folder and create a .env file within the smart_contracts folder. Add the following:
 
 > MNEMONIC="YOUR_API_KEY"
 

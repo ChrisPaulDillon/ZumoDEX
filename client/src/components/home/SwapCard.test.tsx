@@ -1,5 +1,5 @@
 import { fireEvent, getByTestId, screen } from "@testing-library/react";
-import { updateTokenIsSpendable } from "../../state/reducer";
+import { updateDexInfo, updateTokenIsSpendable } from "../../state/reducer";
 import configureStore from "../../state";
 import { testRender } from "../../util/testHelper";
 import SwapCard from "./SwapCard";
@@ -72,5 +72,32 @@ describe("Swap Card Component", () => {
 
     expect(screen.getByDisplayValue("50")).toBeInTheDocument();
     expect(ethInput).toBeDisabled();
+  });
+
+  it("should have the submit button still disabled even after inputting an ethereum value as there is no TDD in exchange", () => {
+    const store = configureStore();
+    store.dispatch(updateTokenIsSpendable({ isTokenSpendable: true }));
+    const { container } = testRender(<SwapCard />, { store });
+
+    const ethInput = container.querySelector('input[name="ETH"]');
+    fireEvent.change(ethInput!, { target: { value: "50" } });
+
+    const button = getByTestId(container, "btn-submit");
+    expect(button).toBeDisabled();
+  });
+
+  it("should have the submit button enabled after all conditions are", () => {
+    const store = configureStore();
+    store.dispatch(updateTokenIsSpendable({ isTokenSpendable: true }));
+    store.dispatch(
+      updateDexInfo({ dexInfo: { buyRate: "1", sellRate: "1", totalSales: 1, exchangeTokenBalance: 500000000, exchangeEtherBalance: 50 } })
+    );
+    const { container } = testRender(<SwapCard />, { store });
+
+    const ethInput = container.querySelector('input[name="ETH"]');
+    fireEvent.change(ethInput!, { target: { value: "0.000000000000001" } });
+
+    const button = getByTestId(container, "btn-submit");
+    expect(button).not.toBeDisabled();
   });
 });
