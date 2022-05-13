@@ -18,8 +18,6 @@ describe("DexSwap", function () {
 
     //@ts-ignore
     dexSwapContract = await dexSwap.deploy(erc20Contract.address);
-
-    const maxTokenSupplyBN = await erc20Contract.totalSupply();
   });
 
   describe("buyTokens()", async () => {
@@ -42,7 +40,6 @@ describe("DexSwap", function () {
       const userAddBalance = await erc20Contract.balanceOf(addr1.address);
       const dexSwapContractTokenBal = await erc20Contract.balanceOf(dexSwapContract.address);
       const ownerEtherBalUpdated = await ethers.provider.getBalance(owner.address);
-
       const updatedTotalSales = await dexSwapContract.getTotalSales();
 
       const ownerEtherBalanceWei = ConvertEtherToWei(ownerEtherBal);
@@ -287,8 +284,6 @@ describe("DexSwap", function () {
 
       //Act
       const maximumSell = await dexSwapContract.getMaximumSell();
-      console.log(maximumSell);
-      console.log(ConvertEtherToWei(maximumSell));
 
       //Assert
       expect(ConvertEtherToWei(maximumSell)).to.equal(ConvertEtherToWei(etherWei));

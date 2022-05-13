@@ -153,6 +153,10 @@ const SwapCard: React.FC = () => {
                         value={item.ticker === "ETH" ? etherAmount : tddAmount}
                         min={0}
                         onChange={(e) => (item.ticker === "ETH" ? handleEtherOnChange(e) : handleTDDOnChange(e))}
+                        isDisabled={
+                          (item.ticker === "ETH" && exchangeMode === EXCHANGE_MODE.SELL) ||
+                          (item.ticker === "TDD" && exchangeMode === EXCHANGE_MODE.BUY)
+                        }
                       >
                         <NumberInputField />
                         <NumberInputStepper>

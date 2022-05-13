@@ -35,7 +35,6 @@ export interface IGlobalState {
   jsonRpcProvider: JsonRpcProvider | undefined;
   dexInfo: IDexInfo;
   tokenInfo: ITokenInfo;
-  contractCallLoading: boolean;
 }
 
 export const initialState: IGlobalState = {
@@ -49,7 +48,6 @@ export const initialState: IGlobalState = {
   jsonRpcProvider: undefined,
   dexInfo: { buyRate: "", sellRate: "", totalSales: 0, exchangeTokenBalance: 0, exchangeEtherBalance: 0 },
   tokenInfo: { name: "", symbol: "", totalSupply: 0 },
-  contractCallLoading: false,
 };
 
 export const logUserIn = createAction<{ address: string }>("state/logUserIn");
@@ -73,10 +71,6 @@ export const updateUserTokenBalance = createAction<{
 export const updateTokenIsSpendable = createAction<{
   isTokenSpendable: boolean;
 }>("state/updateTokenIsSpendable");
-
-export const updateContractCallLoading = createAction<{
-  contractCallLoading: boolean;
-}>("state/updateContractCallLoading");
 
 export default createReducer(initialState, (builder) =>
   builder
@@ -112,9 +106,6 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateTokenIsSpendable, (state: IGlobalState, { payload: { isTokenSpendable } }) => {
       state.isTokenSpendable = isTokenSpendable;
-    })
-    .addCase(updateContractCallLoading, (state: IGlobalState, { payload: { contractCallLoading } }) => {
-      state.contractCallLoading = contractCallLoading;
     })
 );
 
