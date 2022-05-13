@@ -2,133 +2,153 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { DexSwap, TestTokenDex } from "../typechain-types";
 import web3 from "web3";
-import { ConvertTokenBNToNo, ConvertTokenNoToBN } from "../util/TokenHelper";
+import { ConvertEtherToWei, ConvertTokenBNToNo, ConvertTokenNoToBN } from "../util/TokenHelper";
 
 describe("DexSwap", function () {
   let dexSwapContract: DexSwap;
-  let testDexTokenContract: TestTokenDex;
+  let erc20Contract: TestTokenDex;
 
   beforeEach(async () => {
-    const [owner] = await ethers.getSigners();
-
     const testTokenDex = await ethers.getContractFactory("TestTokenDex");
+
     //@ts-ignore
-    testDexTokenContract = await testTokenDex.deploy();
+    erc20Contract = await testTokenDex.deploy();
+
     const dexSwap = await ethers.getContractFactory("DexSwap");
 
     //@ts-ignore
-    dexSwapContract = await dexSwap.deploy(testDexTokenContract.address);
+    dexSwapContract = await dexSwap.deploy(erc20Contract.address);
+
+    const maxTokenSupplyBN = await erc20Contract.totalSupply();
   });
 
   describe("buyTokens()", async () => {
     it("should allow user to purchase at a 10000 wei to 1 token ratio", async function () {
       //Arrange
-      await testDexTokenContract.deployed();
+      const [owner, addr1] = await ethers.getSigners();
+      await erc20Contract.deployed();
       await dexSwapContract.deployed();
 
-      testDexTokenContract.transfer(
-        dexSwapContract.address,
-        await testDexTokenContract.totalSupply()
-      );
-
-      const [owner] = await ethers.getSigners();
-      console.log(owner);
+      const dexTokenBalance = 5000;
+      const ownerEtherBal = await ethers.provider.getBalance(owner.address);
+      erc20Contract.transfer(dexSwapContract.address, ConvertTokenNoToBN(dexTokenBalance));
 
       const ethAmount = web3.utils.toWei("10000", "wei");
 
       //Act
-      await dexSwapContract.buyTokens({ value: ethAmount });
+      await dexSwapContract.connect(addr1).buyTokens({ value: ethAmount });
 
       //Assert
-      const ownerBalance = await testDexTokenContract.balanceOf(owner.address);
+      const userAddBalance = await erc20Contract.balanceOf(addr1.address);
+      const dexSwapContractTokenBal = await erc20Contract.balanceOf(dexSwapContract.address);
+      const ownerEtherBalUpdated = await ethers.provider.getBalance(owner.address);
 
-      expect(ConvertTokenBNToNo(ownerBalance)).to.equal(1);
+      const updatedTotalSales = await dexSwapContract.getTotalSales();
+
+      const ownerEtherBalanceWei = ConvertEtherToWei(ownerEtherBal);
+      const ownerEtherBalanceUpdatedWei = ConvertEtherToWei(ownerEtherBalUpdated);
+
+      expect(ConvertTokenBNToNo(userAddBalance)).to.equal(1);
+      expect(ConvertTokenBNToNo(dexSwapContractTokenBal)).to.equal(4999);
+      expect(Number(ownerEtherBalanceWei)).to.greaterThan(Number(ownerEtherBalanceUpdatedWei));
+      expect(Number(updatedTotalSales)).to.equal(1);
     });
 
     it("should throw an error when the user attempts purchase more tokens than the contract has", async function () {
       //Arrange
-      await testDexTokenContract.deployed();
+      await erc20Contract.deployed();
       await dexSwapContract.deployed();
 
-      testDexTokenContract.transfer(
-        dexSwapContract.address,
-        ConvertTokenNoToBN(1)
-      );
+      erc20Contract.transfer(dexSwapContract.address, ConvertTokenNoToBN(1));
 
-      const ERROR_MSG_TEST =
-        "Error: Requested Amount Exceeds Contract Token Amount";
+      const ERROR_MSG_TEST = "Error: Requested Amount Exceeds Contract Token Amount";
 
       const ethAmount = web3.utils.toWei("99000", "wei");
 
       //Act
       //Assert
-      await dexSwapContract
-        .buyTokens({ value: ethAmount })
-        .should.be.rejectedWith(ERROR_MSG_TEST);
+      await dexSwapContract.buyTokens({ value: ethAmount }).should.be.rejectedWith(ERROR_MSG_TEST);
     });
   });
 
   describe("sellTokens()", async () => {
     it("should allow user to sell at a rate of 5000 wei to 1 token ratio", async function () {
       //Arrange
-      await testDexTokenContract.deployed();
+      await erc20Contract.deployed();
       await dexSwapContract.deployed();
 
       const [owner] = await ethers.getSigners();
 
-      //Give the owner all the tokens
-      testDexTokenContract.transfer(
-        owner.address,
-        await testDexTokenContract.totalSupply()
-      );
-
+      const dexContractEtherBal = ethers.utils.parseEther("25.0");
       //give the dexSwap contract ether so it can buy tokens back
       await owner.sendTransaction({
         to: dexSwapContract.address,
-        value: ethers.utils.parseEther("1.0"),
+        value: dexContractEtherBal,
       });
 
-      const tokenAmount = 1;
+      const tokenAmount = 5;
       const tokenAmountToSell = ConvertTokenNoToBN(tokenAmount);
 
-      const etherBalanceBefore = await ethers.provider.getBalance(
-        owner.address
-      );
+      const etherBalance = await ethers.provider.getBalance(owner.address);
 
       //Act
 
       //Allow dex contract permission to spend tokens
-      await testDexTokenContract.approve(
-        dexSwapContract.address,
-        tokenAmountToSell
-      );
+      await erc20Contract.approve(dexSwapContract.address, tokenAmountToSell);
+      await dexSwapContract.sellTokens(tokenAmountToSell);
 
-      const result = await dexSwapContract.sellTokens(tokenAmountToSell);
+      //Assert
+      const etherBalanceUpdated = await ethers.provider.getBalance(owner.address);
+      const dexContractEtherBalUpdated = await ethers.provider.getBalance(dexSwapContract.address);
+      const dexContractTotalSales = await dexSwapContract.getTotalSales();
+      const dexContractTokenBalance = await erc20Contract.balanceOf(dexSwapContract.address);
 
-      const etherBalance = await ethers.provider.getBalance(owner.address);
+      // const ownerEtherBalanceWei = ConvertEtherToWei(etherBalance);
+      // const ownerEtherBalanceUpdatedWei = ConvertEtherToWei(etherBalanceUpdated);
 
-      const etherBefore = ethers.utils.formatEther(etherBalanceBefore);
-      const etherAfter = ethers.utils.formatEther(etherBalance);
+      expect(ConvertTokenBNToNo(dexContractTokenBalance)).to.equal(tokenAmount);
+      expect(Number(dexContractTotalSales)).to.equal(1);
+      expect(Number(dexContractEtherBalUpdated)).to.lessThan(Number(dexContractEtherBal));
+    });
 
-      const dexContractTokenBalance = await testDexTokenContract.balanceOf(
-        dexSwapContract.address
-      );
+    it("should throw an error when the user attempts to sell more tokens than they have", async function () {
+      //Arrange
+      await erc20Contract.deployed();
+      await dexSwapContract.deployed();
 
-      expect(dexContractTokenBalance).to.equal(tokenAmountToSell);
+      const [owner, addr1] = await ethers.getSigners();
+
+      const dexContractEtherBal = ethers.utils.parseEther("25.0");
+      //give the dexSwap contract ether so it can buy tokens back
+      await owner.sendTransaction({
+        to: dexSwapContract.address,
+        value: dexContractEtherBal,
+      });
+
+      const ERROR_MSG = "Error: You do not have this many tokens!";
+
+      const tokenAmount = 1;
+      const tokenAmountToSell = ConvertTokenNoToBN(tokenAmount);
+
+      //Act
+      //Assert
+
+      //Allow dex contract permission to spend tokens
+      await erc20Contract.approve(dexSwapContract.address, tokenAmountToSell);
+
+      //@ts-ignore
+      await dexSwapContract.connect(addr1).sellTokens(tokenAmountToSell).should.be.rejectedWith(ERROR_MSG);
     });
 
     it("should throw an error when the user attempts to sell tokens but there is no ethereum", async function () {
       //Arrange
-      await testDexTokenContract.deployed();
+      await erc20Contract.deployed();
       await dexSwapContract.deployed();
 
       const [owner] = await ethers.getSigners();
 
       //Give the owner all the tokens
-      testDexTokenContract.transfer(
-        owner.address,
-        await testDexTokenContract.totalSupply()
-      );
+      erc20Contract.transfer(owner.address, await erc20Contract.totalSupply());
 
       const ERROR_MSG = "Error: Not enough Ether in contract";
 
@@ -136,17 +156,13 @@ describe("DexSwap", function () {
       const tokenAmountToSell = ConvertTokenNoToBN(tokenAmount);
 
       //Act
+      //Assert
 
       //Allow dex contract permission to spend tokens
-      await testDexTokenContract.approve(
-        dexSwapContract.address,
-        tokenAmountToSell
-      );
+      await erc20Contract.approve(dexSwapContract.address, tokenAmountToSell);
 
       //@ts-ignore
-      await dexSwapContract
-        .sellTokens(tokenAmountToSell)
-        .should.be.rejectedWith(ERROR_MSG);
+      await dexSwapContract.sellTokens(tokenAmountToSell).should.be.rejectedWith(ERROR_MSG);
     });
   });
 
@@ -159,7 +175,7 @@ describe("DexSwap", function () {
       const buyRate = await dexSwapContract.getBuyRate();
 
       //Assert
-      expect(buyRate.toNumber()).to.equal(100);
+      expect(buyRate).to.equal(100);
     });
   });
 
@@ -172,7 +188,7 @@ describe("DexSwap", function () {
       const sellRate = await dexSwapContract.getSellRate();
 
       //Assert
-      expect(sellRate.toNumber()).to.equal(5000);
+      expect(sellRate.toNumber()).to.equal(50);
     });
   });
 
@@ -190,13 +206,10 @@ describe("DexSwap", function () {
 
     it("Should get the total sales after a user has purchased some tokens", async function () {
       //Arrange
-      await testDexTokenContract.deployed();
+      await erc20Contract.deployed();
       await dexSwapContract.deployed();
 
-      await testDexTokenContract.transfer(
-        dexSwapContract.address,
-        await testDexTokenContract.totalSupply()
-      );
+      await erc20Contract.transfer(dexSwapContract.address, await erc20Contract.totalSupply());
 
       const ethAmount = web3.utils.toWei("10000", "wei");
 
@@ -213,13 +226,10 @@ describe("DexSwap", function () {
       //Arrange
       const [owner] = await ethers.getSigners();
 
-      await testDexTokenContract.deployed();
+      await erc20Contract.deployed();
       await dexSwapContract.deployed();
 
-      await testDexTokenContract.transfer(
-        owner.address,
-        await testDexTokenContract.totalSupply()
-      );
+      await erc20Contract.transfer(owner.address, await erc20Contract.totalSupply());
 
       const tokenAmount = 5;
       const tokenAmountToSell = ConvertTokenNoToBN(tokenAmount);
@@ -230,10 +240,7 @@ describe("DexSwap", function () {
       });
 
       //Allow dex contract permission to spend tokens
-      await testDexTokenContract.approve(
-        dexSwapContract.address,
-        tokenAmountToSell
-      );
+      await erc20Contract.approve(dexSwapContract.address, tokenAmountToSell);
 
       //Act
       await dexSwapContract.sellTokens(tokenAmountToSell);
@@ -248,19 +255,13 @@ describe("DexSwap", function () {
   describe("getMaximumBuy()", async () => {
     it("Should get the maximum buy exchange rate available to the user", async function () {
       //Arrange
-      await testDexTokenContract.deployed();
+      await erc20Contract.deployed();
       await dexSwapContract.deployed();
 
       const tokenAmount = 5;
-      const tokenAmountForContract = ethers.utils.parseUnits(
-        tokenAmount.toString(),
-        2
-      );
+      const tokenAmountForContract = ConvertTokenNoToBN(tokenAmount);
 
-      await testDexTokenContract.transfer(
-        dexSwapContract.address,
-        tokenAmountForContract
-      );
+      await erc20Contract.transfer(dexSwapContract.address, tokenAmountForContract);
 
       //Act
       const maximumBuy = await dexSwapContract.getMaximumBuy();
@@ -270,28 +271,27 @@ describe("DexSwap", function () {
     });
   });
 
-  describe("getMaximumBuy()", async () => {
-    it("Should get the maximum buy exchange rate available to the user", async function () {
+  describe("getMaximumSell()", async () => {
+    it("Should get the maximum sell exchange rate available to the user", async function () {
       //Arrange
-      await testDexTokenContract.deployed();
+      await erc20Contract.deployed();
       await dexSwapContract.deployed();
+      const [owner] = await ethers.getSigners();
 
-      const tokenAmount = 5;
-      const tokenAmountForContract = ethers.utils.parseUnits(
-        tokenAmount.toString(),
-        2
-      );
+      const etherWei = ethers.utils.parseEther("5.0");
 
-      await testDexTokenContract.transfer(
-        dexSwapContract.address,
-        tokenAmountForContract
-      );
+      await owner.sendTransaction({
+        to: dexSwapContract.address,
+        value: etherWei,
+      });
 
       //Act
-      const maximumBuy = await dexSwapContract.getMaximumBuy();
+      const maximumSell = await dexSwapContract.getMaximumSell();
+      console.log(maximumSell);
+      console.log(ConvertEtherToWei(maximumSell));
 
       //Assert
-      expect(ConvertTokenBNToNo(maximumBuy)).to.equal(tokenAmount);
+      expect(ConvertEtherToWei(maximumSell)).to.equal(ConvertEtherToWei(etherWei));
     });
   });
 });

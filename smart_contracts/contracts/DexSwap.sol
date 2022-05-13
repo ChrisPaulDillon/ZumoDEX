@@ -4,8 +4,8 @@ import "./TestTokenDex.sol";
 
 contract DexSwap {
     TestTokenDex public token;
-    uint256 private buyRate = 10000;
-    uint256 private sellRate = 5000;
+    uint256 private buyRate = 100;
+    uint256 private sellRate = 50;
     uint256 private totalSales = 0;
     address private _owner;
 
@@ -46,7 +46,7 @@ contract DexSwap {
 
     function sellTokens(uint256 _amount) public {
         // User can't sell more tokens than they have
-        require(token.balanceOf(msg.sender) >= _amount, "You do not have this many tokens!");
+        require(token.balanceOf(msg.sender) >= _amount, "Error: You do not have this many tokens!");
 
         // Calculate the amount of Ether to redeem
         uint256 etherAmount = _amount * buyRate;
