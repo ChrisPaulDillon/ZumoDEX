@@ -1,6 +1,6 @@
 import { ButtonProps, Button } from "@chakra-ui/react";
+import useDetectWalletStatus from "hooks/useDetectWalletStatus";
 import useFireToast from "../../hooks/useFireToast";
-import useWalletConnect from "../../hooks/useWalletConnect";
 import { CONNECTOR_TYPE, getConnectionStatusSelector, getLoginStatusSelector } from "../../state/reducer";
 import { getAbbreviatedAddress } from "../../util/addressHelper";
 
@@ -8,7 +8,7 @@ const WalletConnectButton: React.FC<ButtonProps> = ({ ...rest }) => {
   const { userAddress, isLoggedIn } = getLoginStatusSelector();
   const connectorStatus = getConnectionStatusSelector();
   const toast = useFireToast();
-  const { login, logout } = useWalletConnect();
+  const { login, logout } = useDetectWalletStatus();
 
   const handleWalletConnect = () => {
     if (connectorStatus !== CONNECTOR_TYPE.WALLET_CONNECT) {

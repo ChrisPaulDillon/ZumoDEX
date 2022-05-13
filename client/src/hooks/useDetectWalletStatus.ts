@@ -1,5 +1,7 @@
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useEffect } from "react";
+import { handleAccountsChanged, handleNetworkSwitch } from "util/metaMaskHelper";
 import { useAppDispatch } from "../state";
 import {
   CONNECTOR_TYPE,
@@ -9,28 +11,50 @@ import {
   updateJsonRpcConnection,
   updateWeb3Provider,
 } from "../state/reducer";
-import { CHAIN_ID, RPC_URL } from "../util/providerHelper";
+import { CHAIN_ID, injectedWalletConnector, RPC_URL } from "../util/providerHelper";
 import useFireToast from "./useFireToast";
 
 const useDetectWalletStatus = () => {
+  const { active, account, activate, deactivate } = useWeb3React();
   const dispatcher = useAppDispatch();
   const connectorStatus = getConnectionStatusSelector();
   const toast = useFireToast();
 
-  // useEffect(() => {
-  //   const handleProviderSwitch = async () => {
-  //     //@ts-ignore
-  //     if (window?.ethereum) {
-  //       //@ts-ignore
-  //       const provider = new ethers.providers.Web3Provider(window.ethereum, CHAIN_ID);
-  //       const result = await provider.send("eth_requestAccounts", []);
-  //       if (result) {
-  //         dispatcher(updateWeb3Provider({ web3Provider: provider }));
-  //       }
-  //     }
-  //   };
-  //   handleProviderSwitch();
-  // }, []);
+  useEffect(() => {
+    if (active) {
+      dispatcher(logUserIn({ address: account! }));
+    }
+  }, [active]);
+
+  const login = () => {
+    try {
+      activate(injectedWalletConnector, async (error: Error) => {
+        if (error instanceof UnsupportedChainIdError) {
+          toast.Negative("Error", "You are currently on the wrong chain, please switch to the testnet!");
+          //@ts-ignore
+          await handleNetworkSwitch();
+        }
+        //@ts-ignore
+        const requestAccount = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        if (requestAccount?.length > 0) {
+          dispatcher(logUserIn({ address: requestAccount[0] }));
+        }
+      });
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
+  const logout = () => {
+    try {
+      deactivate();
+      dispatcher(logUserOut());
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
 
   /*
    * Uses json RPC as a fallback if a web3 wallet is not detected
@@ -59,7 +83,9 @@ const useDetectWalletStatus = () => {
       //@ts-ignore
       window?.ethereum
         .request({ method: "eth_requestAccounts" })
+        .then(handleNetworkSwitch)
         .then(handleAccountsChanged)
+        .then((account: string) => dispatcher(logUserIn({ address: account })))
         .catch((err: { code: number }) => {
           if (err.code === 4001) {
             console.log("Please connect to MetaMask.");
@@ -69,17 +95,6 @@ const useDetectWalletStatus = () => {
         });
     }
   }, []);
-
-  /**
-   * Helper function for when the user logs in or out of their wallet
-   */
-  function handleAccountsChanged(accounts: string | any[]) {
-    if (accounts.length === 0) {
-      console.log("Please connect to MetaMask.");
-      return;
-    }
-    dispatcher(logUserIn({ address: accounts[0].toString() }));
-  }
 
   /**
    * Listener for detecting a user has logged in or out of their web3 wallet,
@@ -101,6 +116,8 @@ const useDetectWalletStatus = () => {
       dispatcher(updateWeb3Provider({ web3Provider: provider }));
     }
   }, []);
+
+  return { active, login, logout, account };
 };
 
 export default useDetectWalletStatus;
