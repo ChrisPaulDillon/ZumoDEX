@@ -11,7 +11,10 @@ const useBalanceOf = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const fetchBalance = async () => {
+    (async () => {
+      if (!isLoggedIn) {
+        return;
+      }
       const contract = getERC20Contract(CONTRACT_ERC20, signer);
       try {
         const res = await contract.balanceOf(userAddress);
@@ -19,11 +22,7 @@ const useBalanceOf = () => {
       } catch (e) {
         console.error(e);
       }
-    };
-
-    if (isLoggedIn) {
-      fetchBalance();
-    }
+    })();
   }, [userAddress]);
 };
 
