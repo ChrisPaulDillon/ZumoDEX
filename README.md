@@ -17,7 +17,7 @@ deploy the contracts on the testnet.
 
 Navigate to the smart_contracts folder and create a .env file within the smart_contracts folder. Add the following:
 
-> MNEMONIC="YOUR_API_KEY"
+> MNEMONIC="YOUR_PRIVATE_KEY"
 
 > RINKEBY_API="YOUR_API_KEY"
 
