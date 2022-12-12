@@ -1,4 +1,4 @@
-import { Badge, Box, Container, Flex, HStack, Link, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Link, Text } from "@chakra-ui/react";
 import { CONNECTOR_TYPE, getConnectionStatusSelector } from "../../state/reducer";
 
 const Footer = () => {
